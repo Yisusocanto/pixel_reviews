@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Reviews</title>
+</head>
+<body>
+    <div>
+        <img src="{{ game.image_url }}" alt="cover game">
+        <h1>{{ game.title }}</h1>
+        <h1>{{ game.release_date }}</h1>
+
+        <h2>Review</h2>
+        <form action="">
+            <div class="rating-section">
+                <h3>Calificar juego</h3>
+                <div id="star-rating" data-game-id="{{ game.game_id }}">
+                    <span class="star" data-value="1">⭐</span>
+                    <span class="star" data-value="2">⭐</span>
+                    <span class="star" data-value="3">⭐</span>
+                    <span class="star" data-value="4">⭐</span>
+                    <span class="star" data-value="5">⭐</span>
+                </div>
+                <p id="rating-message"></p>
+            </div>
+            <input id="review_title" type="text" placeholder="review title" name="review_title" required>
+            <input id="review_content" type="text" placeholder="review content" name="review_content" required>
+            <button id="submit_button">Review game</button>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='js/review_game.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Reviews</title>
+</head>
+<body>
+    <!--SEARCH BAR-->
+    <form action="{{ url_for('main.search') }}" method="get">
+        <input type="text" id="search_input" placeholder="search videogame..." name="search_game">
+        <button id="search_button">Search</button>
+    </form>
+
+    <!--USER PERFIL-->
+    <a href="{{ url_for('users.redirecting_profile') }}">mi perfil</a>
+    <a href="{{ url_for('auth.logout') }}">Logout</a>
+
+    <!--REVIEWS-->
+    {% if reviews %}
+        {% for review in reviews %}
+            <div>
+                <img src="{{ review.game.image_url }}" alt="cover image">
+                <h3><a href="{{ url_for('main.game_details', slug=review.game.slug) }}">{{ review.game.title }}</a></h3>
+                <h4>{{ review.title }}</h4>
+                <p>{{ review.content }}</p>
+                <h5><a href="{{ url_for('users.profile', username=review.author.username) }}">{{ review.author.username }}</a></h5>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <script src="../static/js/search_games.js"></script>
+</body>
+</html>
