@@ -67,31 +67,32 @@ def validate_age(age):
         return "Invalid date format. Use YYYY-MM-DD."
     return None
 
-def execute_validations(email, username, password, name, lastname, age):
-    errors = {}
 
+def execute_validations(email, username, password, name, lastname, age) -> str | None:
+    """The `execute_validations` function is a higher-level function that orchestrates the validation
+    process for a set of user inputs including email, username, password, name, lastname, and age."""
     email_error = validate_email(email)
     if email_error:
-        errors["email"] = email_error
+        return email_error
 
     username_error = validate_username(username)
     if username_error:
-        errors["username"] = username_error
+        return username_error
 
     password_error = validate_password(password)
     if password_error:
-        errors["password"] = password_error
-
+        return password_error
+    
     name_error = validate_name(name)
     if name_error:
-        errors["name"] = name_error
-
+        return name_error
+    
     lastname_error = validate_lastname(lastname)
     if lastname_error:
-        errors["lastname"] = lastname_error
+        return lastname_error
 
     age_error = validate_age(age)
     if age_error:
-        errors["age"] = age_error
+        return age_error
 
-    return errors
+    return None

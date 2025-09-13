@@ -1,18 +1,39 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+
+//pages
 import GameDetailsPage from "./pages/GameDetailsPage";
 import Index from "./pages/Index";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import SearchGamesResultPage from "./pages/SearchGamesResultPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import LogOutPage from "./pages/LogOutPage";
+
+//components
+import NavBarComponent from "./components/commonsComponents/NavBarComponent";
+
+//Context and Config
+import { useAuth } from "./context/AuthContextProvider";
+import { setupAxiosInterceptors } from "./config/axiosConfig";
 
 function App() {
+  const { logoutFunction, loading } = useAuth();
+
+  //The interceptor is inicializated
+  useEffect(() => {
+    setupAxiosInterceptors(logoutFunction);
+  }, []);
+
+  if (loading) {
+    return <h1>Cargando...</h1>
+  }
+
   return (
     <>
-    <div className="min-h-screen bg-center bg-fixed bg-[url('/images/background.png')] bg-cover">
-      <h1>Hola</h1>
-      <BrowserRouter>
+      <div className="dark min-h-screen bg-center bg-fixed bg-[url('/images/background.png')] bg-cover">
+        <NavBarComponent />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth/signup" element={<SignUpPage />} />
@@ -23,11 +44,11 @@ function App() {
             element={<SearchGamesResultPage />}
           />
           <Route path="/game:slug" element={<GameDetailsPage />} />
+          <Route path="/auth/logout" element={<LogOutPage />} />
           <Route path="/prueba" element={<h1>Hola</h1>} />
           <Route path="/*" element={<h1>Pagina no existe</h1>} />
         </Routes>
-      </BrowserRouter>
-    </div>
+      </div>
     </>
   );
 }

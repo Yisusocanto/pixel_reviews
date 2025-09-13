@@ -1,7 +1,10 @@
+import { Button } from "flowbite-react";
+import SearchBar from "../components/commonsComponents/SearchBar";
 function Index() {
   return (
     <div>
-      <h1>Feed</h1>
+      <SearchBar/>
+      <Button>Esto es un boton</Button>
     </div>
   );
 }

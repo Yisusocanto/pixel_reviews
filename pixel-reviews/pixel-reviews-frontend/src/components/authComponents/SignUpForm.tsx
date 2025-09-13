@@ -5,6 +5,7 @@ import { signUp } from "../../services/authService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAlreadyAuth from "../../hooks/useAlreadyAuth";
+import { useAuth } from "../../context/AuthContextProvider";
 
 //Form validation scheme
 const signUpSchema = z
@@ -64,8 +65,10 @@ const signUpSchema = z
 
 //the start of the component
 function SignUpForm() {
-  const [errorMessage, setErrormessage] = useState({});
+  useAlreadyAuth();
+  const [errorMessage, setErrormessage] = useState("");
   const navigate = useNavigate();
+  const { setActiveSession } = useAuth();
 
   const {
     register,
@@ -77,16 +80,14 @@ function SignUpForm() {
 
   // Sends the data to the backend, if there is an error it saves it in the state or if the user creation is successful it redirects
   const onSubmit = handleSubmit(async (data) => {
-    const response = await signUp(data);
-    if ("errors" in response) {
-      setErrormessage(response.errors);
-      console.log(errorMessage);
-    } else {
-      navigate("/prueba");
+    try {
+      await signUp(data);
+      setActiveSession(true);
+      navigate("/");
+    } catch (error: any) {
+      setErrormessage(error.response?.data?.message || "Error desconocido");
     }
   });
-
-  useAlreadyAuth("/prueba")
 
   return (
     <div>
@@ -116,6 +117,7 @@ function SignUpForm() {
         )}
         <button>Create user</button>
       </form>
+      <p>{errorMessage}</p>
     </div>
   );
 }

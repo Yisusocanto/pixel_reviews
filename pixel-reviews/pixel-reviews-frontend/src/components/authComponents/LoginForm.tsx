@@ -4,8 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { login } from "../../services/authService";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContextProvider";
 import useAlreadyAuth from "../../hooks/useAlreadyAuth";
 
+// The loin schema for the validations
 const loginSchema = z.object({
   username: z
     .string()
@@ -18,7 +20,10 @@ const loginSchema = z.object({
 });
 
 function LoginForm() {
-  const [errorMessage, settErrorMessage] = useState("");
+  useAlreadyAuth();
+  const [errorMessage, setErrorMessage] = useState("");
+  const { setActiveSession } = useAuth();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -26,18 +31,17 @@ function LoginForm() {
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
-  const navigate = useNavigate();
 
+  // hnadle of the api call
   const onSubmit = handleSubmit(async (data) => {
-    const response = await login(data);
-    if (response.state) {
-      navigate("/prueba");
-    } else {
-      settErrorMessage(response.message);
+    try {
+      await login(data);
+      setActiveSession(true);
+      navigate("/");
+    } catch (error: any) {
+      setErrorMessage(error.response?.data?.message || "error desconocido");
     }
   });
-
-  useAlreadyAuth("/prueba");
 
   return (
     <div>
