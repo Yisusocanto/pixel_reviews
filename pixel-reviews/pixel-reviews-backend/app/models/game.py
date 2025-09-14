@@ -1,12 +1,14 @@
 from sqlalchemy import String, Integer, Float, Column, DateTime, Date, Text
-from sqlalchemy.orm.relationships import Relationship
+from sqlalchemy.orm import relationship
 from datetime import datetime
 from .base import Base
 from .developer import developers_association
 from .publisher import publishers_association
+from sqlalchemy_serializer import SerializerMixin
 
 
-class Game(Base):
+
+class Game(Base, SerializerMixin):
     __tablename__ = "games"
 
     game_id = Column(Integer, primary_key=True) # Nuestro ID interno
@@ -18,11 +20,11 @@ class Game(Base):
     description = Column(Text, nullable=False)
 
     #Relationships
-    reviews = Relationship("Review", back_populates="game", lazy="dynamic", cascade="all, delete-orphan")
-    ratings = Relationship("Rating", back_populates="game", cascade="all, delete-orphan", lazy="dynamic")
+    reviews = relationship("Review", back_populates="game", lazy="dynamic", cascade="all, delete-orphan")
+    ratings = relationship("Rating", back_populates="game", cascade="all, delete-orphan", lazy="dynamic")
 
-    developers = Relationship("Developer", secondary=developers_association, back_populates="games", lazy="dynamic")
-    publishers = Relationship("Publisher", secondary=publishers_association, back_populates="games", lazy="dynamic")
+    developers = relationship("Developer", secondary=developers_association, back_populates="games", lazy="dynamic")
+    publishers = relationship("Publisher", secondary=publishers_association, back_populates="games", lazy="dynamic")
 
     @property
     def average_rating(self):

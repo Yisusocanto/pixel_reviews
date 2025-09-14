@@ -1,10 +1,12 @@
 from .base import Base
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, UniqueConstraint, CheckConstraint
-from sqlalchemy.orm.relationships import Relationship
+from sqlalchemy.orm import relationship
 from datetime import datetime
+from sqlalchemy_serializer import SerializerMixin
 
 
-class Rating(Base):
+
+class Rating(Base, SerializerMixin):
 
     __tablename__ = "ratings"
 
@@ -16,8 +18,8 @@ class Rating(Base):
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     #Realationships
-    game = Relationship("Game", back_populates="ratings")
-    user = Relationship("User", back_populates="ratings")
+    game = relationship("Game", back_populates="ratings")
+    user = relationship("User", back_populates="ratings")
 
     #Restrictions
     __table_args__ = (

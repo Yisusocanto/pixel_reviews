@@ -1,6 +1,6 @@
-from flask import Blueprint, redirect, request, render_template, url_for, make_response, g
+from flask import Blueprint, redirect, render_template, url_for, g, jsonify
 from app.database.database_manage import DatabaseManager
-from app.utils.jwt_handler import JwtHandler, token_required
+from app.utils.jwt_handler import token_required
 
 database_manager = DatabaseManager()
 
@@ -15,13 +15,13 @@ def redirecting_profile():
     return redirect(url_for("users.profile", username=username))
 
 
-@users_bp.route("/profile/<username>")
+@users_bp.route("/<username>")
 @token_required
 def profile(username): 
     user = database_manager.returning_user_data(username)
     if not user:
         print("ocurrio un error retornando el ususario")
-        return "<h1>User not found</h1>"
+        return jsonify({"message": "An error ocurred returning the user data or do not exits"}), 404
 
     # user_dic = {
     #     "username": user[0],
@@ -33,5 +33,6 @@ def profile(username):
     #     "followers": 0,
     #     "following": 0
     # }
+    print(user)
     
-    return render_template("profile.html", user=user)
+    return jsonify(user), 200

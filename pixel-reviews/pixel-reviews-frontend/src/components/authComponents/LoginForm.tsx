@@ -22,7 +22,7 @@ const loginSchema = z.object({
 function LoginForm() {
   useAlreadyAuth();
   const [errorMessage, setErrorMessage] = useState("");
-  const { setActiveSession } = useAuth();
+  const { setActiveSession, setUserData } = useAuth();
   const navigate = useNavigate();
   const {
     register,
@@ -35,8 +35,9 @@ function LoginForm() {
   // hnadle of the api call
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await login(data);
+      const response = await login(data);
       setActiveSession(true);
+      setUserData(response.data.user_data);
       navigate("/");
     } catch (error: any) {
       setErrorMessage(error.response?.data?.message || "error desconocido");

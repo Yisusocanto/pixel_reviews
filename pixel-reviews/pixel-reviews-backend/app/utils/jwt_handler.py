@@ -1,6 +1,6 @@
 import jwt
 from datetime import datetime, timedelta, timezone
-from flask import request, redirect, url_for, make_response, render_template, g
+from flask import request, redirect, url_for, make_response, render_template, g, jsonify
 from functools import wraps
 import os
 from dotenv import load_dotenv
@@ -43,16 +43,16 @@ def token_required(f):
         token = request.cookies.get("jwt_pixel_reviews")
 
         if not token:
-            return redirect(url_for("auth.login", _external=True))
+            return jsonify({"message": "User not authenticated"}), 401
 
         payload = JwtHandler.check_jwt(token)
 
         if not payload:
-            response = make_response(render_template("login.html", error="Tu sesión ha expirado o el token no es válido. Por favor, inicia sesión de nuevo."))
+            response = make_response(jsonify({"message": "Token invalid"}))
             response.set_cookie(
                 "jwt_pixel_reviews", "", max_age=0, samesite="Lax", httponly=True, secure=True
             )
-            return response
+            return response, 401
         
         # Almacenar el payload en el objeto 'g' de Flask.
         # 'g' es un objeto especial que está disponible durante el ciclo de vida de una solicitud.

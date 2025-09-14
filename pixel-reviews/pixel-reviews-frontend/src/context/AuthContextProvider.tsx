@@ -1,12 +1,14 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import type { ReactNode } from "react";
 import axiosInstance from "../config/axiosConfig";
-
+import type UserData from '../types/userTypes'
 interface AuthContextType {
   activeSession: boolean;
   setActiveSession: (value: boolean) => void;
   logoutFunction: () => void;
   loading: boolean;
+  userData: UserData | null;
+  setUserData: (data: UserData | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -18,17 +20,19 @@ interface AuthContextProviderProps {
 function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [activeSession, setActiveSession] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   // Checks if there is an active section when loading
   useEffect(() => {
     const checkAuth = async () => {
       try {
         // Call to the endpoit wo verifies the token
-        await axiosInstance.get("/auth/verify");
+        const response = await axiosInstance.get("/auth/verify");
+        setUserData(response.data.user_data);
         // If the token is valid
         setActiveSession(true);
       } catch (error) {
-        console.log(("The user is not authenticated"))
+        console.log("The user is not authenticated");
       } finally {
         setLoading(false);
       }
@@ -36,7 +40,6 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 
     checkAuth();
   }, []);
-
 
   const logoutFunction = () => {
     setActiveSession(false);
@@ -49,6 +52,8 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         setActiveSession,
         logoutFunction,
         loading,
+        userData,
+        setUserData,
       }}
     >
       {children}

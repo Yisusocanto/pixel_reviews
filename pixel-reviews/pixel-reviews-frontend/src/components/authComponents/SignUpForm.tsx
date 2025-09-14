@@ -68,7 +68,7 @@ function SignUpForm() {
   useAlreadyAuth();
   const [errorMessage, setErrormessage] = useState("");
   const navigate = useNavigate();
-  const { setActiveSession } = useAuth();
+  const { setActiveSession, setUserData } = useAuth();
 
   const {
     register,
@@ -81,8 +81,9 @@ function SignUpForm() {
   // Sends the data to the backend, if there is an error it saves it in the state or if the user creation is successful it redirects
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await signUp(data);
+      const response = await signUp(data);
       setActiveSession(true);
+      setUserData(response.data.user_data);
       navigate("/");
     } catch (error: any) {
       setErrormessage(error.response?.data?.message || "Error desconocido");

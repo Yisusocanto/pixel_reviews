@@ -11,18 +11,18 @@ database_manager = DatabaseManager()
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 
-@auth_bp.route("/sign_up", methods=["POST"])   
+@auth_bp.route("/sign_up", methods=["POST"])
 def sign_up():
     """
     The `sign_up` function in a Python Flask route collects user data, validates it, encrypts the
     password, creates a new user in the database, generates a JWT token, and sets it as a cookie before
     returning a success message.
-    
+
     return: The `sign_up` function returns a response to the frontend after processing the user sign-up
-    request. 
-    
+    request.
+
     - If there are validation errors in the user data, a JSON response with a message indicating
-    the error message is returned with a status code of 401. 
+    the error message is returned with a status code of 401.
     - If the user data is valid, the user is created
     in the database, a JWT token is generated for the user, and a success message is returned with
     """
@@ -55,14 +55,11 @@ def sign_up():
         email, hashed_pw, username, name, lastname, age
     )
     token = JwtHandler.create_jwt(user_id)
+    user = database_manager.returning_user_data(username=username)
 
     # The response is created and the cookie is set with the token inside
     response = make_response(
-        jsonify(
-            {
-                "message": "User created succesfully",
-            }
-        )
+        jsonify({"message": "User created succesfully", "user_data": user})
     )
     response.set_cookie(
         "jwt_pixel_reviews",
@@ -80,12 +77,12 @@ def login():
     """
     The `login` function in Python handles user authentication by validating the username and password,
     creating a JWT token, and setting a cookie for session management.
-    
+
     return: The `login()` function returns a response with a message indicating the success or failure
-    of the login attempt. 
-    
+    of the login attempt.
+
     - If the username is incorrect or does not exist in the database, a message
-    stating "username incorrect or not exists" is returned with a status code of 401. 
+    stating "username incorrect or not exists" is returned with a status code of 401.
     - If the password
     provided does not match the hashed password stored in the database, a message stating "the password
     is incorrect" is returned
@@ -110,8 +107,12 @@ def login():
     user_id = database_manager.returnig_user_id(username)
     token = JwtHandler.create_jwt(user_id)
 
+    user = database_manager.returning_user_data(username=username)
+
     # The response is created and the cookie is set with the token inside
-    response = make_response(jsonify({"message": "session started successfully"}))
+    response = make_response(
+        jsonify({"message": "session started successfully", "user_data": user})
+    )
 
     response.set_cookie(
         "jwt_pixel_reviews",
@@ -122,6 +123,7 @@ def login():
         samesite="Lax",
     )
     return response, 200
+
 
 @auth_bp.route("/logout", methods=["GET"])
 def logout():
@@ -141,6 +143,7 @@ def logout():
     )
     return response, 200
 
+
 @auth_bp.route("/verify")
 def verify():
     """Function that verifies whether the user is authenticated or not
@@ -149,6 +152,10 @@ def verify():
     token = request.cookies.get("jwt_pixel_reviews")
     payload = JwtHandler.check_jwt(token)
     if payload:
-        return jsonify({"message": "user authenticated"}), 200
+        user_id = int(payload["sub"])
+        username = database_manager.returnig_username(user_id=user_id)
+        user = database_manager.returning_user_data(username=username)
+        print(user)
+        return jsonify({"message": "user authenticated", "user_data": user}), 200
     else:
         return jsonify({"message": "user not authenticated"}), 401

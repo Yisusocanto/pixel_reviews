@@ -1,10 +1,11 @@
 from sqlalchemy import Column, String, Integer, DateTime
-from sqlalchemy.orm.relationships import Relationship
+from sqlalchemy.orm import relationship
 from datetime import datetime
 from .base import Base
+from sqlalchemy_serializer import SerializerMixin
 
 
-class User(Base):
+class User(Base, SerializerMixin):
     __tablename__ = "users"
 
     user_id = Column(Integer(), primary_key=True, autoincrement=True, nullable=False)
@@ -17,8 +18,8 @@ class User(Base):
     created_at = Column(DateTime(), default=datetime.now())
 
     #Relationships
-    reviews = Relationship("Review", back_populates="author", cascade="all, delete-orphan", lazy="dynamic")
-    ratings = Relationship("Rating", back_populates="user", cascade="all, delete-orphan", lazy="dynamic")
+    reviews = relationship("Review", back_populates="author", cascade="all, delete-orphan")
+    ratings = relationship("Rating", back_populates="user", cascade="all, delete-orphan")
 
     def __str__(self):
         return self.username

@@ -1,6 +1,8 @@
 from .base import Base
 from sqlalchemy import Column, Integer, String, Table, ForeignKey
-from sqlalchemy.orm.relationships import Relationship
+from sqlalchemy.orm import relationship
+from sqlalchemy_serializer import SerializerMixin
+
 
 
 developers_association = Table(
@@ -11,7 +13,7 @@ developers_association = Table(
 )
 
 
-class Developer(Base):
+class Developer(Base, SerializerMixin):
 
     __tablename__ = "developers"
 
@@ -21,4 +23,4 @@ class Developer(Base):
     slug = Column(String, nullable=False)
 
     #relationships
-    games = Relationship("Game", secondary=developers_association, back_populates="developers", lazy="dynamic")
+    games = relationship("Game", secondary=developers_association, back_populates="developers", lazy="dynamic")
