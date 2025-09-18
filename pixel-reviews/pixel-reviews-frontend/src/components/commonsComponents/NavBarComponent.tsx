@@ -18,7 +18,7 @@ function NavBarComponent() {
 
   return (
     <div>
-      <Navbar fluid rounded>
+      <Navbar fluid rounded className="dark:bg-[#19191a]">
         <NavbarBrand href="https://flowbite-react.com">
           <img
             src="https://img.freepik.com/vector-premium/ejemplo-logotipo_590037-59.jpg"

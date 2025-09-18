@@ -2,3 +2,10 @@
 @plugin "flowbite-react/plugin/tailwindcss";
 @source "../.flowbite-react/class-list.json";
 
+#background {
+    background-color: #020202;
+}
+
+:root {
+    --accent-color: #19191a
+}

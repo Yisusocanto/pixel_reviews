@@ -32,7 +32,7 @@ function App() {
 
   return (
     <>
-      <div className="dark min-h-screen bg-center bg-fixed bg-[url('/images/background.png')] bg-cover">
+      <div id="background" className="dark min-h-screen font-[Roboto]">
         <NavBarComponent />
         <Routes>
           <Route path="/" element={<Index />} />
