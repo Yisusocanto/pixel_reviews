@@ -1,9 +1,15 @@
 from .base import Base
-from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, UniqueConstraint, CheckConstraint
+from sqlalchemy import (
+    Column,
+    Integer,
+    ForeignKey,
+    DateTime,
+    UniqueConstraint,
+    CheckConstraint,
+)
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from sqlalchemy_serializer import SerializerMixin
-
 
 
 class Rating(Base, SerializerMixin):
@@ -15,14 +21,16 @@ class Rating(Base, SerializerMixin):
     game_id = Column(Integer, ForeignKey("games.game_id"), nullable=False)
     score = Column(Integer, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(
+        DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
 
-    #Realationships
+    # Relationships
     game = relationship("Game", back_populates="ratings")
-    user = relationship("User", back_populates="ratings")
+    author = relationship("User", back_populates="ratings")
 
-    #Restrictions
+    # Restrictions
     __table_args__ = (
         UniqueConstraint("user_id", "game_id", name="uq_user_game_rating"),
-        CheckConstraint("score >= 1 AND score <= 5", name="cc_score_range")
+        CheckConstraint("score >= 1 AND score <= 5", name="cc_score_range"),
     )

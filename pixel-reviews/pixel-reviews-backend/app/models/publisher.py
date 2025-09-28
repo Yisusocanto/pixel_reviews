@@ -4,12 +4,13 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_serializer import SerializerMixin
 
 
-
 publishers_association = Table(
     "publishers_association",
     Base.metadata,
     Column("game_id", Integer, ForeignKey("games.game_id"), primary_key=True),
-    Column("publisher_id", Integer, ForeignKey("publishers.publisher_id"), primary_key=True)
+    Column(
+        "publisher_id", Integer, ForeignKey("publishers.publisher_id"), primary_key=True
+    ),
 )
 
 
@@ -22,5 +23,10 @@ class Publisher(Base, SerializerMixin):
     name = Column(String, nullable=False)
     slug = Column(String, nullable=False)
 
-    #relationships
-    games = relationship("Game", secondary=publishers_association, back_populates="publishers", lazy="dynamic")
+    # relationships
+    games = relationship(
+        "Game",
+        secondary=publishers_association,
+        back_populates="publishers",
+        lazy="dynamic",
+    )

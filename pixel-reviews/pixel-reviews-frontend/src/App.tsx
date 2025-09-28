@@ -40,10 +40,10 @@ function App() {
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="/users/:username" element={<UserProfilePage />} />
           <Route
-            path="/search/:game_name"
+            path="/search/:gameTitle"
             element={<SearchGamesResultPage />}
           />
-          <Route path="/game:slug" element={<GameDetailsPage />} />
+          <Route path="/games/:slug" element={<GameDetailsPage />} />
           <Route path="/auth/logout" element={<LogOutPage />} />
           <Route path="/prueba" element={<h1>Hola</h1>} />
           <Route path="/*" element={<h1>Pagina no existe</h1>} />

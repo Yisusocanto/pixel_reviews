@@ -1,14 +1,14 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import type { ReactNode } from "react";
 import axiosInstance from "../config/axiosConfig";
-import type UserData from '../types/userTypes'
+import type {User} from '../types/userTypes'
 interface AuthContextType {
   activeSession: boolean;
   setActiveSession: (value: boolean) => void;
   logoutFunction: () => void;
   loading: boolean;
-  userData: UserData | null;
-  setUserData: (data: UserData | null) => void;
+  userData: User | null;
+  setUserData: (data: User | null) => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -20,7 +20,7 @@ interface AuthContextProviderProps {
 function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [activeSession, setActiveSession] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
 
   // Checks if there is an active section when loading
   useEffect(() => {

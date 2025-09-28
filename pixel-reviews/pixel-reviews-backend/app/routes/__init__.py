@@ -8,6 +8,7 @@ from .main import main_bp
 from .api import api_bp
 from.review import review_bp
 from flask_cors import CORS
+from app.extensions.marshmallow import ma
 
 
 def create_app():
@@ -18,6 +19,8 @@ def create_app():
     app = Flask(__name__, 
                 template_folder=template_dir,
                 static_folder=static_dir)
+    
+    ma.init_app(app)
     
     CORS(app, 
     resources={r"/*": {

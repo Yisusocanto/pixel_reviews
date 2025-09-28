@@ -19,7 +19,7 @@ class User(Base, SerializerMixin):
 
     #Relationships
     reviews = relationship("Review", back_populates="author", cascade="all, delete-orphan")
-    ratings = relationship("Rating", back_populates="user", cascade="all, delete-orphan")
+    ratings = relationship("Rating", back_populates="author", cascade="all, delete-orphan")
 
     def __str__(self):
         return self.username

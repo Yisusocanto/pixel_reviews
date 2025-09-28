@@ -54,6 +54,9 @@ def sign_up():
     user_id = database_manager.create_user(
         email, hashed_pw, username, name, lastname, age
     )
+    if isinstance(user_id, dict) and "error" in user_id:
+        return jsonify({"message": user_id["error"]}), 409
+    
     token = JwtHandler.create_jwt(user_id)
     user = database_manager.returning_user_data(username=username)
 
@@ -155,7 +158,6 @@ def verify():
         user_id = int(payload["sub"])
         username = database_manager.returnig_username(user_id=user_id)
         user = database_manager.returning_user_data(username=username)
-        print(user)
         return jsonify({"message": "user authenticated", "user_data": user}), 200
     else:
         return jsonify({"message": "user not authenticated"}), 401

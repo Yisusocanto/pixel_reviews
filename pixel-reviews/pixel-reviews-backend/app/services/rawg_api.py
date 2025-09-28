@@ -4,40 +4,48 @@ import requests
 
 load_dotenv()
 
+
 class RawgApi:
 
     api_key = os.getenv("API_RAWG_KEY")
     BASE_URL = "https://api.rawg.io/api"
 
+    def search_games(self, game_title: str) -> list | None:
+        response = requests.get(
+            f"{self.BASE_URL}/games",
+            params={"key": self.api_key, "search": game_title, "page_size": 5},
+        )
 
-    def search_games(self, game_title: str):
-        response = requests.get(f"{self.BASE_URL}/games", params={
-            "key": self.api_key,
-            "search": game_title,
-            "page_size": 5
-        })
+        if response.status_code != 200:
+            print(
+                f"Error en search_games de Rawg API. status code {response.status_code}."
+            )
+            return None
 
-        response.raise_for_status()
+        games_json = response.json()
+        games_list = []
 
-        games_list = response.json()
-        games = []
-
-        for game in games_list["results"]:
-            videogame = {
+        for game in games_json["results"]:
+            videogame = { 
                 "title": game["name"],
                 "slug": game["slug"],
-                "released": game["released"],
-                "background_image": game["background_image"]
+                "releaseDate": game["released"],
+                "imageURL": game["background_image"],
             }
-            games.append(videogame)
-        
-        return games
-    
-    def get_game_details(self, slug):
+            games_list.append(videogame)
+
+        return games_list
+
+    def get_game_details(self, slug) -> dict | None:
 
         response = requests.get(f"{self.BASE_URL}/games/{slug}?key={self.api_key}")
 
-        response.raise_for_status()
+        if response.status_code != 200:
+            print(
+                f"Error en get_game_details de Rawg API. status code {response.status_code}."
+            )
+            return None
+
         game_json = response.json()
         game_data = {
             "rawg_id": game_json["id"],
@@ -47,15 +55,20 @@ class RawgApi:
             "image_url": game_json["background_image"],
             "description": game_json["description_raw"],
             "developers": [
-            {"rawg_id": developer["id"], "name": developer["name"], "slug": developer["slug"]}
-            for developer in game_json["developers"]
+                {
+                    "rawg_id": developer["id"],
+                    "name": developer["name"],
+                    "slug": developer["slug"],
+                }
+                for developer in game_json["developers"]
             ],
             "publishers": [
-            {"rawg_id": publisher["id"], "name": publisher["name"], "slug": publisher["slug"]}
-            for publisher in game_json["publishers"]
+                {
+                    "rawg_id": publisher["id"],
+                    "name": publisher["name"],
+                    "slug": publisher["slug"],
+                }
+                for publisher in game_json["publishers"]
             ],
         }
         return game_data
-
-
-

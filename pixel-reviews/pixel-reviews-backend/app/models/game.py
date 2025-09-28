@@ -16,7 +16,7 @@ class Game(Base, SerializerMixin):
     title = Column(String(200), nullable=False)
     slug = Column(String(200), nullable=False, index=True) # Para URLs amigables, usualmente provisto por RAWG
     release_date = Column(Date, nullable=True)
-    image_url = Column(String(255), nullable=True) # URL de la imagen principal del juego
+    image_url = Column(String(255), nullable=True) # URL de la imagen principal del juego 
     description = Column(Text, nullable=False)
 
     #Relationships
