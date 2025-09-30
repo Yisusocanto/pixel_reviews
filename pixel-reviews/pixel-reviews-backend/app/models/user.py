@@ -1,27 +1,35 @@
-from sqlalchemy import Column, String, Integer, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String, Integer
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
 from .base import Base
 from sqlalchemy_serializer import SerializerMixin
+from typing import TYPE_CHECKING
+
+# Models
+if TYPE_CHECKING:
+    from app.models.review import Review
+    from app.models.rating import Rating
 
 
 class User(Base, SerializerMixin):
     __tablename__ = "users"
 
-    user_id = Column(Integer(), primary_key=True, autoincrement=True, nullable=False)
-    email = Column(String(50), nullable=False, unique=True)
-    username = Column(String(50), nullable=False, unique=True)
-    password = Column(String(200), nullable=False)
-    name = Column(String(50), nullable=False)
-    lastname = Column(String(50), nullable=False)
-    age = Column(DateTime(), nullable=False)
-    created_at = Column(DateTime(), default=datetime.now())
+    user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    email: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
+    username: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(String(200), nullable=False)
+    name: Mapped[str] = mapped_column(String(50), nullable=False)
+    lastname: Mapped[str] = mapped_column(String(50), nullable=False)
+    age: Mapped[datetime] = mapped_column(nullable=False)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
 
-    #Relationships
-    reviews = relationship("Review", back_populates="author", cascade="all, delete-orphan")
-    ratings = relationship("Rating", back_populates="author", cascade="all, delete-orphan")
+    # Relationships
+    reviews: Mapped[list["Review"]] = relationship(
+        back_populates="author", cascade="all, delete-orphan", uselist=True
+    )
+    ratings: Mapped[list["Rating"]] = relationship(
+        back_populates="author", cascade="all, delete-orphan"
+    )
 
     def __str__(self):
         return self.username
-
-

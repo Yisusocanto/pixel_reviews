@@ -1,33 +1,40 @@
 from .base import Base
 from sqlalchemy import (
-    Column,
-    Integer,
     ForeignKey,
-    DateTime,
     UniqueConstraint,
     CheckConstraint,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
+from typing import Optional, TYPE_CHECKING
 from sqlalchemy_serializer import SerializerMixin
+
+# Models
+if TYPE_CHECKING:
+    from app.models.game import Game
+    from app.models.user import User
+    from app.models.review import Review
 
 
 class Rating(Base, SerializerMixin):
 
     __tablename__ = "ratings"
 
-    rating_id = Column(Integer, primary_key=True, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
-    game_id = Column(Integer, ForeignKey("games.game_id"), nullable=False)
-    score = Column(Integer, nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(
-        DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
+    rating_id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id"), nullable=False)
+    game_id: Mapped[int] = mapped_column(ForeignKey("games.game_id"), nullable=False)
+    score: Mapped[int] = mapped_column(nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        nullable=False, default=datetime.utcnow
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow
     )
 
     # Relationships
-    game = relationship("Game", back_populates="ratings")
-    author = relationship("User", back_populates="ratings")
+    game: Mapped["Game"] = relationship(back_populates="ratings")
+    author: Mapped["User"] = relationship(back_populates="ratings")
+    review: Mapped[Optional["Review"]] = relationship(back_populates="rating")
 
     # Restrictions
     __table_args__ = (

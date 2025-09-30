@@ -16,7 +16,7 @@ def index():
     return jsonify({"reviews": reviews}), 200
 
 
-@main_bp.route("/search/<game_title>")
+@main_bp.route("/search/<game_title>") 
 @token_required
 def search(game_title):
     game_list = rawg_api.search_games(game_title)

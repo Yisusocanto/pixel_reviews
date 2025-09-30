@@ -17,6 +17,7 @@ function UserProfilePage() {
       try {
         const response = await userProfile(username || "");
         setUserDataProfile(response.data.user_data);
+        console.log(response.data)
       } catch (error: any) {
         console.log(error.response);
         if (error.response.status == 404) {

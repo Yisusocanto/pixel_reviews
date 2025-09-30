@@ -2,7 +2,6 @@ from flask import Flask, redirect, render_template, g, url_for
 from app.utils.jwt_handler import already_authenticated
 import os
 from .auth import auth_bp
-from .prueba import prueba_bp
 from .users import users_bp
 from .main import main_bp
 from .api import api_bp
@@ -39,7 +38,6 @@ def create_app():
         return render_template("index.html")
 
     app.register_blueprint(auth_bp)
-    app.register_blueprint(prueba_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp)

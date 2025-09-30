@@ -1,8 +1,12 @@
 from .base import Base
 from sqlalchemy import Column, Integer, String, Table, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy_serializer import SerializerMixin
+from typing import TYPE_CHECKING
 
+# Models
+if TYPE_CHECKING:
+    from app.models.game import Game
 
 developers_association = Table(
     "developers_association",
@@ -18,14 +22,13 @@ class Developer(Base, SerializerMixin):
 
     __tablename__ = "developers"
 
-    developer_id = Column(Integer, primary_key=True, nullable=False)
-    rawg_id = Column(Integer, nullable=False, unique=True)
-    name = Column(String, nullable=False)
-    slug = Column(String, nullable=False)
+    developer_id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
+    rawg_id: Mapped[int] = mapped_column(nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    slug: Mapped[str] = mapped_column(nullable=False)
 
     # relationships
-    games = relationship(
-        "Game",
+    games: Mapped[list["Game"]] = relationship(
         secondary=developers_association,
         back_populates="developers",
         lazy="dynamic",

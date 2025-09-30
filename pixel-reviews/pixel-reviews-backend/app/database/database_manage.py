@@ -121,7 +121,7 @@ class DatabaseManager:
         serialized_reviews = ReviewSchema().dump(reviews, many=True)
         return serialized_reviews
 
-    def create_or_update_review(self, game_id, user_id, title, content) -> str:
+    def create_or_update_review(self, game_id: int, user_id: int, title: str, content: str, rating_score:int) -> Review:
         """Method that creates or updates a review of the database"""
         review = (
             self.session.query(Review)
@@ -130,16 +130,22 @@ class DatabaseManager:
         )
 
         if review:
+            # The review is updated
             review.title = title
             review.content = content
         else:
-            new_review = Review(
+            # A new review is created
+            review = Review(
                 game_id=game_id, user_id=user_id, title=title, content=content
             )
-            self.session.add(new_review)
+            self.session.add(review)
+
+        rating = self.create_or_update_rating(user_id=user_id, game_id=game_id, score=rating_score)
+
+        review.rating = rating
 
         self.session.commit()
-        return "review saved"  # Puede que esto cambie luego y retorne la review serializada
+        return review  # Puede que esto cambie luego y retorne la review serializada
 
     def get_user_review(self, game_id: int, user_id: int) -> dict | None:
         """Method that return a user's review of a specific game
@@ -277,7 +283,7 @@ class DatabaseManager:
 
     # Ratings-----------------------------------------------------------------------------------
 
-    def create_or_update_rating(self, user_id: int, game_id: int, score: int) -> str:
+    def create_or_update_rating(self, user_id: int, game_id: int, score: int) -> Rating:
         """Method that creates or updates a review of the database"""
         rating = (
             self.session.query(Rating)
@@ -286,13 +292,15 @@ class DatabaseManager:
         )
 
         if rating:
+            # The rating score is updated
             rating.score = score
         else:
-            new_rating = Rating(user_id=user_id, game_id=game_id, score=score)
-            self.session.add(new_rating)
-
+            # A new rating is created
+            rating = Rating(user_id=user_id, game_id=game_id, score=score)
+            self.session.add(rating)
+            
         self.session.commit()
-        return "rating saved"  # aca tambien se podria devolver el nuevo rating, luego se ve
+        return rating # aca tambien se podria devolver el nuevo rating, luego se ve
 
     def get_user_rating(self, game_id: int, user_id: int) -> dict | None:
         """Method that return the serialized rating of the user if it exits, return `None` instead"""

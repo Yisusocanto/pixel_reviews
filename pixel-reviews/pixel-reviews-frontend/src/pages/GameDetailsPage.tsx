@@ -42,10 +42,12 @@ function GameDetailsPage() {
       <h1 className="text-white">{gameData?.slug}</h1>
 
       <h1 className="text-white">User Review</h1>
-      <h1 className="text-white">{userRating?.score}</h1>
-      <h1 className="text-white">{userReview?.title}</h1>
-      <h1 className="text-white">{userReview?.title}</h1>
-      <h1 className="text-white">{userReview?.createdAt}</h1>
+      <h1 className="text-white">Score: {userRating?.score}</h1>
+      <h1 className="text-white">Title: {userReview?.title}</h1>
+      <h1 className="text-white">Content: {userReview?.content}</h1>
+      <h1 className="text-white">FEcha: {userReview?.createdAt}</h1>
+
+      
     </div>
   );
 }
