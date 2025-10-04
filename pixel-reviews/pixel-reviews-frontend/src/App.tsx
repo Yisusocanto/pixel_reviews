@@ -12,11 +12,12 @@ import UserProfilePage from "./pages/UserProfilePage";
 import LogOutPage from "./pages/LogOutPage";
 
 //components
-import NavBarComponent from "./components/commonsComponents/NavBarComponent";
+// import NavBarComponent from "./components/commonsComponents/NavBarComponent";
 
 //Context and Config
 import { useAuth } from "./context/AuthContextProvider";
 import { setupAxiosInterceptors } from "./config/axiosConfig";
+import NavBar from "./components/shadcn/NavBar";
 
 function App() {
   const { logoutFunction, loading } = useAuth();
@@ -33,7 +34,7 @@ function App() {
   return (
     <>
       <div id="background" className="dark min-h-screen font-[Roboto]">
-        <NavBarComponent />
+        <NavBar/>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth/signup" element={<SignUpPage />} />

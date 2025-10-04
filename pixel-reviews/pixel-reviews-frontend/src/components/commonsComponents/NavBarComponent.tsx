@@ -14,8 +14,8 @@ import { useAuth } from "../../context/AuthContextProvider";
 import { Link } from "react-router-dom";
 
 function NavBarComponent() {
-  const { activeSession, userData } = useAuth();
-
+  const { activeSession, userData } = useAuth(); 
+  
   return (
     <div>
       <Navbar fluid rounded className="dark:bg-[#19191a]">

@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { indexPageData } from "@/services/indexPageService";
-import { Link } from "react-router-dom";
-
+// import { Link } from "react-router-dom";
 import type { Review } from "@/types/gameTypes";
 
-import { Button } from "flowbite-react";
-import SearchBar from "../components/commonsComponents/SearchBar";
+import GameReviewCard from "@/components/gameReviewComponents/GameReviewCard";
 
 function Index() {
   const [reviews, setReviews] = useState<Review[] | null>(null);
@@ -25,24 +23,18 @@ function Index() {
 
   return (
     <div>
-      <SearchBar />
-      <Button>Esto es un boton</Button>
-
       {reviews?.map((review: Review) => {
         return (
-          <div>
-            <Link to={`/games/${review.game?.slug}`}>
-              <img src={review.game?.imageURL} alt="" />
-              <h1>Game name:{review.game?.title}</h1>
-              <h3>Review Tile: {review.title}</h3>
-              <p>{review.content}</p>
-
-              <h4>
-                Author username: {review.author?.username}
-                <span>fecha: {review.createdAt}</span>
-              </h4>
-            </Link>
-          </div>
+          <GameReviewCard
+            coverImage={review.game?.imageURL}
+            gameTitle={review.game?.title}
+            gameSlug={review.game?.slug}
+            reviewTitle={review.title}
+            reviewContent={review.content}
+            rating={review.rating?.score}
+            authorUsername={review.author?.username}
+            createdDate={review.createdAt}
+          />
         );
       })}
     </div>
