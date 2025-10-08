@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import type { SearchedGame } from "@/types/gameTypes";
 import { searchGames } from "@/services/gameDataService";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { GameCard } from "@/components/gameComponents/GameCard";
 
 function SearchGamesResultPage() {
   const [gameResults, setGameResults] = useState<Array<SearchedGame> | null>(
@@ -35,9 +36,12 @@ function SearchGamesResultPage() {
           return (
             <div>
               <Link to={`/games/${game.slug}`}>
-                <h1 className="text-white">{game.title}</h1>
-                <img src={game.imageURL} alt="" />
-                <h2 className="text-white">{game.releaseDate}</h2>
+                <GameCard
+                  imageURL={game.imageURL}
+                  title={game.title}
+                  description="hola"
+                  released={game.releaseDate}
+                />
               </Link>
             </div>
           );

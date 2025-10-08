@@ -17,7 +17,7 @@ import LogOutPage from "./pages/LogOutPage";
 //Context and Config
 import { useAuth } from "./context/AuthContextProvider";
 import { setupAxiosInterceptors } from "./config/axiosConfig";
-import NavBar from "./components/shadcn/NavBar";
+import NavBar from "./components/commonsComponents/NavBar";
 
 function App() {
   const { logoutFunction, loading } = useAuth();
@@ -33,7 +33,7 @@ function App() {
 
   return (
     <>
-      <div id="background" className="dark min-h-screen font-[Roboto]">
+      <div id="background" className="dark min-h-screen font-exo">
         <NavBar/>
         <Routes>
           <Route path="/" element={<Index />} />

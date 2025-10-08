@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { gameDetails } from "@/services/gameDataService";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import type {Game, Rating, Review} from '@/types/gameTypes'
+import type { Game, Rating, Review } from "@/types/gameTypes";
+import { ReviewCard } from "@/components/gameReviewComponents/ReviewCard";
 
 function GameDetailsPage() {
   const [gameData, setGameData] = useState<Game | null>(null);
-  const [userRating, setUserRating] = useState<Rating | null>(null)
-  const [userReview, setUserReview] = useState<Review | null>(null)
+  const [userRating, setUserRating] = useState<Rating | null>(null);
+  const [userReview, setUserReview] = useState<Review | null>(null);
   const [error, setError] = useState("");
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -17,20 +18,20 @@ function GameDetailsPage() {
       try {
         const response = await gameDetails(slug || "");
         setGameData(response.data.game_data);
-        setUserRating(response.data.user_rating_data)
-        setUserReview(response.data.user_review_data)
+        setUserRating(response.data.user_rating_data);
+        setUserReview(response.data.user_review_data);
         console.log(response);
       } catch (error: any) {
         console.log("error", error);
         if (error.status == 401) navigate("/auth/login");
-        if (error.status == 404) setError("404")
+        if (error.status == 404) setError("404");
       }
     };
     bringGameDetails();
   }, []);
 
   if (error == "404") {
-    return <h1>El Juego no existe</h1>
+    return <h1>El Juego no existe</h1>;
   }
 
   return (
@@ -47,7 +48,18 @@ function GameDetailsPage() {
       <h1 className="text-white">Content: {userReview?.content}</h1>
       <h1 className="text-white">FEcha: {userReview?.createdAt}</h1>
 
-      
+      {userReview ? (
+        <div>
+          <h1>User Review</h1>
+          <ReviewCard
+            reviewTitle={userReview.title}
+            username={userReview.author?.username}
+            review={userReview.content}
+            rating={userReview.rating?.score}
+            imageUrl=""
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

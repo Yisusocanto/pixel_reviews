@@ -30,7 +30,7 @@ class RawgApi:
                 "title": game["name"],
                 "slug": game["slug"],
                 "releaseDate": game["released"],
-                "imageURL": game["background_image"],
+                "imageURL": game["background_image"]
             }
             games_list.append(videogame)
 

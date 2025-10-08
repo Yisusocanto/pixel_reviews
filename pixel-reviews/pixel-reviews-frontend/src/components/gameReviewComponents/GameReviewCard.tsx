@@ -70,7 +70,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                 className="mb-4 flex items-center justify-between"
               >
                 <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-white/90 mb-1">
+                  <h2 className="text-xl md:text-2xl font-bold text-white/90 mb-1 hover:text-accent-foreground">
                     <Link to={`/games/${gameSlug}`}>{gameTitle}</Link>
                   </h2>
                   <div className="h-px w-16 bg-gradient-to-r from-white/40 to-transparent" />
