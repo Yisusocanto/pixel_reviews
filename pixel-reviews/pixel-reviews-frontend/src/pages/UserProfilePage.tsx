@@ -6,8 +6,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Bell, UserRound, Trophy, PencilLine } from "lucide-react";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import UserProfile from "@/components/userComponents/UserProfile";
-
+import ProfileReviewCard from "@/components/gameReviewComponents/ProfileReviewCard";
 import type { User } from "../types/userTypes";
+
 
 function UserProfilePage() {
   const { username } = useParams();
@@ -77,7 +78,13 @@ function UserProfilePage() {
         <TabsContent value="notifications">
           Content for Notifications
         </TabsContent>
-        <TabsContent value="reviews">Content for reviews</TabsContent>
+        <TabsContent value="reviews">
+          <div className="flex flex-col gap-4">
+            {userDataProfile?.reviews?.map((review) => (
+              <ProfileReviewCard review={review} />
+            ))}
+          </div>
+        </TabsContent>
         <TabsContent value="trophies">Content for trophies</TabsContent>
       </Tabs>
     </div>
