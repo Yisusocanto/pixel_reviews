@@ -1,6 +1,6 @@
 import React, { useId, useState } from "react";
 import { SearchIcon } from "lucide-react";
-
+// App logo
 import Logo from "@/components/shadcn/logo";
 import UserMenu from "@/components/shadcn/user-menu";
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ export default function NavBar() {
   const navigate = useNavigate();
   const id = useId();
 
-  const handleClick = (
+  const handleClickNavigation = (
     e: React.MouseEvent<HTMLAnchorElement>,
     targetPath: string
   ) => {
@@ -96,7 +96,7 @@ export default function NavBar() {
                     ? loggedInNavigationLinks.map((link, index) => (
                         <NavigationMenuItem key={index} className="w-full">
                           <NavigationMenuLink
-                            onClick={(e) => handleClick(e, link.href)}
+                            onClick={(e) => handleClickNavigation(e, link.href)}
                             href={link.href}
                             className="py-1.5"
                             active={link.active}
@@ -108,7 +108,7 @@ export default function NavBar() {
                     : loggedOutNavigationLinks.map((link, index) => (
                         <NavigationMenuItem key={index} className="w-full">
                           <NavigationMenuLink
-                            onClick={(e) => handleClick(e, link.href)}
+                            onClick={(e) => handleClickNavigation(e, link.href)}
                             href={link.href}
                             className="py-1.5"
                             active={link.active}
@@ -170,7 +170,7 @@ export default function NavBar() {
               ? loggedInNavigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
-                      onClick={(e) => handleClick(e, link.href)}
+                      onClick={(e) => handleClickNavigation(e, link.href)}
                       active={link.active}
                       href={link.href}
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"
@@ -182,7 +182,7 @@ export default function NavBar() {
               : loggedOutNavigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
-                      onClick={(e) => handleClick(e, link.href)}
+                      onClick={(e) => handleClickNavigation(e, link.href)}
                       active={link.active}
                       href={link.href}
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { gameDetails } from "@/services/gameDataService";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import type { Game, Rating, Review } from "@/types/gameTypes";
 import { ReviewCard } from "@/components/gameReviewComponents/ReviewCard";
 
@@ -10,6 +10,7 @@ function GameDetailsPage() {
   const [userRating, setUserRating] = useState<Rating | null>(null);
   const [userReview, setUserReview] = useState<Review | null>(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -25,10 +26,18 @@ function GameDetailsPage() {
         console.log("error", error);
         if (error.status == 401) navigate("/auth/login");
         if (error.status == 404) setError("404");
+      } finally {
+        setLoading(false);
       }
     };
     bringGameDetails();
-  }, []);
+  }, [slug, navigate]);
+
+  if (loading) {
+    return (
+      <SpinnerComponent/>
+    );
+  }
 
   if (error == "404") {
     return <h1>El Juego no existe</h1>;
@@ -41,12 +50,6 @@ function GameDetailsPage() {
       <h1 className="text-white">{gameData?.game_id}</h1>
       <h1 className="text-white">{gameData?.releaseDate}</h1>
       <h1 className="text-white">{gameData?.slug}</h1>
-
-      <h1 className="text-white">User Review</h1>
-      <h1 className="text-white">Score: {userRating?.score}</h1>
-      <h1 className="text-white">Title: {userReview?.title}</h1>
-      <h1 className="text-white">Content: {userReview?.content}</h1>
-      <h1 className="text-white">FEcha: {userReview?.createdAt}</h1>
 
       {userReview ? (
         <div>

@@ -2,6 +2,7 @@ import { logOut } from "../services/authService";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuth } from "../context/AuthContextProvider";
+import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 
 function LogOutPage() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function LogOutPage() {
     logOutFunction();
   }, []);
 
-  return <div>Cerrando Sesion...</div>;
+  return <SpinnerComponent />;
 }
 
 export default LogOutPage;

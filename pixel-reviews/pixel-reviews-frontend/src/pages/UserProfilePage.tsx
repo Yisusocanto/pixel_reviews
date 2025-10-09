@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { userProfile } from "@/services/userDataService";
-import { useAuth } from "../context/AuthContextProvider";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from "@/context/AuthContextProvider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Bell, UserRound, Trophy, PencilLine } from "lucide-react";
+import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import UserProfile from "@/components/userComponents/UserProfile";
+
 import type { User } from "../types/userTypes";
 
 function UserProfilePage() {
   const { username } = useParams();
   const { userData } = useAuth();
-  const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [userDataProfile, setUserDataProfile] = useState<User | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const bringUserprofile = async () => {
@@ -26,10 +29,16 @@ function UserProfilePage() {
         if (error.response.status == 404) {
           setError(error.response.data.message);
         }
+      } finally {
+        setLoading(false);
       }
     };
     bringUserprofile();
   }, []);
+
+  if (loading) {
+    return <SpinnerComponent />;
+  }
 
   if (error) {
     return <h1>{error}</h1>;
@@ -42,30 +51,35 @@ function UserProfilePage() {
       ) : (
         <UserProfile user={userDataProfile} />
       )}
-      <Tabs defaultValue="profile" className="w-full text-sm text-muted-foreground mt-4">
-      <TabsList className="grid w-full grid-cols-4" shape="pill">
-        <TabsTrigger value="profile">
-          <UserRound /> 
-          Profile
-        </TabsTrigger>
-        <TabsTrigger value="notifications">
-          <Bell />
-          Notifications
-        </TabsTrigger>
-        <TabsTrigger value="reviews">
-          <PencilLine />
-          Reviews
-        </TabsTrigger>
-        <TabsTrigger value="trophies">
-          <Trophy />
-          Trophies
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="profile">Content for Profile</TabsContent>
-      <TabsContent value="notifications">Content for Notifications</TabsContent>
-      <TabsContent value="reviews">Content for reviews</TabsContent>
-      <TabsContent value="trophies">Content for trophies</TabsContent>
-    </Tabs>
+      <Tabs
+        defaultValue="profile"
+        className="w-full text-sm text-muted-foreground mt-4"
+      >
+        <TabsList className="grid w-full grid-cols-4" shape="pill">
+          <TabsTrigger value="profile">
+            <UserRound />
+            Profile
+          </TabsTrigger>
+          <TabsTrigger value="notifications">
+            <Bell />
+            Notifications
+          </TabsTrigger>
+          <TabsTrigger value="reviews">
+            <PencilLine />
+            Reviews
+          </TabsTrigger>
+          <TabsTrigger value="trophies">
+            <Trophy />
+            Trophies
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="profile">Content for Profile</TabsContent>
+        <TabsContent value="notifications">
+          Content for Notifications
+        </TabsContent>
+        <TabsContent value="reviews">Content for reviews</TabsContent>
+        <TabsContent value="trophies">Content for trophies</TabsContent>
+      </Tabs>
     </div>
   );
 }

@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
-import type { SearchedGame } from "@/types/gameTypes";
 import { searchGames } from "@/services/gameDataService";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { GameCard } from "@/components/gameComponents/GameCard";
+
+import type { SearchedGame } from "@/types/gameTypes";
+import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 
 function SearchGamesResultPage() {
   const [gameResults, setGameResults] = useState<Array<SearchedGame> | null>(
     null
   );
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const { gameTitle } = useParams();
   const navigate = useNavigate();
 
@@ -20,10 +23,16 @@ function SearchGamesResultPage() {
       } catch (error: any) {
         if (error.status == 401) navigate("/auth/login");
         if (error.status == 404) setError("404");
+      } finally {
+        setLoading(false);
       }
     };
     bringGameResults();
   }, []);
+
+  if (loading) {
+    return <SpinnerComponent />;
+  }
 
   if (error == "404") {
     return <h1>No results</h1>;

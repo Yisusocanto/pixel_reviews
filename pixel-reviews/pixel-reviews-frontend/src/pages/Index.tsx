@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { indexPageData } from "@/services/indexPageService";
-// import { Link } from "react-router-dom";
-import type { Review } from "@/types/gameTypes";
-
 import GameReviewCard from "@/components/gameReviewComponents/GameReviewCard";
+import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
+
+import type { Review } from "@/types/gameTypes";
 
 function Index() {
   const [reviews, setReviews] = useState<Review[] | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const bringIndexPageData = async () => {
@@ -16,10 +17,16 @@ function Index() {
         setReviews(response.data.reviews);
       } catch (error: any) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     bringIndexPageData();
   }, []);
+
+  if (loading) {
+    return <SpinnerComponent />;
+  }
 
   return (
     <div>
