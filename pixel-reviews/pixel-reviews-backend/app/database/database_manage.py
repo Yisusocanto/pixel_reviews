@@ -121,12 +121,20 @@ class DatabaseManager:
         serialized_reviews = ReviewSchema().dump(reviews, many=True)
         return serialized_reviews
 
-    def create_or_update_review(self, game_id: int, user_id: int, title: str, content: str, rating_score:int) -> Review:
+    def create_or_update_review(
+        self, game_id: int, user_id: int, title: str, content: str, rating_score: int
+    ) -> Review:
         """Method that creates or updates a review of the database"""
+
         review = (
             self.session.query(Review)
             .filter(Review.game_id == game_id, Review.user_id == user_id)
             .first()
+        )
+
+        # Crear o actualizar el rating primero para asegurarnos de tener rating.id no nulo
+        rating = self.create_or_update_rating(
+            user_id=user_id, game_id=game_id, score=rating_score
         )
 
         if review:
@@ -134,18 +142,18 @@ class DatabaseManager:
             review.title = title
             review.content = content
         else:
-            # A new review is created
+            # A new review is created (ya tenemos el rating)
             review = Review(
                 game_id=game_id, user_id=user_id, title=title, content=content
             )
             self.session.add(review)
 
-        rating = self.create_or_update_rating(user_id=user_id, game_id=game_id, score=rating_score)
-
+        # Asignar el rating al review antes de commitear
         review.rating = rating
 
         self.session.commit()
-        return review  # Puede que esto cambie luego y retorne la review serializada
+        serialized_review = ReviewSchema().dump(review)
+        return serialized_review  # Puede que esto cambie luego y retorne la review serializada
 
     def get_user_review(self, game_id: int, user_id: int) -> dict | None:
         """Method that return a user's review of a specific game
@@ -269,7 +277,7 @@ class DatabaseManager:
 
         new_developer = Developer(rawg_id=rawg_id, name=name, slug=slug)
         self.session.add(new_developer)
-        return new_developer 
+        return new_developer
 
     def find_or_create_publisher(self, rawg_id, name, slug) -> Publisher:
         """Method that searches if a `Developer` already exits in the database. If it does not exits, it creates it and returns it."""
@@ -279,7 +287,7 @@ class DatabaseManager:
 
         new_publisher = Publisher(rawg_id=rawg_id, name=name, slug=slug)
         self.session.add(new_publisher)
-        return new_publisher 
+        return new_publisher
 
     # Ratings-----------------------------------------------------------------------------------
 
@@ -298,9 +306,9 @@ class DatabaseManager:
             # A new rating is created
             rating = Rating(user_id=user_id, game_id=game_id, score=score)
             self.session.add(rating)
-            
+
         self.session.commit()
-        return rating # aca tambien se podria devolver el nuevo rating, luego se ve
+        return rating  # aca tambien se podria devolver el nuevo rating, luego se ve
 
     def get_user_rating(self, game_id: int, user_id: int) -> dict | None:
         """Method that return the serialized rating of the user if it exits, return `None` instead"""

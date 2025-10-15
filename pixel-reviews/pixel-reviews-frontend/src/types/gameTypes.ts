@@ -9,8 +9,8 @@ export interface Game {
   description: string;
   developers?: Array<Developer>;
   publishers?: Array<Publisher>;
-  rating?: Array<Rating>;
-  review?: Array<Rating>;
+  ratings?: Array<Rating>;
+  reviews?: Array<Review>;
 }
 
 export interface SearchedGame {
