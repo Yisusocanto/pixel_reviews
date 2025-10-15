@@ -10,7 +10,7 @@ interface GameHeroProps {
 
 const GameHero = ({ gameData }: GameHeroProps) => {
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full h-[70vh] overflow-hidden">
       {/* Imagen de fondo */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -19,11 +19,11 @@ const GameHero = ({ gameData }: GameHeroProps) => {
         }}
       />
 
-      {/* Overlay con gradiente y oscurecimiento */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/60 to-transparent z-10" />
+      {/* Overlay con gradiente más suave en la parte inferior */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 via-40% to-transparent to-70% z-10" />
 
       {/* Contenido */}
-      <div className="relative z-10 flex flex-col justify-end h-full pb-20 p-8 text-white">
+      <div className="relative z-10 flex flex-col justify-end h-full pb-12 px-8 text-white">
         {/* Tags */}
         <div className="flex gap-2 mb-4">
           <Badge variant={"secondary"} className="text-base">
@@ -48,30 +48,30 @@ const GameHero = ({ gameData }: GameHeroProps) => {
         {/* Rating */}
         <div className="flex items-center gap-4 mb-6">
           <div className="flex items-center gap-2">
-            <Star />
-            <span className="text-2xl font-bold">9.2</span>
-            <span className="text-base text-gray-300">/ 10</span>
+            <Star className="text-yellow-400 fill-yellow-400"/>
+            <span className="text-2xl font-bold">{gameData?.averageRating}</span>
+            <span className="text-base text-gray-300">/ 5</span>
           </div>
           <div className="flex items-center gap-2">
             <MessageCircle />
-            <span className="text-base text-gray-300">1.847 reseñas</span>
+            <span className="text-base text-gray-300">{gameData?.reviews?.length} reseñas</span>
           </div>
         </div>
 
         {/* Botones */}
         <div className="flex gap-4">
           <Button
-            className="px-6 py-3 font-semibold flex items-center gap-2"
+            className="px-6 py-3 font-semibold flex items-center gap-2 cursor-pointer"
             variant="shine"
           >
             <Download />
-            Jugar Ahora
+            Save in Library
           </Button>
-          <Button className=" px-6 py-3 font-semibold flex items-center gap-2">
+          <Button className=" px-6 py-3 font-semibold flex items-center gap-2 cursor-pointer">
             <Heart />
             Wishlist
           </Button>
-          <Button className=" px-4 py-3 ">
+          <Button className=" px-4 py-3 cursor-pointer">
             <Link2 />
           </Button>
         </div>

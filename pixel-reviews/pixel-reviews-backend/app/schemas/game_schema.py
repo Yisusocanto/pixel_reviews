@@ -21,7 +21,7 @@ class GameSchema(SQLAlchemySchema):
     publishers = fields.Nested("PublisherSchema", many=True, exclude=("games",))
 
     # Property
-    average_rating = fields.Method("get_average_rating")
+    average_rating = fields.Method("get_average_rating", data_key="averageRating")
 
     def get_average_rating(self, obj):
         return obj.average_rating

@@ -79,10 +79,10 @@ function DialogReviewComponent({
         </DialogTrigger>
         <DialogContent>
           <DialogTitle className="flex flex-col">
-            <span className="text-base text-primary-muted ">
+            <span className="text- text-primary-muted ">
               Write a review of this game
             </span>
-            <span className="text-xl font-orbitron">{gameData?.title}</span>
+            <span className="text-2xl font-orbitron">{gameData?.title}</span>
           </DialogTitle>
 
           <DialogDescription asChild>
@@ -92,6 +92,7 @@ function DialogReviewComponent({
                 size="lg"
                 rating={score}
                 editable
+                showValue
                 onRatingChange={setScore}
               />
               <form action="" className="mt-4 mb-8">

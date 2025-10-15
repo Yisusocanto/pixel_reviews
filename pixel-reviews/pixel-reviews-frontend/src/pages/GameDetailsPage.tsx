@@ -191,6 +191,7 @@ function GameDetailsPage() {
                 size="lg"
                 rating={userRating?.score || 0}
                 editable
+                showValue
                 onRatingChange={handleRatingChange}
               />
 
