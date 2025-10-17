@@ -31,12 +31,13 @@ const starVariants = cva('', {
   },
 });
 
-const valueVariants = cva('text-muted-foreground w-5', {
+{/* I only change this */}
+const valueVariants = cva('text-primary font-bold w-5', {
   variants: {
     size: {
       sm: 'text-xs',
       md: 'text-sm',
-      lg: 'text-base',
+      lg: 'text-xl',
     },
   },
   defaultVariants: {

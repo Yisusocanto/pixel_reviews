@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { Calendar, User, Star } from "lucide-react";
+import { Calendar, User } from "lucide-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import type { GameReviewCardProps } from "@/types/reviewTypes";
+import { RatingComponent } from "../ui/rating";
 
 const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
   (
@@ -75,22 +76,9 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                   </h2>
                   <div className="h-px w-16 bg-gradient-to-r from-white/40 to-transparent" />
                 </div>
-                <div className="flex items-center gap-1">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-5 h-5 ${
-                        i < Math.floor(rating!)
-                          ? "fill-white/90 text-white/90"
-                          : i < rating!
-                          ? "fill-white/40 text-white/40"
-                          : "text-white/20"
-                      }`}
-                    />
-                  ))}
-                  <span className="ml-1 text-sm font-semibold text-white/90">
-                    {rating}/5
-                  </span>
+                <div className="flex items-center gap-3">
+                  <RatingComponent rating={rating || 0} showValue size="lg" className="text-xl"/>
+                  <span className="text-primary-muted">/ 5</span>
                 </div>
               </motion.div>
               <motion.h1
