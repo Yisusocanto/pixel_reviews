@@ -3,20 +3,24 @@ import { useNavigate, useParams } from "react-router-dom";
 import { userProfile } from "@/services/userDataService";
 import { useAuth } from "@/context/AuthContextProvider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, UserRound, Trophy, PencilLine } from "lucide-react";
+import { Bell, UserRound, Gift, PencilLine } from "lucide-react";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import UserProfile from "@/components/userComponents/UserProfile";
 import ProfileReviewCard from "@/components/gameReviewComponents/ProfileReviewCard";
 import type { User } from "../types/userTypes";
 
-
 function UserProfilePage() {
-  const { username } = useParams();
+  const { username, tab } = useParams();
   const { userData } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [userDataProfile, setUserDataProfile] = useState<User | null>(null);
   const navigate = useNavigate();
+
+  const currentTab = tab || "profile";
+
+  const validTabs = ["profile", "notifications", "reviews", "trophies"];
+  const activeTab = validTabs.includes(currentTab) ? currentTab : "profile";
 
   useEffect(() => {
     const bringUserprofile = async () => {
@@ -37,6 +41,10 @@ function UserProfilePage() {
     bringUserprofile();
   }, []);
 
+  const handleTabChange = (value: string) => {
+    navigate(`/users/${username}/${value}`);
+  };
+
   if (loading) {
     return <SpinnerComponent />;
   }
@@ -53,7 +61,8 @@ function UserProfilePage() {
         <UserProfile user={userDataProfile} />
       )}
       <Tabs
-        defaultValue="profile"
+        value={activeTab}
+        onValueChange={handleTabChange}
         className="w-full text-sm text-muted-foreground mt-4"
       >
         <TabsList className="grid w-full grid-cols-4" shape="pill">
@@ -69,9 +78,9 @@ function UserProfilePage() {
             <PencilLine />
             Reviews
           </TabsTrigger>
-          <TabsTrigger value="trophies">
-            <Trophy />
-            Trophies
+          <TabsTrigger value="wishlist">
+            <Gift />
+            Wishlist
           </TabsTrigger>
         </TabsList>
         <TabsContent value="profile">Content for Profile</TabsContent>
@@ -85,7 +94,7 @@ function UserProfilePage() {
             ))}
           </div>
         </TabsContent>
-        <TabsContent value="trophies">Content for trophies</TabsContent>
+        <TabsContent value="wishlist">Content for wishlist</TabsContent>
       </Tabs>
     </div>
   );

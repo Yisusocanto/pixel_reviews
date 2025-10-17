@@ -36,7 +36,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
     return (
       <div
         ref={ref}
-        className={`relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#0a0a0a] p-4 ${className}`}
+        className={`relative min-h-[24rem] md:min-h-[28rem] w-full flex items-center justify-center overflow-hidden bg-[#0a0a0a] p-4 ${className}`}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] via-transparent to-white/[0.02]" />
 
@@ -52,7 +52,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
               variants={fadeUpVariants}
               initial="hidden"
               animate="visible"
-              className="relative h-64 md:h-80 overflow-hidden"
+              className="relative h-48 md:h-56 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent z-10" />
               <img
@@ -62,7 +62,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
               />
             </motion.div>
 
-            <div className="p-6 md:p-10">
+            <div className="p-4 md:p-6">
               <motion.div
                 custom={1}
                 variants={fadeUpVariants}
@@ -77,7 +77,12 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                   <div className="h-px w-16 bg-gradient-to-r from-white/40 to-transparent" />
                 </div>
                 <div className="flex items-center gap-3">
-                  <RatingComponent rating={rating || 0} showValue size="lg" className="text-xl"/>
+                  <RatingComponent
+                    rating={rating || 0}
+                    showValue
+                    size="lg"
+                    className="text-xl"
+                  />
                   <span className="text-primary-muted">/ 5</span>
                 </div>
               </motion.div>

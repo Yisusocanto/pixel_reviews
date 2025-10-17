@@ -28,18 +28,19 @@ function App() {
   }, []);
 
   if (loading) {
-    return <h1>Cargando...</h1>
+    return <h1>Cargando...</h1>;
   }
 
   return (
     <>
       <div id="background" className="dark min-h-screen font-exo">
-        <NavBar/>
+        <NavBar />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth/signup" element={<SignUpPage />} />
           <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/users/:username" element={<UserProfilePage />} />
+          <Route path="/users/:username/" element={<UserProfilePage />} />
+          <Route path="/users/:username/:tab" element={<UserProfilePage />} />
           <Route
             path="/search/:gameTitle"
             element={<SearchGamesResultPage />}

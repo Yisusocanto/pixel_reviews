@@ -10,7 +10,7 @@ function SignUpPage() {
         <p className="text-gray-400 text-base mb-2 hidden md:visible">
           Create an accouunt and discover a whole new world of possibilities.
         </p>
-        <p className="text-gray-400 text-base">
+        <p className="text-gray-400 text-base text-center">
           Join our community and start sharing your thoughts on video games
           with other gamers like you.
         </p>

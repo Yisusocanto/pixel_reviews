@@ -12,7 +12,7 @@ function LoginPage() {
           <h1 className="text-3xl text-white text-center font-bold mb-2">
             We are very happy to have you back
           </h1>
-          <p className="text-base text-gray-400">
+          <p className="text-base text-gray-400 text-center">
             Sign in and start sharing your opinions on you favorite video games.
           </p>
         </div>

@@ -29,7 +29,7 @@ function Index() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-2 bg-[#0a0a0a]">
       {reviews?.map((review: Review) => {
         return (
           <GameReviewCard
@@ -41,6 +41,7 @@ function Index() {
             rating={review.rating?.score}
             authorUsername={review.author?.username}
             createdDate={review.createdAt}
+            className="w-xl "
           />
         );
       })}
