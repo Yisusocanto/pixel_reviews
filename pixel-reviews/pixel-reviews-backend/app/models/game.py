@@ -46,5 +46,13 @@ class Game(Base, SerializerMixin):
             return 0.0
         return sum(rating.score for rating in self.ratings) / self.ratings.count()
 
+    @property
+    def total_ratings(self):
+        return self.ratings.count()
+
+    @property
+    def total_reviews(self):
+        return self.reviews.count()
+
     def __str__(self):
         return self.title

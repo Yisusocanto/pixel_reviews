@@ -20,8 +20,16 @@ class GameSchema(SQLAlchemySchema):
     developers = fields.Nested("DeveloperSchema", many=True, exclude=("games",))
     publishers = fields.Nested("PublisherSchema", many=True, exclude=("games",))
 
-    # Property
+    # Propertys
     average_rating = fields.Method("get_average_rating", data_key="averageRating")
+    total_ratings = fields.Method("get_total_ratings", data_key="totalRatings")
+    total_reviews = fields.Method("get_total_reviews", data_key="totalReviews")
 
     def get_average_rating(self, obj):
         return obj.average_rating
+
+    def get_total_ratings(self, obj):
+        return obj.total_ratings
+
+    def get_total_reviews(self, obj):
+        return obj.total_reviews

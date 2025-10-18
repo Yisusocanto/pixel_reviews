@@ -14,7 +14,9 @@ if TYPE_CHECKING:
 class User(Base, SerializerMixin):
     __tablename__ = "users"
 
-    user_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, nullable=False)
+    user_id: Mapped[int] = mapped_column(
+        primary_key=True, autoincrement=True, nullable=False
+    )
     email: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
     username: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
     password: Mapped[str] = mapped_column(String(200), nullable=False)
@@ -25,11 +27,25 @@ class User(Base, SerializerMixin):
 
     # Relationships
     reviews: Mapped[list["Review"]] = relationship(
-        back_populates="author", cascade="all, delete-orphan", uselist=True
+        back_populates="author", cascade="all, delete-orphan", uselist=True, lazy="dynamic"
     )
     ratings: Mapped[list["Rating"]] = relationship(
-        back_populates="author", cascade="all, delete-orphan"
+        back_populates="author", cascade="all, delete-orphan", lazy="dynamic"
     )
+
+    @property
+    def average_rating(self):
+        if not self.ratings.count():
+            return 0.0
+        return sum(rating.score for rating in self.ratings) / self.ratings.count()
+
+    @property
+    def total_ratings(self):
+        return self.ratings.count()
+
+    @property
+    def total_reviews(self):
+        return self.reviews.count()
 
     def __str__(self):
         return self.username

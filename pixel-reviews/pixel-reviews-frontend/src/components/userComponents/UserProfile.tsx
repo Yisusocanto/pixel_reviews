@@ -21,7 +21,7 @@ function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
           <AvatarFallback>PP</AvatarFallback>
         </Avatar>
         {ownProfile && <Button className="w-fit">
-          <span className="flex items-center gap-2">
+          <span className="flex items-center gap-2 font-bold text-primary">
             <SquarePen className="w-4 h-4" />
             Editar Perfil
           </span>
@@ -64,7 +64,7 @@ function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
               <MapPin size={18} /> ciudad
             </span>
             <span className="flex gap-2 items-center text-muted-foreground">
-              <Star size={18} /> calificacion promedio
+              <Star size={18} /> <span>Average Rating: {user?.averageRating}</span>
             </span>
           </div>
         </div>
@@ -74,28 +74,28 @@ function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
           <div className="flex gap-8">
             {/* Cada estadística: flex-col para número arriba y texto abajo */}
             <div className="flex flex-col items-center">
-              <span className="text-lg font-bold">10</span>
+              <span className="text-xl font-bold">10</span>
               <span className="text-base text-muted-foreground">
-                suscriptores
+                Followers
               </span>
             </div>
 
             <div className="flex flex-col items-center">
-              <span className="text-lg font-bold">10</span>
-              <span className="text-base text-muted-foreground">seguidos</span>
+              <span className="text-xl font-bold">10</span>
+              <span className="text-base text-muted-foreground">Following</span>
             </div>
 
             <div className="flex flex-col items-center">
-              <span className="text-lg font-bold">10</span>
-              <span className="text-base text-muted-foreground">likes</span>
+              <span className="text-xl font-bold">10</span>
+              <span className="text-base text-muted-foreground">Likes</span>
             </div>
           </div>
 
           {/* Botón: automáticamente se alinea a la derecha por justify-between */}
-          <Button>Seguir</Button>
+          <Button>Follow</Button>
         </div>
         <div className="flex flex-col gap-2 ">
-          <h3 className="text-lg">Generos favoritos</h3>
+          <h3 className="text-lg">Favorite Genres</h3>
           <div className="flex gap-2">
             <Badge className="text-base" variant={"secondary"}>
               Souls

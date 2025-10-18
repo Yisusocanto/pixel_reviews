@@ -179,11 +179,11 @@ function GameDetailsPage() {
               <h3 className="text-lg">Rate this game</h3>
               <div className="flex gap-2 items-center">
                 <Star size={36} className="text-yellow-400 fill-yellow-400"/>
-                <span className="text-4xl text-bold">9</span>
-                <span className="text-base">/ 10</span>
+                <span className="text-4xl text-bold">{gameData?.averageRating}</span>
+                <span className="text-base">/ 5</span>
               </div>
               <span className="text-base text-primary-muted">
-                19883 ratings
+                Total Reviews: {gameData?.totalRatings}
               </span>
               <Separator />
               <h4 className="text-lg">Your rating</h4>

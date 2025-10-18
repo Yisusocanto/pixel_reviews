@@ -96,7 +96,7 @@ const variants = [
             mouseY.set(e.clientY - top);
           }}
           className={cn(
-            "group relative overflow-hidden rounded-xl bg-border/50 p-px"
+            "group relative overflow-hidden rounded-xl bg-border/50 p-px w-full" // I did add 'w-full'
           )}
         >
           <motion.div

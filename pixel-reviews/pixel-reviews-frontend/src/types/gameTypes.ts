@@ -1,7 +1,9 @@
 import type { User } from "@/types/userTypes";
 
 export interface Game {
-  averageRating: number
+  averageRating: number;
+  totalRatings: number;
+  totalReviews: number;
   game_id: number;
   title: string;
   slug: string;

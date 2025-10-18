@@ -8,6 +8,8 @@ import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import UserProfile from "@/components/userComponents/UserProfile";
 import ProfileReviewCard from "@/components/gameReviewComponents/ProfileReviewCard";
 import type { User } from "../types/userTypes";
+import StatsCards from "@/components/userComponents/StatsCards";
+import WishlistStatsCards from "@/components/userComponents/WishlistStatsCards";
 
 function UserProfilePage() {
   const { username, tab } = useParams();
@@ -19,7 +21,7 @@ function UserProfilePage() {
 
   const currentTab = tab || "profile";
 
-  const validTabs = ["profile", "notifications", "reviews", "trophies"];
+  const validTabs = ["profile", "notifications", "reviews", "wishlist"];
   const activeTab = validTabs.includes(currentTab) ? currentTab : "profile";
 
   useEffect(() => {
@@ -83,7 +85,12 @@ function UserProfilePage() {
             Wishlist
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="profile">Content for Profile</TabsContent>
+        {/* Tabs Content */}
+        <TabsContent value="profile">
+          <div className="mt-8">
+            <StatsCards userData={userData || undefined}/>
+          </div>
+        </TabsContent>
         <TabsContent value="notifications">
           Content for Notifications
         </TabsContent>
@@ -94,7 +101,11 @@ function UserProfilePage() {
             ))}
           </div>
         </TabsContent>
-        <TabsContent value="wishlist">Content for wishlist</TabsContent>
+        <TabsContent value="wishlist">
+          <div>
+            <WishlistStatsCards/>
+          </div>
+        </TabsContent>
       </Tabs>
     </div>
   );
