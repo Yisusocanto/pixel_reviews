@@ -48,6 +48,9 @@ def create_or_update_review():
 
     if not game_id:
         return jsonify({"error": "game_id cannot be empty"}), 400
+    
+    if score < 1 and score > 5:
+        return jsonify({"error": "score out of range"}), 400
 
     payload = g.user_payload
     user_id = int(payload["sub"])

@@ -67,7 +67,7 @@ def sign_up():
     response.set_cookie(
         "jwt_pixel_reviews",
         token,
-        max_age=10000000,
+        max_age=86400,
         httponly=True,
         secure=False,
         samesite="Lax",

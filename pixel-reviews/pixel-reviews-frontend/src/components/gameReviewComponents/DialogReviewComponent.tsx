@@ -16,8 +16,10 @@ import { RatingComponent } from "../ui/rating";
 import { Button } from "../luxe/button";
 import { Input } from "../luxe/input";
 import { Textarea } from "../ui/textarea";
+import { toast, Toaster } from "sonner";
 import { createReview } from "@/services/apiService";
 
+// Form Schema
 const ReviewSchema = z.object({
   title: z
     .string()
@@ -51,7 +53,21 @@ function DialogReviewComponent({
   } = useForm({ resolver: zodResolver(ReviewSchema) });
 
   const [score, setScore] = useState<number>(userRating?.score || 0);
-  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isOpen, setIsOpen] = useState<boolean>(false); // Dialog controller
+
+  // Success toast
+  const displaySuccessToast = () =>
+    toast.success("Review created", {
+      description: "The review has been created/edited successfully",
+      duration: 5000,
+    });
+
+  // Success toast
+  const displayErrorToast = (error: string) =>
+    toast.error("Error", {
+      description: `Eror creating/updating the review: ${error}`,
+      duration: 5000,
+    });
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -64,20 +80,30 @@ function DialogReviewComponent({
       );
       setUserRating(response.data.rating);
       setUserReview(response.data.review);
-      setIsOpen(false)
-      console.log("review y rating creado exitosamente");
+      setIsOpen(false);
+      displaySuccessToast();
     } catch (error: any) {
-      console.log(error);
+      displayErrorToast(error.response.data.error);
+      setIsOpen(false);
     }
   });
 
   return (
     <div>
+      {/* This display the toast in the screen */}
+      <Toaster theme="dark" richColors={true} />
+
+      {/* Dialog Window */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        {/* Dialog Button */}
         <DialogTrigger asChild className="w-full">
-          <Button variant="default" className="cursor-pointer">Write a Review</Button>
+          <Button variant="default" className="cursor-pointer">
+            Write a Review
+          </Button>
         </DialogTrigger>
+        {/* Dialog Content */}
         <DialogContent>
+          {/* Dialog Title */}
           <DialogTitle className="flex flex-col">
             <span className="text- text-primary-muted ">
               Write a review of this game
@@ -85,6 +111,7 @@ function DialogReviewComponent({
             <span className="text-2xl font-orbitron">{gameData?.title}</span>
           </DialogTitle>
 
+          {/* Dialog Body */}
           <DialogDescription asChild>
             <div className="flex flex-col gap-1">
               <span className="text-base text-primary-muted">Rating</span>
@@ -118,6 +145,7 @@ function DialogReviewComponent({
                     {...register("content")}
                     defaultValue={userReview?.content}
                     variant="lg"
+                    className="bg-main-secondary"
                   />
                   <span className="text-sm text-destructive">
                     {errors.content?.message}
@@ -126,6 +154,7 @@ function DialogReviewComponent({
               </form>
             </div>
           </DialogDescription>
+          {/* Dialog Footer */}
           <DialogFooter>
             <DialogClose asChild>
               <Button>Close</Button>

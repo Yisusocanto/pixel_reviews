@@ -9,6 +9,7 @@ import { ReviewCard } from "@/components/gameReviewComponents/ReviewCard";
 import { Card } from "@/components/luxe/card";
 import { Star, Users, MessageSquare, Heart, LaptopMinimal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import {toast, Toaster} from "sonner"
 import GameHero from "@/components/gameComponents/GameHero";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import type { Game, Rating, Review } from "@/types/gameTypes";
@@ -44,15 +45,31 @@ function GameDetailsPage() {
     bringGameDetails();
   }, [slug, navigate]);
 
+  const displaySuccessToast = () => {
+    toast.success("Rating created", {
+      description: "Rating created/updated successfully",
+      duration: 5000
+    })
+  }
+
+  const displayErrorToast = (error: string) => {
+    toast.error("Error", {
+      description: `Error creating/updating the rating: ${error}`,
+      duration: 5000
+    })
+  } 
+
   const handleRatingChange = async (score: number) => {
     if (gameData) {
       try {
         const response = await createRating(gameData.game_id, score);
         setUserRating(response.data.rating);
         setUserReview(response.data.review);
+        displaySuccessToast()
       } catch (error: any) {
         console.log(error);
         setError(error.response.data.error);
+        displayErrorToast(error.response.data.error)
       }
     }
   };
@@ -67,6 +84,7 @@ function GameDetailsPage() {
 
   return (
     <div>
+      <Toaster theme="dark" richColors={true}/>
       <GameHero gameData={gameData || undefined} />
       <div className="flex w-full">
         {/* Left side */}

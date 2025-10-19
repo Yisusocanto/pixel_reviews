@@ -10,7 +10,6 @@ db = DatabaseManager()
 
 
 @main_bp.route("/")
-@token_required
 def index():
     reviews = db.get_review_count(reviews_count=10)
     return jsonify({"reviews": reviews}), 200

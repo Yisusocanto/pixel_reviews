@@ -1,5 +1,5 @@
 import jwt
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from flask import request, redirect, url_for, make_response, render_template, g, jsonify
 from functools import wraps
 import os
@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 SECRECT_KEY = os.getenv("SECRECT_KEY_JWT")
-
+ALGORITHM = "HS256"
+TOKEN_EXP_SECONDS = 86400
 
 class JwtHandler:
     """class that handles the creation and verification of JWTs"""
@@ -16,15 +17,15 @@ class JwtHandler:
     def create_jwt(user_id):
         payload = {
             "sub": str(user_id),
-            "exp": datetime.now(tz=timezone.utc) + timedelta(minutes=30)
+            "exp": datetime.utcnow() + timedelta(seconds=TOKEN_EXP_SECONDS)
         }
-        token = jwt.encode(payload, SECRECT_KEY, algorithm="HS256")
+        token = jwt.encode(payload, SECRECT_KEY, algorithm=ALGORITHM)
         return token
     
     @staticmethod
     def check_jwt(token):
         try:
-            payload = jwt.decode(token, SECRECT_KEY, algorithms="HS256")
+            payload = jwt.decode(token, SECRECT_KEY, algorithms=ALGORITHM)
             return payload
         except Exception as e:
             print(f"error {e}")
