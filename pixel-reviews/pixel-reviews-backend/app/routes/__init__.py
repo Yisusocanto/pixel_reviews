@@ -12,8 +12,8 @@ from app.extensions.marshmallow import ma
 
 def create_app():
 
-    template_dir = os.path.abspath('frontend/templates')
-    static_dir = os.path.abspath('frontend/static')
+    template_dir = os.path.abspath('templates')
+    static_dir = os.path.abspath('templates/images')
     
     app = Flask(__name__, 
                 template_folder=template_dir,

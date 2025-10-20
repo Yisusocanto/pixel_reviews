@@ -1,11 +1,14 @@
-from flask import Blueprint, request, make_response, jsonify
+from flask import Blueprint, request, make_response, jsonify, render_template
 from app.utils.validations import execute_validations
 from app.database.database_manage import DatabaseManager
 from app.utils.jwt_handler import JwtHandler
 from app.utils import password_handler
+from app.services.email_sender import EmailSender
 
 # An instance of the database is created
 database_manager = DatabaseManager()
+
+email_sender = EmailSender()
 
 # Blueprint that handles authentication paths
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -56,9 +59,12 @@ def sign_up():
     )
     if isinstance(user_id, dict) and "error" in user_id:
         return jsonify({"message": user_id["error"]}), 409
-    
+
     token = JwtHandler.create_jwt(user_id)
     user = database_manager.returning_user_data(username=username)
+
+    email_sender.welcome(email)
+    
 
     # The response is created and the cookie is set with the token inside
     response = make_response(
