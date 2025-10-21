@@ -1,6 +1,14 @@
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, desc, exc
-from app.models import User, Game, Review, Rating, Developer, Publisher
+from app.models import (
+    User,
+    Game,
+    Review,
+    Rating,
+    Developer,
+    Publisher,
+    PasswordResetToken,
+)
 from datetime import datetime
 from typing import List
 from app.services.rawg_api import RawgApi
@@ -79,6 +87,12 @@ class DatabaseManager:
         else:
             return None
 
+    def check_user_exits_with_email(self, email) -> User | None:
+        user = self.session.query(User).filter(User.email == email).first()
+        if not user:
+            return None
+        return user
+
     def returnig_user_id(self, username: str) -> int | None:
         """return the 'user_id' if the user exits, instead, return 'None'"""
         user_id = (
@@ -109,6 +123,19 @@ class DatabaseManager:
         else:
             serialized_user = UserSchema().dump(user)
             return serialized_user
+
+    def update_password(self, user_id, new_password) -> dict | None:
+        try:
+            user = self.session.query(User).filter(User.user_id == user_id).first()
+            if not user:
+                return None
+
+            user.password = new_password
+            self.session.commit()
+            return {"success": "Password updated successfully"}
+        except Exception as e:
+            print("error en update password: ", e)
+            return None
 
     # Reviews----------------------------------
     def get_review_count(self, reviews_count: int) -> List:
@@ -322,4 +349,34 @@ class DatabaseManager:
             serialized_rating = RatingSchema().dump(rating)
             return serialized_rating
         else:
+            return None
+
+    # Password Reset Tokens
+    def create_password_reset_token(self, user_id, reset_token):
+        try:
+            token = PasswordResetToken(user_id=user_id, token=reset_token)
+            self.session.add(token)
+            self.session.commit()
+            return token.token
+        except Exception as e:
+            print("error creandp el reset tken", e)
+
+    def check_reset_token(self, reset_token):
+        try:
+            token = (
+                self.session.query(PasswordResetToken)
+                .filter(
+                    PasswordResetToken.token == reset_token,
+                    PasswordResetToken.expires_at > datetime.now(),
+                )
+                .first()
+            )
+            if not token:
+                return None
+
+            token.token = None
+            token.expires_at = None
+            return token
+        except Exception as e:
+            print("error en check reset token: ", e)
             return None

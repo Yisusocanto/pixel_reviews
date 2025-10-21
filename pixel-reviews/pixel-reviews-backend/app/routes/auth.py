@@ -2,8 +2,10 @@ from flask import Blueprint, request, make_response, jsonify, render_template
 from app.utils.validations import execute_validations
 from app.database.database_manage import DatabaseManager
 from app.utils.jwt_handler import JwtHandler
-from app.utils import password_handler
+from app.utils import password_handler, reset_token_handler
 from app.services.email_sender import EmailSender
+from app.utils.jwt_handler import token_required
+
 
 # An instance of the database is created
 database_manager = DatabaseManager()
@@ -63,8 +65,7 @@ def sign_up():
     token = JwtHandler.create_jwt(user_id)
     user = database_manager.returning_user_data(username=username)
 
-    email_sender.welcome(email)
-    
+    email_sender.welcome_email(email)
 
     # The response is created and the cookie is set with the token inside
     response = make_response(
@@ -167,3 +168,45 @@ def verify():
         return jsonify({"message": "user authenticated", "user_data": user}), 200
     else:
         return jsonify({"message": "user not authenticated"}), 401
+
+
+@auth_bp.route("/password_recovery", methods=["POST"])
+def password_recovery():
+    response = request.get_json()
+    email = response["email"]
+
+    # verificamos que el usuario existe
+    user = database_manager.check_user_exits_with_email(email)
+    if not user:
+        return jsonify({"error": "email not associated with any user"}), 401
+
+    try:
+        # creamos un token con el util
+        reset_token = reset_token_handler.generate_reset_tooken()
+        # se guarda el reset_token en la base de datos
+        database_manager.create_password_reset_token(user.user_id, reset_token)
+        # se encia el email con el reset_token
+        email_sender.reset_token_email(email, user.username, reset_token)
+        return jsonify({"succes": "reset token created and sended"}), 200
+    except Exception as e:
+        print("error en reset token route", e)
+        return jsonify({"error": f"{e}"}), 500
+
+
+@auth_bp.route("/password_reset", methods=["POST"])
+def password_reset():
+    response = request.get_json()
+    reset_token = response["reset_token"]
+    new_password = response["new_password"]
+
+    check_token = database_manager.check_reset_token(reset_token)
+    if not check_token:
+        return jsonify({"error": "token not valid or expired"}), 401
+
+    hashed_password = password_handler.hash_password(new_password)
+
+    message = database_manager.update_password(check_token.user_id, hashed_password)
+    if not message:
+        return jsonify({"error": "error updating the password"}), 500
+
+    return jsonify(message)

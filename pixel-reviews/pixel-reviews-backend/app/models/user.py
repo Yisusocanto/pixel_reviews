@@ -23,11 +23,14 @@ class User(Base, SerializerMixin):
     name: Mapped[str] = mapped_column(String(50), nullable=False)
     lastname: Mapped[str] = mapped_column(String(50), nullable=False)
     age: Mapped[datetime] = mapped_column(nullable=False)
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     # Relationships
     reviews: Mapped[list["Review"]] = relationship(
-        back_populates="author", cascade="all, delete-orphan", uselist=True, lazy="dynamic"
+        back_populates="author",
+        cascade="all, delete-orphan",
+        uselist=True,
+        lazy="dynamic",
     )
     ratings: Mapped[list["Rating"]] = relationship(
         back_populates="author", cascade="all, delete-orphan", lazy="dynamic"

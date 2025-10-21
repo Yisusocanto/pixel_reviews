@@ -38,7 +38,7 @@ function LoginForm() {
   });
 
   // hnadle of the api call
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data) => { 
     try {
       const response = await login(data);
       setActiveSession(true);
@@ -92,12 +92,20 @@ function LoginForm() {
       </form>
       <p className="mt-2 text-red-500">{errorMessage}</p>
       <p className="text-white text-center mt-4 ">
-        Don't have an account?{" "}
+        Don't have an account?
         <Link
           to="/auth/signup"
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
         >
           Sign Up
+        </Link>
+      </p>
+      <p className="text-white text-center mt-4 ">
+        <Link
+          to="/auth/password_recovery"
+          className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+        >
+          Forgot password?
         </Link>
       </p>
     </div>

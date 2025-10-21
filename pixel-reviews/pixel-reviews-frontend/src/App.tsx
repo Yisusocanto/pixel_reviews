@@ -18,6 +18,8 @@ import LogOutPage from "./pages/LogOutPage";
 import { useAuth } from "./context/AuthContextProvider";
 import { setupAxiosInterceptors } from "./config/axiosConfig";
 import NavBar from "./components/commonsComponents/NavBar";
+import PasswordRecovery from "./pages/PasswordRecovery";
+import PasswordReset from "./pages/PasswordReset";
 
 function App() {
   const { logoutFunction, loading } = useAuth();
@@ -39,6 +41,13 @@ function App() {
           <Route path="/" element={<Index />} />
           <Route path="/auth/signup" element={<SignUpPage />} />
           <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/logout" element={<LogOutPage />} />
+          <Route
+            path="/auth/password_recovery"
+            element={<PasswordRecovery />}
+          />
+          <Route path="/auth/password_reset" element={<PasswordReset />} />
+
           <Route path="/users/:username/" element={<UserProfilePage />} />
           <Route path="/users/:username/:tab" element={<UserProfilePage />} />
           <Route
@@ -46,8 +55,6 @@ function App() {
             element={<SearchGamesResultPage />}
           />
           <Route path="/games/:slug" element={<GameDetailsPage />} />
-          <Route path="/auth/logout" element={<LogOutPage />} />
-          <Route path="/prueba" element={<h1>Hola</h1>} />
           <Route path="/*" element={<h1>Pagina no existe</h1>} />
         </Routes>
       </div>

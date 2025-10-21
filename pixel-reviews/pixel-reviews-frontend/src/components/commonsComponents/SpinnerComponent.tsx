@@ -1,11 +1,15 @@
-import { Spinner } from "../luxe/spinner"
+import { Spinner } from "../luxe/spinner";
 
 function SpinnerComponent() {
   return (
-    <div className="mt-50 flex justify-center">
-      <Spinner size="size-20" className="m-auto"/>
+    // overlay fijo que cubre toda la pantalla y centra el spinner
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black opacity-40" />
+      <div className="relative">
+        <Spinner size="size-20" className="m-auto" />
+      </div>
     </div>
-  )
+  );
 }
 
-export default SpinnerComponent
+export default SpinnerComponent;
