@@ -13,6 +13,9 @@ class UserSchema(SQLAlchemySchema):
     name = auto_field()
     lastname = auto_field()
     age = auto_field(data_key="birthday")
+    bio = auto_field()
+    location = auto_field()
+    website = auto_field()
     created_at = auto_field(data_key="createdAt")
 
     # Relationships

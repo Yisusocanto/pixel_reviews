@@ -18,11 +18,14 @@ class User(Base, SerializerMixin):
         primary_key=True, autoincrement=True, nullable=False
     )
     email: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
-    username: Mapped[str] = mapped_column(String(50), nullable=False, unique=True)
-    password: Mapped[str] = mapped_column(String(200), nullable=False)
-    name: Mapped[str] = mapped_column(String(50), nullable=False)
-    lastname: Mapped[str] = mapped_column(String(50), nullable=False)
+    username: Mapped[str] = mapped_column(String(30), nullable=False, unique=True)
+    password: Mapped[str] = mapped_column(nullable=False)
+    name: Mapped[str] = mapped_column(String(30), nullable=False)
+    lastname: Mapped[str] = mapped_column(String(30), nullable=False)
     age: Mapped[datetime] = mapped_column(nullable=False)
+    bio: Mapped[str] = mapped_column(String(300), nullable=True)
+    location: Mapped[str] = mapped_column(String(40), nullable=True)
+    website: Mapped[str] = mapped_column(String(40), nullable=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     # Relationships
