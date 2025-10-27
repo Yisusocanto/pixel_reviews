@@ -1,11 +1,11 @@
-from flask import Flask, redirect, render_template, g, url_for
+from flask import Flask, g
 from app.utils.jwt_handler import already_authenticated
 import os
 from .auth import auth_bp
 from .users import users_bp
 from .main import main_bp
 from .api import api_bp
-from.review import review_bp
+from .settings import settings_bp
 from flask_cors import CORS
 from app.extensions.marshmallow import ma
 
@@ -32,15 +32,10 @@ def create_app():
     }}
 )
     
-    @app.route("/")
-    @already_authenticated()
-    def index():
-        return render_template("index.html")
-
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp)
-    app.register_blueprint(review_bp)
+    app.register_blueprint(settings_bp)
     
     return app

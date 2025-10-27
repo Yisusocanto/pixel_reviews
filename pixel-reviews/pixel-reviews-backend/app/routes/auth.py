@@ -1,14 +1,9 @@
-from flask import Blueprint, request, make_response, jsonify, render_template
+from flask import Blueprint, request, make_response, jsonify
 from app.utils.validations import execute_validations
-from app.database.database_manage import DatabaseManager
+from app.database import UserManager, AuthManager
 from app.utils.jwt_handler import JwtHandler
 from app.utils import password_handler, reset_token_handler
 from app.services.email_sender import EmailSender
-from app.utils.jwt_handler import token_required
-
-
-# An instance of the database is created
-database_manager = DatabaseManager()
 
 email_sender = EmailSender()
 
@@ -56,14 +51,19 @@ def sign_up():
     hashed_pw = password_handler.hash_password(password)
 
     # The user is created and the token is created from the user_id of the created user
-    user_id = database_manager.create_user(
-        email, hashed_pw, username, name, lastname, age
+    user_id = UserManager.create_user(
+        email=email,
+        password=hashed_pw,
+        username=username,
+        name=name,
+        lastname=lastname,
+        age=age,
     )
     if isinstance(user_id, dict) and "error" in user_id:
         return jsonify({"message": user_id["error"]}), 409
 
     token = JwtHandler.create_jwt(user_id)
-    user = database_manager.returning_user_data(username=username)
+    user = UserManager.get_user_by_username(username=username)
 
     email_sender.welcome_email(email)
 
@@ -104,7 +104,7 @@ def login():
     password = response_data["password"]
 
     # user validation
-    hashed_password = database_manager.check_user_exits(username)
+    hashed_password = AuthManager.get_hashed_password(username=username)
     if not hashed_password:
         return (
             jsonify({"message": "username incorrect or not exits"}),
@@ -114,10 +114,10 @@ def login():
     if not password_handler.check_password(password, hashed_password):
         return jsonify({"message": "the password is incorrect"}), 401
 
-    user_id = database_manager.returnig_user_id(username)
+    user_id = UserManager.get_user_id(username=username)
     token = JwtHandler.create_jwt(user_id)
 
-    user = database_manager.returning_user_data(username=username)
+    user = UserManager.get_user_by_username(username=username)
 
     # The response is created and the cookie is set with the token inside
     response = make_response(
@@ -163,8 +163,7 @@ def verify():
     payload = JwtHandler.check_jwt(token)
     if payload:
         user_id = int(payload["sub"])
-        username = database_manager.returnig_username(user_id=user_id)
-        user = database_manager.returning_user_data(username=username)
+        user = UserManager.get_user_by_id(user_id=user_id)
         return jsonify({"message": "user authenticated", "user_data": user}), 200
     else:
         return jsonify({"message": "user not authenticated"}), 401
@@ -176,7 +175,7 @@ def password_recovery():
     email = response["email"]
 
     # verificamos que el usuario existe
-    user = database_manager.check_user_exits_with_email(email)
+    user = UserManager.get_user_by_email(email=email)
     if not user:
         return jsonify({"error": "email not associated with any user"}), 401
 
@@ -184,8 +183,10 @@ def password_recovery():
         # creamos un token con el util
         reset_token = reset_token_handler.generate_reset_tooken()
         # se guarda el reset_token en la base de datos
-        database_manager.create_password_reset_token(user.user_id, reset_token)
-        # se encia el email con el reset_token
+        AuthManager.create_password_reset_token(
+            user_id=user.user_id, reset_token=reset_token
+        )
+        # se envia el email con el reset_token
         email_sender.reset_token_email(email, user.username, reset_token)
         return jsonify({"succes": "reset token created and sended"}), 200
     except Exception as e:
@@ -199,13 +200,15 @@ def password_reset():
     reset_token = response["reset_token"]
     new_password = response["new_password"]
 
-    check_token = database_manager.check_reset_token(reset_token)
+    check_token = AuthManager.check_reset_token(reset_token=reset_token)
     if not check_token:
         return jsonify({"error": "token not valid or expired"}), 401
 
     hashed_password = password_handler.hash_password(new_password)
 
-    message = database_manager.update_password(check_token.user_id, hashed_password)
+    message = AuthManager.update_password(
+        user_id=check_token.user_id, new_password=hashed_password
+    )
     if not message:
         return jsonify({"error": "error updating the password"}), 500
 

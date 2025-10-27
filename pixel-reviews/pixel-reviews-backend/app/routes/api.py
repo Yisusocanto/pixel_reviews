@@ -1,8 +1,7 @@
-from flask import Blueprint, request, g, jsonify, make_response, url_for, redirect
-from app.database.database_manage import DatabaseManager
+from flask import Blueprint, request, g, jsonify
+from app.database import ReviewManager
 from app.utils.jwt_handler import token_required
 
-db = DatabaseManager()
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -24,9 +23,12 @@ def create_or_update_rating():
     payload = g.user_payload
     user_id = int(payload["sub"])
 
-    db.create_or_update_rating(user_id, game_id, score)
-    rating = db.get_user_rating(game_id=game_id, user_id=user_id)
-    review = db.get_user_review(game_id=game_id, user_id=user_id)
+    ReviewManager._create_or_update_rating(
+        game_id=game_id, user_id=user_id, score=score
+    )
+    rating = ReviewManager.get_user_rating(game_id=game_id, user_id=user_id)
+    review = ReviewManager.get_user_review(game_id=game_id, user_id=user_id)
+
     if not rating:
         return jsonify({"error": "An error ocurred creating the rating"})
 
@@ -48,17 +50,21 @@ def create_or_update_review():
 
     if not game_id:
         return jsonify({"error": "game_id cannot be empty"}), 400
-    
+
     if score < 1 and score > 5:
         return jsonify({"error": "score out of range"}), 400
 
     payload = g.user_payload
     user_id = int(payload["sub"])
 
-    review = db.create_or_update_review(
-        game_id, user_id, review_title, review_content, score
+    review = ReviewManager.create_or_update_review(
+        game_id=game_id,
+        user_id=user_id,
+        title=review_title,
+        content=review_content,
+        rating_score=score,
     )
-    rating = db.get_user_rating(game_id=game_id, user_id=user_id)
+    rating = ReviewManager.get_user_rating(game_id=game_id, user_id=user_id)
 
     if not review:
         return jsonify({"error", "An error ocurred creating the review"}), 500
