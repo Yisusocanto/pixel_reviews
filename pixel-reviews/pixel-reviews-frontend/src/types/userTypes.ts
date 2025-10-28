@@ -10,6 +10,9 @@ export interface User {
   name: string;
   lastname: string;
   birthday: string;
+  location: string;
+  bio: string;
+  website: string;
   createdAt: string;
   reviews?: Array<Review>;
   ratings?: Array<Rating>;
