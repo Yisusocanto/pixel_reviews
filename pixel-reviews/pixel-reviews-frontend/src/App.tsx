@@ -10,9 +10,11 @@ import SignUpPage from "./pages/SignUpPage";
 import SearchGamesResultPage from "./pages/SearchGamesResultPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import LogOutPage from "./pages/LogOutPage";
+import SettingsPage from "./pages/SettingsPage";
 
 //components
 // import NavBarComponent from "./components/commonsComponents/NavBarComponent";
+import Background from "./components/commonsComponents/Background";
 
 //Context and Config
 import { useAuth } from "./context/AuthContextProvider";
@@ -20,6 +22,7 @@ import { setupAxiosInterceptors } from "./config/axiosConfig";
 import NavBar from "./components/commonsComponents/NavBar";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import PasswordReset from "./pages/PasswordReset";
+
 
 function App() {
   const { logoutFunction, loading } = useAuth();
@@ -35,29 +38,27 @@ function App() {
 
   return (
     <>
-      <div id="background" className="dark min-h-screen font-exo">
-        <NavBar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth/signup" element={<SignUpPage />} />
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/logout" element={<LogOutPage />} />
-          <Route
-            path="/auth/password_recovery"
-            element={<PasswordRecovery />}
-          />
-          <Route path="/auth/password_reset" element={<PasswordReset />} />
+      <Background />
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/auth/signup" element={<SignUpPage />} />
+        <Route path="/auth/login" element={<LoginPage />} />
+        <Route path="/auth/logout" element={<LogOutPage />} />
+        <Route path="/auth/password_recovery" element={<PasswordRecovery />} />
+        <Route path="/auth/password_reset" element={<PasswordReset />} />
 
-          <Route path="/users/:username/" element={<UserProfilePage />} />
-          <Route path="/users/:username/:tab" element={<UserProfilePage />} />
-          <Route
-            path="/search/:gameTitle"
-            element={<SearchGamesResultPage />}
-          />
-          <Route path="/games/:slug" element={<GameDetailsPage />} />
-          <Route path="/*" element={<h1>Pagina no existe</h1>} />
-        </Routes>
-      </div>
+        <Route path="/users/:username/" element={<UserProfilePage />} />
+        <Route path="/users/:username/:tab" element={<UserProfilePage />} />
+
+        <Route path="/search/:gameTitle" element={<SearchGamesResultPage />} />
+        <Route path="/games/:slug" element={<GameDetailsPage />} />
+
+        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/settings/:tab" element={<SettingsPage />} />
+
+        <Route path="/*" element={<h1>Pagina no existe</h1>} />
+      </Routes>
     </>
   );
 }
