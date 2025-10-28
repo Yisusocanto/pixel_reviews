@@ -19,7 +19,7 @@ import {
 
 //main
 import { useAuth } from "@/context/AuthContextProvider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 // Navigation links array to be used in both desktop and mobile menus
 const loggedInNavigationLinks = [
@@ -123,9 +123,9 @@ export default function NavBar() {
           </Popover>
           {/* Logo */}
           <div className="flex items-center">
-            <a href="#" className="text-primary hover:text-primary/90">
+            <Link to="/" className="text-primary hover:text-primary/90">
               <Logo />
-            </a>
+            </Link>
           </div>
         </div>
         {/* Middle area */}

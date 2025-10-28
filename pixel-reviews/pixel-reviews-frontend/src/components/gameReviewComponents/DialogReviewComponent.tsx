@@ -65,7 +65,7 @@ function DialogReviewComponent({
   // Success toast
   const displayErrorToast = (error: string) =>
     toast.error("Error", {
-      description: `Eror creating/updating the review: ${error}`,
+      description: `Error creating/updating the review: ${error}`,
       duration: 5000,
     });
 

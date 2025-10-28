@@ -13,10 +13,8 @@ function Index() {
     const bringIndexPageData = async () => {
       try {
         const response = await indexPageData();
-        console.log(response);
         setReviews(response.data.reviews);
       } catch (error: any) {
-        console.log(error);
       } finally {
         setLoading(false);
       }
@@ -29,7 +27,7 @@ function Index() {
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 bg-[#0a0a0a]">
+    <div className="flex flex-col items-center gap-2">
       {reviews?.map((review: Review) => {
         return (
           <GameReviewCard

@@ -2,15 +2,22 @@ import { Card } from "../luxe/card";
 import { Avatar, AvatarImage, AvatarFallback } from "../luxe/avatar";
 import { Button } from "../luxe/button";
 import { Badge } from "../ui/badge";
-import { SquarePen, Calendar, Link, MapPin, Star } from "lucide-react";
+import {
+  SquarePen,
+  Calendar,
+  Link as LucideLink,
+  MapPin,
+  Star,
+} from "lucide-react";
 import type { User } from "@/types/userTypes";
+import { Link } from "react-router-dom";
 
 interface UserProfileCardProps {
-  user: User | null
-  ownProfile?: boolean
+  user: User | null;
+  ownProfile?: boolean;
 }
 
-function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
+function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
   return (
     <Card className="flex grid-rows-1 m-auto w-7xl p-10 font-exo">
       {/*Avatar Image and edit button */}
@@ -20,12 +27,14 @@ function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
           <AvatarImage src="https://img.freepik.com/vector-premium/imagen-perfil-avatar-hombre-aislada-fondo-imagen-profil-avatar-hombre_1293239-4857.jpg" />
           <AvatarFallback>PP</AvatarFallback>
         </Avatar>
-        {ownProfile && <Button className="w-fit">
-          <span className="flex items-center gap-2 font-bold text-primary">
-            <SquarePen className="w-4 h-4" />
-            Editar Perfil
-          </span>
-        </Button>}
+        {ownProfile && (
+          <Button className="w-fit">
+            <span className="flex items-center gap-2 font-bold text-primary">
+              <SquarePen className="w-4 h-4" />
+              <Link to="/settings">Edit profile</Link>
+            </span>
+          </Button>
+        )}
       </div>
 
       {/*User info and stadistic */}
@@ -41,12 +50,7 @@ function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
         </div>
         <div className="flex mb-4">
           {/*aca luego se pone la descripcion del usuario */}
-          <p className="text-xl text-muted-foreground">
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Est in
-            totam aperiam corporis maxime nulla error adipisci qui fugit rerum,
-            dolorum placeat minima laborum commodi! Eveniet reprehenderit fugit
-            rem assumenda?
-          </p>
+          <p className="text-xl text-muted-foreground">{user?.bio}</p>
         </div>
         <div className="columns-2 mb-4 text-lg">
           <div className="flex flex-col gap-4">
@@ -55,16 +59,17 @@ function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
               {user?.createdAt}
             </span>
             <span className="flex gap-2 items-center text-muted-foreground">
-              <Link size={18} />
-              link de red social
+              <Star size={18} />{" "}
+              <span>Average Rating: {user?.averageRating}</span>
             </span>
           </div>
           <div className="flex flex-col gap-4">
             <span className="flex gap-2 items-center text-muted-foreground">
-              <MapPin size={18} /> ciudad
+              <MapPin size={18} /> {user?.location}
             </span>
             <span className="flex gap-2 items-center text-muted-foreground">
-              <Star size={18} /> <span>Average Rating: {user?.averageRating}</span>
+              <LucideLink size={18} />
+              {user?.website}
             </span>
           </div>
         </div>
@@ -75,9 +80,7 @@ function UserProfile({user, ownProfile=false}: UserProfileCardProps) {
             {/* Cada estadística: flex-col para número arriba y texto abajo */}
             <div className="flex flex-col items-center">
               <span className="text-xl font-bold">10</span>
-              <span className="text-base text-muted-foreground">
-                Followers
-              </span>
+              <span className="text-base text-muted-foreground">Followers</span>
             </div>
 
             <div className="flex flex-col items-center">

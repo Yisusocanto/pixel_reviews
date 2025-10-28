@@ -56,7 +56,7 @@ export default function UserMenu() {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Settings</span>
+            <Link to="/settings">Settings</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
