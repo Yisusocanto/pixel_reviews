@@ -11,17 +11,17 @@ import SearchGamesResultPage from "./pages/SearchGamesResultPage";
 import UserProfilePage from "./pages/UserProfilePage";
 import LogOutPage from "./pages/LogOutPage";
 import SettingsPage from "./pages/SettingsPage";
-
+import PasswordRecovery from "./pages/PasswordRecovery";
+import PasswordReset from "./pages/PasswordReset";
 //components
-// import NavBarComponent from "./components/commonsComponents/NavBarComponent";
 import Background from "./components/commonsComponents/Background";
-
+import NavBar from "./components/commonsComponents/NavBar";
+import { Footer } from "./components/commonsComponents/Footer";
 //Context and Config
 import { useAuth } from "./context/AuthContextProvider";
 import { setupAxiosInterceptors } from "./config/axiosConfig";
-import NavBar from "./components/commonsComponents/NavBar";
-import PasswordRecovery from "./pages/PasswordRecovery";
-import PasswordReset from "./pages/PasswordReset";
+
+
 
 
 function App() {
@@ -59,6 +59,7 @@ function App() {
 
         <Route path="/*" element={<h1>Pagina no existe</h1>} />
       </Routes>
+      <Footer/>
     </>
   );
 }
