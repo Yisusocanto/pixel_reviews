@@ -39,17 +39,17 @@ function SearchGamesResultPage() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center gap-4 mt-4">
       {gameResults ? (
-        gameResults.map((game: SearchedGame) => {
+        gameResults.map((game: SearchedGame, e) => {
           return (
-            <div>
+            <div key={e} className="w-full">
               <Link to={`/games/${game.slug}`}>
                 <GameCard
                   imageURL={game.imageURL}
                   title={game.title}
-                  description="hola"
                   released={game.releaseDate}
+                  className="m-auto"
                 />
               </Link>
             </div>

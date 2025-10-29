@@ -7,7 +7,7 @@ interface GameCardProps {
   imageURL: string;
   title: string;
   released: string;
-  description: string;
+  description?: string;
   className?: string;
 }
 
@@ -112,12 +112,14 @@ export const GameCard = ({
           <span>Released</span> &bull; <span>{released}</span>
         </motion.div>
 
-        <motion.p
-          variants={itemVariants}
-          className="text-sm text-muted-foreground leading-relaxed"
-        >
-          {description}
-        </motion.p>
+        {description && (
+          <motion.p
+            variants={itemVariants}
+            className="text-sm text-muted-foreground leading-relaxed"
+          >
+            {description}
+          </motion.p>
+        )}
       </motion.div>
     </motion.div>
   );
