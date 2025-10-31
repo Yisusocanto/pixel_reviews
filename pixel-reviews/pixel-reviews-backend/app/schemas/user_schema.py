@@ -16,6 +16,7 @@ class UserSchema(SQLAlchemySchema):
     bio = auto_field()
     location = auto_field()
     website = auto_field()
+    avatar_url = auto_field(data_key="avatarUrl")
     created_at = auto_field(data_key="createdAt")
 
     # Relationships

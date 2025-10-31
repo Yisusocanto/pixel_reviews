@@ -26,6 +26,8 @@ class User(Base, SerializerMixin):
     bio: Mapped[str] = mapped_column(String(300), nullable=True)
     location: Mapped[str] = mapped_column(String(40), nullable=True)
     website: Mapped[str] = mapped_column(String(40), nullable=True)
+    avatar_url: Mapped[str] = mapped_column(nullable=True)
+    avatar_public_id: Mapped[str] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow)
 
     # Relationships

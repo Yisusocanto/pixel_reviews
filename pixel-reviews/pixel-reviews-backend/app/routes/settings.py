@@ -2,6 +2,7 @@ from flask import Blueprint, request, g, jsonify
 from app.utils.jwt_handler import token_required
 from app.database import SettingManager, AuthManager
 from app.utils import password_handler
+from app.services.cloudinary_handler import CloudinaryHandler
 
 
 settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
@@ -54,3 +55,44 @@ def change_password():
         return jsonify({"error": "The current password is incorrect"}), 401
 
     return jsonify({"succes": "password changed successfully"}), 200
+
+
+@settings_bp.route("/upload_avatar", methods=["POST"])
+@token_required
+def upload_avatar():
+    file_storage = request.files.get("file")
+    file_obj = None
+    if file_storage:
+        # Pass a file-like to Cloudinary (FileStorage.stream)
+        file_obj = file_storage.stream
+    else:
+        # fallback: try JSON / base64 (if the frontend sends base64 in the body)
+        data = request.get_json(silent=True)
+        if (
+            data
+            and isinstance(data.get("file"), str)
+            and data["file"].startswith("data:")
+        ):
+            import base64, io
+
+            header, encoded = data["file"].split(",", 1)
+            file_bytes = base64.b64decode(encoded)
+            file_obj = io.BytesIO(file_bytes)
+
+    if not file_obj:
+        return jsonify({"error": "No file provided"}), 400
+
+    result = CloudinaryHandler.upload_avatar(file=file_obj)
+    if not result:
+        return jsonify({"error": "error uploading the photo"}), 500
+
+    payload = g.user_payload
+    user_id = int(payload["sub"])
+
+    user = SettingManager.upload_avatar(
+        user_id=user_id, public_id=result["public_id"], secure_url=result["secure_url"]
+    )
+    if not user:
+        return jsonify({"error": "error uploading the photo"}), 500
+
+    return jsonify({"user": user}), 200
