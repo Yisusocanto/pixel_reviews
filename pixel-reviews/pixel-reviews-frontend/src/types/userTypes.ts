@@ -13,6 +13,7 @@ export interface User {
   location: string;
   bio: string;
   website: string;
+  avatarUrl: string
   createdAt: string;
   reviews?: Array<Review>;
   ratings?: Array<Rating>;

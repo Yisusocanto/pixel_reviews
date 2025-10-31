@@ -9,6 +9,17 @@ const axiosInstance = axios.create({
   },
 });
 
+// Quitar Content-Type cuando el body es FormData para no romper el boundary
+axiosInstance.interceptors.request.use((config: any) => {
+  if (config && config.data && config.data instanceof FormData) {
+    // el navegador/axios añadirá el Content-Type correcto con boundary
+    if (config.headers) {
+      delete config.headers["Content-Type"];
+    }
+  }
+  return config;
+});
+
 // function that initializes the axios intercept
 export const setupAxiosInterceptors = (onAuthError: () => void) => {
   axiosInstance.interceptors.response.use(

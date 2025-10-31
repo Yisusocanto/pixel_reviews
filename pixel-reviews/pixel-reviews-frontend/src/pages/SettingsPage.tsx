@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContextProvider";
 
 import {
   Tabs,
@@ -7,10 +8,9 @@ import {
   TabsTrigger,
 } from "../components/ui/tabs";
 import { Card } from "../components/luxe/card";
-
 import ProfileSettings from "@/components/settingsComponents/ProfileSettings";
-import { useAuth } from "@/context/AuthContextProvider";
 import AuthSettings from "@/components/settingsComponents/AuthSettings";
+import AvatarSettings from "@/components/settingsComponents/AvatarSettings";
 
 function SettingsPage() {
   const { tab } = useParams();
@@ -43,12 +43,12 @@ function SettingsPage() {
           <TabsTrigger value="auth">
             <span>Auth</span>
           </TabsTrigger>
-          <TabsTrigger value="notifications">
+          {/* {<TabsTrigger value="notifications">
             <span>Notifications</span>
           </TabsTrigger>
           <TabsTrigger value="data">
             <span>Data</span>
-          </TabsTrigger>
+          </TabsTrigger>} */}
         </TabsList>
         <div>
           <TabsContent value="profile">
@@ -56,14 +56,18 @@ function SettingsPage() {
               <ProfileSettings user={userData || undefined} />
             </Card>
           </TabsContent>
-          <TabsContent value="avatar">Avatar content</TabsContent>
+          <TabsContent value="avatar">
+            <Card>
+              <AvatarSettings defaultAvatar={userData?.avatarUrl} />
+            </Card>
+          </TabsContent>
           <TabsContent value="auth">
             <Card>
               <AuthSettings />
             </Card>
           </TabsContent>
-          <TabsContent value="notifications">noti content</TabsContent>
-          <TabsContent value="data">data content</TabsContent>
+          {/* {<TabsContent value="notifications">noti content</TabsContent>
+          <TabsContent value="data">data content</TabsContent>} */}
         </div>
       </Tabs>
     </div>

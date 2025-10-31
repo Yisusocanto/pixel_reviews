@@ -24,7 +24,7 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
       <div className="flex-1 flex flex-col items-center gap-4">
         <Avatar hasBorder className="size-45">
           {/*aca luego se pone la foto del usuario, cuando se implememnte la funcion */}
-          <AvatarImage src="https://img.freepik.com/vector-premium/imagen-perfil-avatar-hombre-aislada-fondo-imagen-profil-avatar-hombre_1293239-4857.jpg" />
+          <AvatarImage src={user?.avatarUrl} />
           <AvatarFallback>PP</AvatarFallback>
         </Avatar>
         {ownProfile && (

@@ -2,8 +2,21 @@ import { motion } from "framer-motion";
 import { Calendar, User } from "lucide-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
-import type { GameReviewCardProps } from "@/types/reviewTypes";
 import { RatingComponent } from "../ui/rating";
+import { Avatar, AvatarImage, AvatarFallback } from "../luxe/avatar";
+
+export interface GameReviewCardProps {
+  coverImage?: string;
+  gameTitle?: string;
+  gameSlug?: string;
+  reviewTitle?: string;
+  reviewContent?: string;
+  rating?: number;
+  authorUsername?: string;
+  authorAvatar?: string;
+  createdDate?: string;
+  className?: string;
+}
 
 const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
   (
@@ -15,6 +28,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
       reviewContent,
       rating,
       authorUsername,
+      authorAvatar,
       createdDate,
       className,
     },
@@ -117,7 +131,16 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/[0.1] flex items-center justify-center">
-                    <User className="w-5 h-5 text-white/60" />
+                    {authorAvatar ? (
+                      <Avatar>
+                        <AvatarImage src={authorAvatar} alt="Author Avatar" />
+                        <AvatarFallback>
+                          {authorUsername?.slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                    ) : (
+                      <User className="w-5 h-5 text-white/60" />
+                    )}
                   </div>
                   <div>
                     <p className="text-sm text-white/40 mb-0.5">Author</p>

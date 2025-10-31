@@ -38,6 +38,7 @@ function Index() {
             reviewContent={review.content}
             rating={review.rating?.score}
             authorUsername={review.author?.username}
+            authorAvatar={review.author?.avatarUrl}
             createdDate={review.createdAt}
             className="w-xl "
           />

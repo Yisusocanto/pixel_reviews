@@ -173,7 +173,7 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
               variant="lg"
             />
             {errors.bio ? (
-              <HelperText>{errors.bio.message}</HelperText>
+              <HelperText color="failure">{errors.bio.message}</HelperText>
             ) : (
               <HelperText color="gray">
                 Write your bio between 20 to 300 characters
