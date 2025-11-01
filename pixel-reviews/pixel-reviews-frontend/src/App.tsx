@@ -37,7 +37,7 @@ function App() {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Background />
       <NavBar />
       <Routes>
@@ -60,7 +60,7 @@ function App() {
         <Route path="/*" element={<h1>Pagina no existe</h1>} />
       </Routes>
       <Footer/>
-    </>
+    </div>
   );
 }
 

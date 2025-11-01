@@ -15,7 +15,7 @@ class SettingManager(DatabaseBase):
         location: str,
         bio: str,
         website: str,
-    ) -> Optional[User]:
+    ) -> Optional[dict]:
         try:
             with cls.get_session() as session:
                 user = session.query(User).filter(User.user_id == user_id).first()
@@ -28,13 +28,15 @@ class SettingManager(DatabaseBase):
                 user.bio = bio
                 user.website = website
 
-            return user
+                return UserSchema().dump(user)
         except Exception as e:
             print("error on update_profile manager", e)
             return None
 
     @classmethod
-    def upload_avatar(cls, user_id: int, public_id: str, secure_url: str) -> Optional[dict]:
+    def upload_avatar(
+        cls, user_id: int, public_id: str, secure_url: str
+    ) -> Optional[dict]:
         try:
             with cls.get_session() as session:
                 user = session.query(User).filter(User.user_id == user_id).first()

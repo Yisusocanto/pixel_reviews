@@ -27,13 +27,13 @@ def update_profile():
         lastname=lastname,
         location=location,
         bio=bio,
-        website=website,
+        website=website, 
     )
 
     if not user:
         return jsonify({"error": "unknown error"}), 500
 
-    return jsonify({"succes": "profile updated successfully"}), 200
+    return jsonify({"user": user}), 200
 
 
 @settings_bp.route("/change_password", methods=["POST"])

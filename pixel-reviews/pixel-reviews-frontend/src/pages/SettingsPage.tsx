@@ -33,7 +33,7 @@ function SettingsPage() {
         value={activeTab}
         onValueChange={handleTabChange}
       >
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid grid-cols-3">
           <TabsTrigger value="profile">
             <span>Profile</span>
           </TabsTrigger>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/context/AuthContextProvider";
 
 // Components
 import { Input } from "../luxe/input";
@@ -65,7 +66,8 @@ interface ProfileSettingsProps {
 
 function ProfileSettings({ user }: ProfileSettingsProps) {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false); 
+  const {setUserData} = useAuth()
   const {
     register,
     handleSubmit,
@@ -98,13 +100,15 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
-      await updateProfile(
+      const response = await updateProfile(
         data.name,
         data.lastname,
         data.location || "",
         data.bio || "",
         data.website || ""
       );
+      const user = response?.data?.user
+      setUserData(user)
       displaySuccessToast();
       setIsDisabled(true);
     } catch (error: any) {
@@ -186,7 +190,7 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
               style={{ color: "rgb(246 246 246)" }}
               className="w-full"
               type="text"
-              placeholder="www.my-website.com"
+              placeholder={user?.website ? "" : "www.mywebsite.com"}
               defaultValue={user?.website}
               {...register("website")}
             />
