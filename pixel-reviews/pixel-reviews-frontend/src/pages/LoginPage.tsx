@@ -8,7 +8,7 @@ function LoginPage() {
         className="w-full max-w-4xl rounded-2xl flex flex-col md:flex-row mx-auto p-6 md:p-8 gap-6 md:gap-8"
         variant="shine"
       >
-        <div className="my-auto flex-1 text-center lg:text-left">
+        <div className="my-auto flex-1 text-center lg:text-left w-3xs">
           <h1 className="text-3xl text-white text-center font-bold mb-2">
             We are very happy to have you back
           </h1>

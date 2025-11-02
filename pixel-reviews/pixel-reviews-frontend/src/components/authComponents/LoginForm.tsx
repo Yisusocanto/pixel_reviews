@@ -1,16 +1,17 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { login } from "@/services/authService";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContextProvider";
 import useAlreadyAuth from "@/hooks/useAlreadyAuth";
-import { Label, TextInput, Button, HelperText } from "flowbite-react";
-
-// Icons
-import UsernameIcon from "@/components/iconsComponents/UsernameIcon";
-import LockIcon from "@/components/iconsComponents/LockIcon";
+// Components
+import { Label, HelperText } from "flowbite-react";
+import { Lock, AtSign } from "lucide-react";
+import { Input, InputAddon, InputGroup } from "../ui/input";
+import AccentButton from "../commonsComponents/AccentButton";
+// Services
+import { login } from "@/services/authService";
 
 // The loin schema for the validations
 const loginSchema = z.object({
@@ -38,60 +39,64 @@ function LoginForm() {
   });
 
   // hnadle of the api call
-  const onSubmit = handleSubmit(async (data) => { 
+  const onSubmit = handleSubmit(async (data) => {
     try {
       const response = await login(data);
       setActiveSession(true);
       setUserData(response.data.user_data);
       navigate("/");
     } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || "error desconocido");
+      setErrorMessage(error.response?.data?.message || "Unknown error");
     }
   });
 
   return (
-    <div className="shadow-4xl max-w-sm w-full">
-      <h2 className="text-4xl text-white font-bold mb-2">Welcome Back!</h2>
-      <p className="text-gray-400 mb-8">Let's log in to continue</p>
+    <div className="flex flex-col shadow-4xl max-w-sm w-full">
+      <h2 className="text-4xl font-bold mb-2">Welcome Back!</h2>
+      <p className="text-primary-muted mb-8">Let's log in to continue</p>
 
       <form onSubmit={onSubmit}>
-        <Label color={errors.username ? "failure" : "default"}>Username</Label>
-        <TextInput
-          {...register("username")}
-          type="text"
-          shadow
-          placeholder="johndoe1234"
-          icon={UsernameIcon}
-          autoFocus
-        />
-        <HelperText className="mb-5" color="failure">
-          {errors.username?.message}
-        </HelperText>
-        <Label
-          className="mt-10"
-          color={errors.password ? "failure" : "default"}
-        >
-          Password
-        </Label>
-        <TextInput
-          {...register("password")}
-          type="password"
-          shadow
-          placeholder="**********"
-          icon={LockIcon}
-        />
-        <HelperText className="mb-5" color="failure">
-          {errors.password?.message}
-        </HelperText>
-        <Button
-          className="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white hover:bg-gradient-to-br focus:ring-blue-300 dark:focus:ring-blue-800 w-full"
-          type="submit"
-        >
-          Login
-        </Button>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col">
+            <Label color={errors.username ? "failure" : "default"}>
+              Username
+            </Label>
+            <InputGroup>
+              <InputAddon mode="icon" variant="lg">
+                <AtSign />
+              </InputAddon>
+              <Input
+                type="text"
+                variant="lg"
+                {...register("username")}
+                placeholder="johndoe1234"
+                autoFocus
+              />
+            </InputGroup>
+            <HelperText color="failure">{errors.username?.message}</HelperText>
+          </div>
+          <div className="flex flex-col">
+            <Label color={errors.password ? "failure" : "default"}>
+              Password
+            </Label>
+            <InputGroup>
+              <InputAddon mode="icon" variant="lg">
+                <Lock />
+              </InputAddon>
+              <Input
+                type="text"
+                variant="lg"
+                {...register("password")}
+                placeholder="**********"
+              />
+            </InputGroup>
+            <HelperText color="failure">{errors.password?.message}</HelperText>
+          </div>
+          <AccentButton>Login</AccentButton>
+        </div>
       </form>
       <p className="mt-2 text-red-500">{errorMessage}</p>
-      <p className="text-white text-center mt-4 ">
+      <span className="flex justify-center gap-2 mt-4 ">
         Don't have an account?
         <Link
           to="/auth/signup"
@@ -99,15 +104,15 @@ function LoginForm() {
         >
           Sign Up
         </Link>
-      </p>
-      <p className="text-white text-center mt-4 ">
+      </span>
+      <span className="text-white text-center mt-4 ">
         <Link
           to="/auth/password_recovery"
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
         >
           Forgot password?
         </Link>
-      </p>
+      </span>
     </div>
   );
 }

@@ -13,10 +13,12 @@ import LogOutPage from "./pages/LogOutPage";
 import SettingsPage from "./pages/SettingsPage";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import PasswordReset from "./pages/PasswordReset";
+import NotFoundPage from "./pages/NotFoundPage";
 //components
 import Background from "./components/commonsComponents/Background";
 import NavBar from "./components/commonsComponents/NavBar";
 import { Footer } from "./components/commonsComponents/Footer";
+import SpinnerComponent from "./components/commonsComponents/SpinnerComponent";
 //Context and Config
 import { useAuth } from "./context/AuthContextProvider";
 import { setupAxiosInterceptors } from "./config/axiosConfig";
@@ -33,11 +35,11 @@ function App() {
   }, []);
 
   if (loading) {
-    return <h1>Cargando...</h1>;
+    return <SpinnerComponent/>;
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col font-exo">
       <Background />
       <NavBar />
       <Routes>
@@ -57,7 +59,7 @@ function App() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/settings/:tab" element={<SettingsPage />} />
 
-        <Route path="/*" element={<h1>Pagina no existe</h1>} />
+        <Route path="/*" element={<NotFoundPage/>} />
       </Routes>
       <Footer/>
     </div>

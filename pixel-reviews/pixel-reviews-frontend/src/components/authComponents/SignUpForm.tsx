@@ -1,25 +1,18 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { signUp } from "@/services/authService";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAlreadyAuth from "@/hooks/useAlreadyAuth";
 import { useAuth } from "@/context/AuthContextProvider";
-
-//icons
-import UsernameIcon from "@/components/iconsComponents/UsernameIcon";
-import LockIcon from "@/components/iconsComponents/LockIcon";
-import EmailIcon from "@/components/iconsComponents/EmailIcon";
-
-//flowbite components
-import {
-  TextInput,
-  Label,
-  HelperText,
-  Button,
-  Datepicker,
-} from "flowbite-react";
+// Components
+import { Input, InputAddon, InputGroup } from "../ui/input";
+import { DateField, DateInput } from "../ui/datefield";
+import { AtSign, CalendarDays, Mail, Lock } from "lucide-react";
+import AccentButton from "../commonsComponents/AccentButton";
+import { Label, HelperText } from "flowbite-react";
+// Services
+import { signUp } from "@/services/authService";
 
 //Form validation scheme
 const signUpSchema = z
@@ -101,118 +94,150 @@ function SignUpForm() {
       setUserData(response.data.user_data);
       navigate("/");
     } catch (error: any) {
-      setErrormessage(error.response?.data?.message || "Error desconocido");
+      setErrormessage(error.response?.data?.message || "Unknown error");
     }
   });
 
   return (
-    <div className="w-full shadow-4xl max-w-md">
-      <h2 className="text-4xl text-white font-bold mb-2">Create an account</h2>
-      <p className="text-gray-400 mb-8">Join us to get started</p>
+    <div className="flex flex-col w-full shadow-4xl max-w-md">
+      <h2 className="text-4xl text-center sm:text-start font-bold mb-2">
+        Create an account
+      </h2>
+      <p className="text-primary-muted text-center sm:text-start mb-8">
+        Join us to get started
+      </p>
       <form onSubmit={onSubmit}>
-        <div className="grid-cols-2 grid gap-4">
-          <div>
-            <Label color={errors.name ? "failure" : "default"}>Name</Label>
-            <TextInput
-              type="text"
-              {...register("name")}
-              className=""
-              placeholder="John"
-              autoFocus
-            />
-            <HelperText color="failure">{errors.name?.message}</HelperText>
+        <div className="flex flex-col gap-2">
+          {/* Name and Lastname */}
+          <div className="flex justify-between gap-2">
+            <div className="flex flex-col">
+              <Label color={errors.name ? "failure" : "default"}>Name</Label>
+              <Input
+                type="text"
+                variant="lg"
+                {...register("name")}
+                autoFocus
+                placeholder="John"
+              />
+              <HelperText color="failure">{errors.name?.message}</HelperText>
+            </div>
+            <div className="flex flex-col">
+              <Label color={errors.lastname ? "failure" : "default"}>
+                Lastname
+              </Label>
+              <Input
+                type="text"
+                variant="lg"
+                {...register("lastname")}
+                placeholder="Doe"
+              />
+              <HelperText color="failure">
+                {errors.lastname?.message}
+              </HelperText>
+            </div>
           </div>
-          <div>
-            <Label color={errors.lastname ? "failure" : "default"}>
-              Lastname
+          {/* Username */}
+          <div className="flex flex-col">
+            <Label color={errors.username ? "failure" : "default"}>
+              Username
             </Label>
-            <TextInput
-              type="text"
-              {...register("lastname")}
-              className=""
-              placeholder="Doe"
-            />
-            <HelperText color="failure">{errors.lastname?.message}</HelperText>
+            <InputGroup>
+              <InputAddon mode="icon" variant="lg">
+                <AtSign />
+              </InputAddon>
+              <Input
+                type="text"
+                variant="lg"
+                {...register("username")}
+                placeholder="johndoe1234"
+              />
+            </InputGroup>
+            <HelperText color="failure">{errors.username?.message}</HelperText>
           </div>
-        </div>
-        <div className="mt-3">
-          <Label color={errors.username ? "failure" : "default"}>
-            Username
-          </Label>
-          <TextInput
-            type="text"
-            {...register("username")}
-            className=""
-            placeholder="johndoe1234"
-            icon={UsernameIcon}
-          />
-          <HelperText color="failure">{errors.username?.message}</HelperText>
-        </div>
-        <div className="mt-3">
-          <Label color={errors.email ? "failure" : "default"}>Email</Label>
-          <TextInput
-            type="email"
-            {...register("email")}
-            className=""
-            placeholder="johndoe@example.com"
-            icon={EmailIcon}
-          />
-          <HelperText color="failure">{errors.email?.message}</HelperText>
-        </div>
+          {/* Email */}
+          <div className="flex flex-col">
+            <Label color={errors.email ? "failure" : "default"}>Email</Label>
+            <InputGroup>
+              <InputAddon mode="icon" variant="lg">
+                <Mail />
+              </InputAddon>
+              <Input
+                type="text"
+                variant="lg"
+                {...register("email")}
+                placeholder="johndoe@example.com"
+              />
+            </InputGroup>
+            <HelperText color="failure">{errors.email?.message}</HelperText>
+          </div>
+          {/* Birthday */}
+          <div className="flex flex-col">
+            <Label color={errors.birthday ? "failure" : "default"}>
+              Birthday
+            </Label>
+            <InputGroup>
+              <InputAddon mode="icon" variant="lg">
+                <CalendarDays />
+              </InputAddon>
+              <DateField
+                aria-label="bithday"
+                onChange={(value) => {
+                  if (value) {
+                    console.log(value);
+                    console.log(value.toString());
+                    const formatted = value.toString();
+                    setValue("birthday", formatted, { shouldValidate: true });
+                  }
+                }}
+              >
+                <DateInput variant="lg" />
+              </DateField>
+            </InputGroup>
 
-        <div className="mt-3">
-          <Label color={errors.birthday ? "failure" : "default"}>
-            Birthday
-          </Label>
-          <Datepicker
-            onChange={(value) => {
-              if (value) {
-                // Formatea la fecha a YYYY-MM-DD
-                const formatted = value.toISOString().split("T")[0];
-                setValue("birthday", formatted, { shouldValidate: true });
-              }
-            }}
-          />
-          <HelperText color="failure">{errors.birthday?.message}</HelperText>
-        </div>
+            <HelperText color="failure">{errors.birthday?.message}</HelperText>
+          </div>
 
-        <div className="mt-3">
-          <Label color={errors.password ? "failure" : "default"}>
-            Password
-          </Label>
-          <TextInput
-            type="password"
-            {...register("password")}
-            className=""
-            placeholder="**********"
-            icon={LockIcon}
-          />
-          <HelperText color="failure">{errors.password?.message}</HelperText>
+          <div className="flex flex-col">
+            <Label color={errors.password ? "failure" : "default"}>
+              Password
+            </Label>
+            <InputGroup>
+              <InputAddon mode="icon" variant="lg">
+                <Lock />
+              </InputAddon>
+              <Input
+                type="password"
+                variant="lg"
+                {...register("password")}
+                placeholder="**********"
+              />
+            </InputGroup>
+            <HelperText color="failure">{errors.password?.message}</HelperText>
+          </div>
+          <div className="flex flex-col">
+            <Label color={errors.confirmPassword ? "failure" : "default"}>
+              Confirm Password
+            </Label>
+            <InputGroup>
+              <InputAddon mode="icon" variant="lg">
+                <Lock />
+              </InputAddon>
+              <Input
+                type="password"
+                variant="lg"
+                {...register("confirmPassword")}
+                placeholder="**********"
+              />
+            </InputGroup>
+            <HelperText color="failure">
+              {errors.confirmPassword?.message}
+            </HelperText>
+          </div>
+          <AccentButton>Create user</AccentButton>
         </div>
-        <div className="mt-3">
-          <Label color={errors.confirmPassword ? "failure" : "default"}>
-            Confirm Password
-          </Label>
-          <TextInput
-            type="password"
-            {...register("confirmPassword")}
-            className=""
-            placeholder="**********"
-            icon={LockIcon}
-          />
-          <HelperText color="failure">
-            {errors.confirmPassword?.message}
-          </HelperText>
-        </div>
-        <Button
-          type="submit"
-          className="bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 text-white hover:bg-gradient-to-br focus:ring-blue-300 dark:focus:ring-blue-800 w-full mt-5"
-        >
-          Create User
-        </Button>
       </form>
-      <p className="text-red-500 mt-2">{errorMessage}</p>
-      <p className="text-white text-center mt-4">
+      <span className="text-destructive mt-2">{errorMessage}</span>
+      <span className="text-center mt-4">
         Already have an account?{" "}
         <Link
           to="/auth/login"
@@ -220,7 +245,7 @@ function SignUpForm() {
         >
           Log in
         </Link>
-      </p>
+      </span>
     </div>
   );
 }
