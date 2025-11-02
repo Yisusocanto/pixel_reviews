@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContextProvider";
-
+// Components
 import {
   Tabs,
   TabsContent,
@@ -11,6 +11,7 @@ import { Card } from "../components/luxe/card";
 import ProfileSettings from "@/components/settingsComponents/ProfileSettings";
 import AuthSettings from "@/components/settingsComponents/AuthSettings";
 import AvatarSettings from "@/components/settingsComponents/AvatarSettings";
+import { User, Shield, ImageUp } from "lucide-react";
 
 function SettingsPage() {
   const { tab } = useParams();
@@ -18,7 +19,7 @@ function SettingsPage() {
   const navigate = useNavigate();
 
   const currentTab = tab || "profile";
-  const validTabs = ["profile", "avatar", "auth", "notifications", "data"];
+  const validTabs = ["profile", "avatar", "auth"];
   const activeTab = validTabs.includes(currentTab) ? currentTab : "profile";
 
   const handleTabChange = (value: string) => {
@@ -26,22 +27,31 @@ function SettingsPage() {
   };
 
   return (
-    <div className="w-2xl m-auto">
+    <div className="flex justify-center">
       <Tabs
-        className="w-full my-4"
+        className="w-xs sm:w-sm md:w-xl my-4"
         defaultValue="profile"
         value={activeTab}
         onValueChange={handleTabChange}
       >
         <TabsList className="grid grid-cols-3">
           <TabsTrigger value="profile">
-            <span>Profile</span>
+            <span className="flex gap-2 items-center">
+              <User />
+              Profile
+            </span>
           </TabsTrigger>
           <TabsTrigger value="avatar">
-            <span>Avatar</span>
+            <span className="flex gap-2 items-center">
+              <ImageUp />
+              Avatar
+            </span>
           </TabsTrigger>
           <TabsTrigger value="auth">
-            <span>Auth</span>
+            <span className="flex gap-2 items-center">
+              <Shield />
+              Auth
+            </span>
           </TabsTrigger>
           {/* {<TabsTrigger value="notifications">
             <span>Notifications</span>

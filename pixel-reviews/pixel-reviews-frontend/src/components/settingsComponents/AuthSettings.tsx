@@ -2,15 +2,13 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 // Components
 import { toast, Toaster } from "sonner";
 import { Input } from "../luxe/input";
-import { Button } from "../luxe/button";
 import { HelperText } from "flowbite-react";
 import { LockIcon, Save } from "lucide-react";
 import SpinnerComponent from "../commonsComponents/SpinnerComponent";
-
+import AccentButton from "../commonsComponents/AccentButton";
 // Services
 import { changePassword } from "@/services/settingService";
 
@@ -82,7 +80,7 @@ function AuthSettings() {
       <Toaster theme="dark" richColors={true} />
       {loading && <SpinnerComponent />}
       <form onSubmit={onSubmit}>
-        <div className="flex flex-col gap-4 px-4">
+        <div className="flex flex-col gap-4 px-1 md:px-4">
           <div className="flex gap-2 items-center">
             <LockIcon size={18} />
             <h4 className="text-lg">Change Password</h4>
@@ -135,10 +133,10 @@ function AuthSettings() {
             )}
           </div>
           <div className="flex">
-            <Button className="flex gap-2 items-center">
+            <AccentButton className="flex gap-2 items-center">
               <Save size={16} />
               <span>Change Password</span>
-            </Button>
+            </AccentButton>
           </div>
         </div>
       </form>

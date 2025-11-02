@@ -3,16 +3,15 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContextProvider";
-
 // Components
 import { Input } from "../luxe/input";
 import { Textarea } from "../ui/textarea";
-import { Button } from "../luxe/button";
 import { Separator } from "../ui/separator";
 import SpinnerComponent from "../commonsComponents/SpinnerComponent";
 import { HelperText } from "flowbite-react";
 import { toast, Toaster } from "sonner";
 import { Save } from "lucide-react";
+import AccentButton from "../commonsComponents/AccentButton";
 // Services
 import { updateProfile } from "@/services/settingService";
 // Types
@@ -123,7 +122,7 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
       <Toaster theme="dark" richColors={true} />
       {loading && <SpinnerComponent />}
       <form onSubmit={onSubmit} onChange={() => setIsDisabled(false)}>
-        <div className="flex flex-col gap-4 px-4">
+        <div className="flex flex-col gap-4 px-1 md:px-4">
           <div className="flex flex-col">
             <label htmlFor="name">Name</label>
             <Input
@@ -200,15 +199,13 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
           </div>
           <Separator />
           <div className="flex justify-end ">
-            <Button
+            <AccentButton
               disabled={isDisabled}
-              className={`${
-                isDisabled ? "hover:cursor-not-allowed" : ""
-              } flex gap-2 items-center`}
+              className="flex gap-2 items-center"
             >
               <Save size={16} />
               <span className="text-base">Save changes</span>
-            </Button>
+            </AccentButton>
           </div>
         </div>
       </form>

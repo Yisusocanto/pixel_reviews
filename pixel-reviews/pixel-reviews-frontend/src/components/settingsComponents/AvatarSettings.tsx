@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { TriangleAlert, User, X } from "lucide-react";
+import AccentButton from "../commonsComponents/AccentButton";
+// Utils
 import { cn } from "@/lib/utils";
 // Services
 import { uploadAvatar } from "@/services/settingService";
@@ -119,7 +121,7 @@ export default function Avatar({
       <div className="relative">
         <div
           className={cn(
-            "group/avatar relative h-24 w-24 cursor-pointer overflow-hidden rounded-full border border-dashed transition-colors",
+            "group/avatar relative h-34 w-34 cursor-pointer overflow-hidden rounded-full border border-dashed transition-colors",
             isDragging
               ? "border-primary bg-primary/5"
               : "border-muted-foreground/25 hover:border-muted-foreground/20",
@@ -216,13 +218,13 @@ export default function Avatar({
         <Button onClick={openFileDialog} variant="ghost">
           Select
         </Button>
-        <Button
-          variant="secondary"
+        <AccentButton
+          size="sm"
           onClick={handleUpload}
           disabled={!currentFile || loading || errors.length > 0}
         >
           {loading ? "Uploading..." : "Send"}
-        </Button>
+        </AccentButton>
       </div>
     </div>
   );
