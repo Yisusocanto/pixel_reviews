@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
-import { indexPageData } from "@/services/indexPageService";
+// Components
 import GameReviewCard from "@/components/gameReviewComponents/GameReviewCard";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
-
+// Services
+import { indexPageData } from "@/services/indexPageService";
+// Types
 import type { Review } from "@/types/gameTypes";
 
 function Index() {
   const [reviews, setReviews] = useState<Review[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const bringIndexPageData = async () => {
@@ -15,6 +18,7 @@ function Index() {
         const response = await indexPageData();
         setReviews(response.data.reviews);
       } catch (error: any) {
+        setError(error?.response?.data?.error);
       } finally {
         setLoading(false);
       }
@@ -28,19 +32,13 @@ function Index() {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {reviews?.map((review: Review) => {
+      {error && <span>{error}</span>}
+      {reviews?.map((review: Review, e) => {
         return (
           <GameReviewCard
-            coverImage={review.game?.imageURL}
-            gameTitle={review.game?.title}
-            gameSlug={review.game?.slug}
-            reviewTitle={review.title}
-            reviewContent={review.content}
-            rating={review.rating?.score}
-            authorUsername={review.author?.username}
-            authorAvatar={review.author?.avatarUrl}
-            createdDate={review.createdAt}
-            className="w-xl "
+            review={review}
+            className="w-xs sm:w-sm md:w-xl "
+            key={e}
           />
         );
       })}

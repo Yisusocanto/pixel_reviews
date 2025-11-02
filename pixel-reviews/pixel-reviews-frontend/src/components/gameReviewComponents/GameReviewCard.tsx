@@ -1,39 +1,22 @@
 import { motion } from "framer-motion";
-import { Calendar, User } from "lucide-react";
 import * as React from "react";
 import { Link } from "react-router-dom";
+// Components
+import { Calendar, User } from "lucide-react";
 import { RatingComponent } from "../ui/rating";
 import { Avatar, AvatarImage, AvatarFallback } from "../luxe/avatar";
+// Utils
+import { dateFormatter } from "@/utils/dateFormatter";
+// Types
+import type { Review } from "@/types/gameTypes";
 
 export interface GameReviewCardProps {
-  coverImage?: string;
-  gameTitle?: string;
-  gameSlug?: string;
-  reviewTitle?: string;
-  reviewContent?: string;
-  rating?: number;
-  authorUsername?: string;
-  authorAvatar?: string;
-  createdDate?: string;
+  review: Review;
   className?: string;
 }
 
 const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
-  (
-    {
-      coverImage,
-      gameTitle,
-      gameSlug,
-      reviewTitle,
-      reviewContent,
-      rating,
-      authorUsername,
-      authorAvatar,
-      createdDate,
-      className,
-    },
-    ref
-  ) => {
+  ({ review, className }, ref) => {
     const fadeUpVariants = {
       hidden: { opacity: 0, y: 30 },
       visible: (i: number) => ({
@@ -70,8 +53,8 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-transparent to-transparent z-10" />
               <img
-                src={coverImage}
-                alt={gameTitle}
+                src={review.game?.imageURL}
+                alt={review.game?.title}
                 className="w-full h-full object-cover"
               />
             </motion.div>
@@ -85,14 +68,16 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                 className="mb-4 flex items-center justify-between"
               >
                 <div>
-                  <h2 className="text-xl md:text-2xl font-bold text-white/90 mb-1 hover:text-accent-foreground">
-                    <Link to={`/games/${gameSlug}`}>{gameTitle}</Link>
+                  <h2 className="text-xl font-orbitron md:text-2xl font-bold text-white/90 mb-1 hover:text-primary-muted">
+                    <Link to={`/games/${review.game?.slug}`}>
+                      {review.game?.title}
+                    </Link>
                   </h2>
                   <div className="h-px w-16 bg-gradient-to-r from-white/40 to-transparent" />
                 </div>
                 <div className="flex items-center gap-3">
                   <RatingComponent
-                    rating={rating || 0}
+                    rating={review.rating?.score || 0}
                     showValue
                     size="lg"
                     className="text-xl"
@@ -107,7 +92,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                 animate="visible"
                 className="text-3xl md:text-4xl font-bold mb-8 text-white leading-tight"
               >
-                {reviewTitle}
+                {review.title}
               </motion.h1>
 
               <motion.div
@@ -118,7 +103,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                 className="mb-8"
               >
                 <p className="text-base md:text-lg text-white/60 leading-relaxed">
-                  {reviewContent}
+                  {review.content}
                 </p>
               </motion.div>
 
@@ -131,11 +116,14 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/[0.1] flex items-center justify-center">
-                    {authorAvatar ? (
+                    {review.author?.avatarUrl ? (
                       <Avatar>
-                        <AvatarImage src={authorAvatar} alt="Author Avatar" />
+                        <AvatarImage
+                          src={review.author.avatarUrl}
+                          alt="Author Avatar"
+                        />
                         <AvatarFallback>
-                          {authorUsername?.slice(0, 2)}
+                          {review.author.username?.slice(0, 2)}
                         </AvatarFallback>
                       </Avatar>
                     ) : (
@@ -144,9 +132,9 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                   </div>
                   <div>
                     <p className="text-sm text-white/40 mb-0.5">Author</p>
-                    <Link to={`/users/${authorUsername}`}>
-                      <p className="text-base font-medium text-white/80">
-                        {authorUsername}
+                    <Link to={`/users/${review.author?.username}`}>
+                      <p className="text-base font-medium text-white/80 hover:text-primary-muted">
+                        {review.author?.username}
                       </p>
                     </Link>
                   </div>
@@ -159,7 +147,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                   <div>
                     <p className="text-sm text-white/40 mb-0.5">Created At</p>
                     <p className="text-base font-medium text-white/80">
-                      {createdDate}
+                      {dateFormatter(review.createdAt || "")}
                     </p>
                   </div>
                 </div>
