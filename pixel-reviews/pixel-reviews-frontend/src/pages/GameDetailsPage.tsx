@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react";
-import { gameDetails } from "@/services/gameDataService";
 import { useParams, useNavigate } from "react-router-dom";
+// Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { RatingComponent } from "@/components/ui/rating";
-import { createRating } from "@/services/apiService";
 import { ReviewCard } from "@/components/gameReviewComponents/ReviewCard";
 import { Card } from "@/components/luxe/card";
 import { Star, Users, MessageSquare, Heart, LaptopMinimal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import {toast, Toaster} from "sonner"
+import { toast, Toaster } from "sonner";
 import GameHero from "@/components/gameComponents/GameHero";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
-import type { Game, Rating, Review } from "@/types/gameTypes";
-
-// Dialog
 import DialogReviewComponent from "@/components/gameReviewComponents/DialogReviewComponent";
+import NotFoundPage from "./NotFoundPage";
+// Types
+import type { Game, Rating, Review } from "@/types/gameTypes";
+// Services
+import { createRating } from "@/services/apiService";
+import { gameDetails } from "@/services/gameDataService";
+// Utils
+import { dateFormatter } from "@/utils/dateFormatter";
 
 function GameDetailsPage() {
   const [gameData, setGameData] = useState<Game | null>(null);
@@ -33,9 +37,7 @@ function GameDetailsPage() {
         setGameData(response.data.game_data);
         setUserRating(response.data.user_rating_data);
         setUserReview(response.data.user_review_data);
-        console.log(response);
       } catch (error: any) {
-        console.log("error", error);
         if (error.status == 401) navigate("/auth/login");
         if (error.status == 404) setError("404");
       } finally {
@@ -48,16 +50,16 @@ function GameDetailsPage() {
   const displaySuccessToast = () => {
     toast.success("Rating created", {
       description: "Rating created/updated successfully",
-      duration: 5000
-    })
-  }
+      duration: 5000,
+    });
+  };
 
   const displayErrorToast = (error: string) => {
     toast.error("Error", {
       description: `Error creating/updating the rating: ${error}`,
-      duration: 5000
-    })
-  } 
+      duration: 5000,
+    });
+  };
 
   const handleRatingChange = async (score: number) => {
     if (gameData) {
@@ -65,11 +67,10 @@ function GameDetailsPage() {
         const response = await createRating(gameData.game_id, score);
         setUserRating(response.data.rating);
         setUserReview(response.data.review);
-        displaySuccessToast()
+        displaySuccessToast();
       } catch (error: any) {
-        console.log(error);
         setError(error.response.data.error);
-        displayErrorToast(error.response.data.error)
+        displayErrorToast(error.response.data.error);
       }
     }
   };
@@ -79,12 +80,12 @@ function GameDetailsPage() {
   }
 
   if (error == "404") {
-    return <h1>El Juego no existe</h1>;
+    return <NotFoundPage/>;
   }
 
   return (
     <div>
-      <Toaster theme="dark" richColors={true}/>
+      <Toaster theme="dark" richColors={true} />
       <GameHero gameData={gameData || undefined} />
       <div className="flex w-full">
         {/* Left side */}
@@ -93,7 +94,7 @@ function GameDetailsPage() {
             <TabsList className="w-fit ">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="reviews">Reviews</TabsTrigger>
-              <TabsTrigger value="specs">Specs</TabsTrigger>
+              {/* {<TabsTrigger value="specs">Specs</TabsTrigger>} */}
             </TabsList>
             {/* Descripction and images of the video game */}
             <TabsContent value="overview">
@@ -132,7 +133,7 @@ function GameDetailsPage() {
               </div>
             </TabsContent>
             {/* specs of the videogame */}
-            <TabsContent value="specs">
+            {/* {<TabsContent value="specs">
               <div className="mt-8">
                 <Card className="px-8">
                   <h3 className="text-xl text-bold mb-4">Specs</h3>
@@ -186,7 +187,7 @@ function GameDetailsPage() {
                   </div>
                 </Card>
               </div>
-            </TabsContent>
+            </TabsContent>} */}
           </Tabs>
         </div>
         {/* Right side */}
@@ -196,8 +197,10 @@ function GameDetailsPage() {
             <Card variant="shine" className="flex flex-col gap-4 ">
               <h3 className="text-lg">Rate this game</h3>
               <div className="flex gap-2 items-center">
-                <Star size={36} className="text-yellow-400 fill-yellow-400"/>
-                <span className="text-4xl text-bold">{gameData?.averageRating}</span>
+                <Star size={36} className="text-yellow-400 fill-yellow-400" />
+                <span className="text-4xl text-bold">
+                  {gameData?.averageRating}
+                </span>
                 <span className="text-base">/ 5</span>
               </div>
               <span className="text-base text-primary-muted">
@@ -239,18 +242,18 @@ function GameDetailsPage() {
                 <h4 className="text-lg text-primary-muted">Publishers</h4>
                 {gameData?.publishers?.map((publisher, index) => (
                   <div className="flex flex-col" key={index}>
-                    <span  className="text-lg">
-                      {publisher.name}
-                    </span>
+                    <span className="text-lg">{publisher.name}</span>
                   </div>
                 ))}
               </div>
               <Separator />
               <div>
                 <h4 className="text-lg text-primary-muted">Release Date</h4>
-                <span className="text-lg">{gameData?.releaseDate}</span>
+                <span className="text-lg">
+                  {dateFormatter(gameData?.releaseDate || "")}
+                </span>
               </div>
-              <Separator />
+              {/* {<Separator />
               <div className="flex gap-2">
                 <Badge variant={"outline"} className="flex gap-2">
                   <LaptopMinimal size={14} /> PC
@@ -261,11 +264,11 @@ function GameDetailsPage() {
                 <Badge variant={"outline"} className="flex gap-2">
                   <LaptopMinimal size={14} /> Xbox Series X
                 </Badge>
-              </div>
+              </div>} */}
             </Card>
           </div>
           {/* Community Card */}
-          <div className="w-sm m-auto">
+          {/* {<div className="w-sm m-auto">
             <Card className="flex flex-col gap-4">
               <h3 className="text-lg">Community</h3>
               <div className="flex justify-between">
@@ -292,7 +295,7 @@ function GameDetailsPage() {
                 <span className="text-lg">437K</span>
               </div>
             </Card>
-          </div>
+          </div>} */}
         </div>
       </div>
     </div>

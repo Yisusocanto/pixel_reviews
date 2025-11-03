@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+// Components
 import {
   Dialog,
   DialogTrigger,
@@ -11,13 +12,16 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/luxe/dialog";
-import type { Game, Rating, Review } from "@/types/gameTypes";
 import { RatingComponent } from "../ui/rating";
 import { Button } from "../luxe/button";
 import { Input } from "../luxe/input";
 import { Textarea } from "../ui/textarea";
 import { toast, Toaster } from "sonner";
+import AccentButton from "../commonsComponents/AccentButton";
+// Services
 import { createReview } from "@/services/apiService";
+// types
+import type { Game, Rating, Review } from "@/types/gameTypes";
 
 // Form Schema
 const ReviewSchema = z.object({
@@ -97,9 +101,7 @@ function DialogReviewComponent({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         {/* Dialog Button */}
         <DialogTrigger asChild className="w-full">
-          <Button variant="default" className="cursor-pointer">
-            Write a Review
-          </Button>
+          <AccentButton className="cursor-pointer">Write a review</AccentButton>
         </DialogTrigger>
         {/* Dialog Content */}
         <DialogContent>
@@ -160,7 +162,7 @@ function DialogReviewComponent({
               <Button>Close</Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button onClick={onSubmit}>Review It</Button>
+              <AccentButton onClick={onSubmit}>Review It</AccentButton>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
