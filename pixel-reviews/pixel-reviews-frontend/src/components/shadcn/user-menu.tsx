@@ -4,15 +4,11 @@ import {
   LogOutIcon,
   PinIcon,
   UserPenIcon,
-} from "lucide-react"
+} from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,21 +17,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 //main
-import { useAuth } from "@/context/AuthContextProvider"
-import { Link } from "react-router-dom"
+import { useAuth } from "@/context/AuthContextProvider";
+import { Link } from "react-router-dom";
 
 export default function UserMenu() {
-  const {userData} = useAuth()
+  const { userData } = useAuth();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <Avatar>
             <AvatarImage src={userData?.avatarUrl} alt="Profile image" />
-            <AvatarFallback>PP</AvatarFallback>
+            <AvatarFallback>{userData?.username.slice(0, 2)}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -55,23 +51,19 @@ export default function UserMenu() {
             <Link to={`/users/${userData?.username}`}>My Profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-            <Link to="/settings">Settings</Link>
+            <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
+            <Link to={`/users/${userData?.username}/reviews`}>My Reviews</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 3</span>
+            <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
+            <span>Wishlist</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <PinIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 4</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 5</span>
+            <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
+            <Link to="/settings">Settings</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
@@ -81,5 +73,5 @@ export default function UserMenu() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

@@ -23,10 +23,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 // Navigation links array to be used in both desktop and mobile menus
 const loggedInNavigationLinks = [
-  { href: "/", label: "Home", active: true },
-  { href: "/", label: "Wishlist" },
-  { href: "/", label: "My Reviews" },
-  { href: "/", label: "New Releases" },
+  { href: "/", label: "Home", active: true }
 ];
 
 const loggedOutNavigationLinks = [
