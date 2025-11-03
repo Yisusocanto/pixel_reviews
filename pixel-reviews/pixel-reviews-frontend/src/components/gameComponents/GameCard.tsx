@@ -64,15 +64,13 @@ export const GameCard = ({
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.5 }}
       variants={contentVariants}
-      // --- NEW: Added hover animation ---
       whileHover={{
         scale: 1.03,
         boxShadow: "0px 10px 30px -5px hsl(var(--foreground) / 0.1)",
         transition: { type: "spring", stiffness: 300, damping: 20 },
       }}
-      // --- END NEW ---
       className={cn(
-        "w-full max-w-sm overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-lg cursor-pointer",
+        "flex flex-col h-full w-xs sm:w-xs lg:w-xs xl:w-sm max-w-sm overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-lg cursor-pointer",
         className
       )}
     >
@@ -98,12 +96,23 @@ export const GameCard = ({
       </div>
 
       {/* Content Section */}
-      <motion.div variants={contentVariants} className="p-5 space-y-4">
+      <motion.div variants={contentVariants} className="p-5 space-y-4 flex-1">
         <motion.div
           variants={itemVariants}
           className="flex justify-between items-start"
         >
-          <h3 className="text-xl font-orbitron font-bold">{title}</h3>
+          {/* --- CHANGED: limitar título a 2 líneas con ellipsis --- */}
+          <h3
+            className="text-xl font-orbitron font-bold"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {title}
+          </h3>
         </motion.div>
 
         <motion.div
@@ -117,6 +126,12 @@ export const GameCard = ({
           <motion.p
             variants={itemVariants}
             className="text-sm text-muted-foreground leading-relaxed"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
           >
             {description}
           </motion.p>
