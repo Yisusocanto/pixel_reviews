@@ -77,11 +77,7 @@ function PasswordRecovery() {
         <span className="text-destructive">{error}</span>
       </div>
 
-      {loading && (
-        <div className="z-50">
-          <SpinnerComponent />
-        </div>
-      )}
+      {loading && <SpinnerComponent/>}
     </div>
   );
 }

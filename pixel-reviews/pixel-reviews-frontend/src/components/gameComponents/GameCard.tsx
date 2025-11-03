@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { dateFormatter } from "@/utils/dateFormatter";
 
 // Interface for component props for type safety and reusability
 interface GameCardProps {
@@ -75,7 +76,7 @@ export const GameCard = ({
         className
       )}
     >
-      {/* Image Carousel Section */}
+      {/* Image Section */}
       <div className="relative group h-64">
         <AnimatePresence initial={false} custom={direction}>
           <motion.img
@@ -102,14 +103,14 @@ export const GameCard = ({
           variants={itemVariants}
           className="flex justify-between items-start"
         >
-          <h3 className="text-xl font-bold">{title}</h3>
+          <h3 className="text-xl font-orbitron font-bold">{title}</h3>
         </motion.div>
 
         <motion.div
           variants={itemVariants}
           className="text-m text-muted-foreground"
         >
-          <span>Released</span> &bull; <span>{released}</span>
+          <span>Released</span> &bull; <span>{dateFormatter(released)}</span>
         </motion.div>
 
         {description && (

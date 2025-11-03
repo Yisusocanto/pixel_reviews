@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { userProfile } from "@/services/userDataService";
 import { useAuth } from "@/context/AuthContextProvider";
+// Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Bell, UserRound, Gift, PencilLine } from "lucide-react";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
+import NotFoundPage from "./NotFoundPage";
 import UserProfile from "@/components/userComponents/UserProfile";
 import ProfileReviewCard from "@/components/gameReviewComponents/ProfileReviewCard";
-import type { User } from "../types/userTypes";
 import StatsCards from "@/components/userComponents/StatsCards";
 import WishlistStatsCards from "@/components/userComponents/WishlistStatsCards";
+// Services
+import { userProfile } from "@/services/userDataService";
+// Types
+import type { User } from "../types/userTypes";
 
 function UserProfilePage() {
   const { username, tab } = useParams();
@@ -29,12 +33,10 @@ function UserProfilePage() {
       try {
         const response = await userProfile(username || "");
         setUserDataProfile(response.data.user_data);
-        console.log(response.data);
       } catch (error: any) {
-        console.log(error.response);
         if (error.response.status == 401) navigate("/auth/login");
         if (error.response.status == 404) {
-          setError(error.response.data.message);
+          setError("404");
         }
       } finally {
         setLoading(false);
@@ -51,8 +53,8 @@ function UserProfilePage() {
     return <SpinnerComponent />;
   }
 
-  if (error) {
-    return <h1>{error}</h1>;
+  if (error == "404") {
+    return <NotFoundPage />;
   }
 
   return (
@@ -88,7 +90,7 @@ function UserProfilePage() {
         {/* Tabs Content */}
         <TabsContent value="profile">
           <div className="mt-8">
-            <StatsCards userData={userData || undefined}/>
+            <StatsCards userData={userData || undefined} />
           </div>
         </TabsContent>
         <TabsContent value="notifications">
@@ -103,7 +105,7 @@ function UserProfilePage() {
         </TabsContent>
         <TabsContent value="wishlist">
           <div>
-            <WishlistStatsCards/>
+            <WishlistStatsCards />
           </div>
         </TabsContent>
       </Tabs>

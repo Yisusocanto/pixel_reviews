@@ -94,11 +94,7 @@ function PasswordReset() {
           </form>
         </Card>
         <span className="text-destructive">{errorMessage}</span>
-        {loading && (
-          <div className="z-50">
-            <SpinnerComponent />
-          </div>
-        )}
+        {loading && <SpinnerComponent/>}
       </div>
     </div>
   );

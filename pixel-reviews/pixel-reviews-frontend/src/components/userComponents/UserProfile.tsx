@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import type { User } from "@/types/userTypes";
 import { Link } from "react-router-dom";
+// Utils
+import { dateFormatter } from "@/utils/dateFormatter";
 
 interface UserProfileCardProps {
   user: User | null;
@@ -52,11 +54,11 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
           {/*aca luego se pone la descripcion del usuario */}
           <p className="text-xl text-muted-foreground">{user?.bio}</p>
         </div>
-        <div className="columns-2 mb-4 text-lg">
+        <div className="grid grid-cols-2 mb-4 text-lg">
           <div className="flex flex-col gap-4">
             <span className="flex gap-2 items-center text-muted-foreground">
               <Calendar size={18} />
-              {user?.createdAt}
+              {dateFormatter(user?.createdAt || "")}
             </span>
             <span className="flex gap-2 items-center text-muted-foreground">
               <Star size={18} />{" "}
@@ -64,13 +66,17 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
             </span>
           </div>
           <div className="flex flex-col gap-4">
-            <span className="flex gap-2 items-center text-muted-foreground">
-              <MapPin size={18} /> {user?.location}
-            </span>
-            <span className="flex gap-2 items-center text-muted-foreground">
-              <LucideLink size={18} />
-              {user?.website}
-            </span>
+            {user?.location && (
+              <span className="flex gap-2 items-center text-muted-foreground">
+                <MapPin size={18} /> {user?.location}
+              </span>
+            )}
+            {user?.website && (
+              <span className="flex gap-2 items-center text-muted-foreground">
+                <LucideLink size={18} />
+                {user?.website}
+              </span>
+            )}
           </div>
         </div>
         {/* Contenedor principal: flex para alinear estadísticas a la izquierda y botón a la derecha */}

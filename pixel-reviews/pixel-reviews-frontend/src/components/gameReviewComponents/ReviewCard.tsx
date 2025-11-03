@@ -46,10 +46,10 @@ const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-4">
             {/* Aca va la foto del usuario, se implementa en un futuro */}
-            {review.game?.imageURL ? (
+            {review.author?.avatarUrl ? (
               <img
-                src={review.game.imageURL}
-                alt={`Avatar of ${review.game.title}`}
+                src={review.author.avatarUrl}
+                alt={`Avatar of ${review.author.username}`}
                 className="w-12 h-12 rounded-full object-cover"
               />
             ) : (
