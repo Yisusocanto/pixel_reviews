@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
-import { searchGames } from "@/services/gameDataService";
 import { useParams, useNavigate, Link } from "react-router-dom";
+// Components
 import { GameCard } from "@/components/gameComponents/GameCard";
-
-import type { SearchedGame } from "@/types/gameTypes";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
+import NotResultsPage from "./NotResultsPage";
+// Services
+import { searchGames } from "@/services/gameDataService";
+// Types
+import type { SearchedGame } from "@/types/gameTypes";
 
 function SearchGamesResultPage() {
   const [gameResults, setGameResults] = useState<Array<SearchedGame> | null>(
@@ -35,7 +38,7 @@ function SearchGamesResultPage() {
   }
 
   if (error == "404") {
-    return <h1>No results</h1>;
+    return <NotResultsPage gameTitle={gameTitle || ""} />;
   }
 
   return (
