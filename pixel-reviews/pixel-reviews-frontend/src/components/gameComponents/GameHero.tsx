@@ -22,7 +22,7 @@ const GameHero = ({ gameData }: GameHeroProps) => {
       <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 via-40% to-transparent to-70% z-10" />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col justify-end h-full pb-12 px-8 text-primary">
+      <div className="relative z-10 flex flex-col justify-end h-full pb-12 px-8 md:px-20  lg:px-35 md:mx-8 text-primary">
         {/* Tags */}
         {/* <div className="flex gap-2 mb-4">
         <Badge variant={"secondary"} className="text-base">

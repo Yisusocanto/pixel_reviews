@@ -12,6 +12,7 @@ import { toast, Toaster } from "sonner";
 import GameHero from "@/components/gameComponents/GameHero";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import DialogReviewComponent from "@/components/gameReviewComponents/DialogReviewComponent";
+import RatingStatistics from "@/components/gameReviewComponents/RatingStatistics";
 import NotFoundPage from "./NotFoundPage";
 // Types
 import type { Game, Rating, Review } from "@/types/gameTypes";
@@ -20,6 +21,7 @@ import { createRating } from "@/services/apiService";
 import { gameDetails } from "@/services/gameDataService";
 // Utils
 import { dateFormatter } from "@/utils/dateFormatter";
+import { Button } from "@/components/ui/button";
 
 function GameDetailsPage() {
   const [gameData, setGameData] = useState<Game | null>(null);
@@ -27,8 +29,22 @@ function GameDetailsPage() {
   const [userReview, setUserReview] = useState<Review | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { slug } = useParams();
   const navigate = useNavigate();
+
+  // Preview helpers
+  const PREVIEW_WORDS = 40;
+  const getPreview = (text?: string) => {
+    if (!text) return "";
+    const words = text.trim().split(/\s+/);
+    return words.length <= PREVIEW_WORDS
+      ? text
+      : words.slice(0, PREVIEW_WORDS).join(" ") + "…";
+  };
+  const isLongDescription =
+    !!gameData?.description &&
+    gameData.description.split(/\s+/).length > PREVIEW_WORDS;
 
   useEffect(() => {
     const bringGameDetails = async () => {
@@ -80,16 +96,16 @@ function GameDetailsPage() {
   }
 
   if (error == "404") {
-    return <NotFoundPage/>;
+    return <NotFoundPage />;
   }
 
   return (
     <div>
       <Toaster theme="dark" richColors={true} />
       <GameHero gameData={gameData || undefined} />
-      <div className="flex w-full">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-0 w-full md:px-20  lg:px-35">
         {/* Left side */}
-        <div className="flex-2 ,">
+        <div className="flex-2">
           <Tabs defaultValue="overview" className="mx-8">
             <TabsList className="w-fit ">
               <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -99,15 +115,60 @@ function GameDetailsPage() {
             {/* Descripction and images of the video game */}
             <TabsContent value="overview">
               <div className="flex flex-col gap-4 items-start mt-8">
-                <h3 className="text-2xl text-bold">About the game</h3>
-                <p className="text-base text-muted-foreground text-pretty">
-                  {gameData?.description}
-                </p>
+                <div className="max-w-sm md:max-w-2xl m-auto md:m-0">
+                  <h3 className="text-2xl text-bold">About the game</h3>
+
+                  {/* If description is short, show it all */}
+                  {!isLongDescription ? (
+                    <p>{gameData?.description}</p>
+                  ) : (
+                    <div className="relative">
+                      {/* Preview or full text with smooth max-height transition */}
+                      <p
+                        className={`transition-all duration-300 overflow-hidden`}
+                        style={{
+                          maxHeight: isOpen ? 1000 : 120, // ajusta valores según tu diseño
+                        }}
+                        aria-expanded={isOpen}
+                      >
+                        {isOpen
+                          ? gameData?.description
+                          : getPreview(gameData?.description)}
+                      </p>
+
+                      {/* Gradient overlay when collapsed */}
+                      {!isOpen && (
+                        <div
+                          aria-hidden="true"
+                          className="pointer-events-none absolute left-0 right-0 bottom-0 h-10"
+                        />
+                      )}
+
+                      <div className="mt-2">
+                        <Button
+                          variant="ghost"
+                          className="text-blue-600 hover:text-blue-500"
+                          size="sm"
+                          onClick={() => setIsOpen((v) => !v)}
+                        >
+                          {isOpen ? "Read less" : "Read more"}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="w-full items-center">
+                  <RatingStatistics
+                    classname="m-auto md:m-0"
+                    gameData={gameData || undefined}
+                  />
+                </div>
               </div>
             </TabsContent>
             {/* reviews of the videogame */}
             <TabsContent value="reviews">
-              <div className="flex flex-col gap-4 items-center m-auto w-xl mt-8">
+              <div className="flex flex-col gap-4 items-center m-auto w-full max-w-sm md:max-w-xl mt-8">
                 {/* Review of the main user if exits */}
                 {userReview ? (
                   <div className="w-full flex flex-col gap-4">
@@ -191,10 +252,10 @@ function GameDetailsPage() {
           </Tabs>
         </div>
         {/* Right side */}
-        <div className="flex-1 flex flex-col gap-4">
+        <div className="flex-1 flex flex-col gap-4 items-center sm:pla mx-8">
           {/* Rating and Review Card */}
-          <div className="w-sm m-auto">
-            <Card variant="shine" className="flex flex-col gap-4 ">
+          <div className="w-full max-w-sm">
+            <Card variant="shine" className="flex flex-col gap-4">
               <h3 className="text-lg">Rate this game</h3>
               <div className="flex gap-2 items-center">
                 <Star size={36} className="text-yellow-400 fill-yellow-400" />
@@ -226,7 +287,7 @@ function GameDetailsPage() {
             </Card>
           </div>
           {/* Information Card */}
-          <div className="w-sm m-auto">
+          <div className="w-full max-w-sm">
             <Card className="flex flex-col gap-4">
               <h3 className="text-lg text-bold">Information</h3>
               <div>
