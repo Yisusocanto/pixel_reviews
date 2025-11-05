@@ -20,7 +20,7 @@ import AccentButton from "../commonsComponents/AccentButton";
 // Utils
 import { cn } from "@/lib/utils";
 // Services
-import { uploadAvatar } from "@/services/settingService";
+import { uploadAvatar, deleteAvatar } from "@/services/settingService";
 
 interface AvatarProps {
   maxSize?: number;
@@ -63,6 +63,21 @@ export default function Avatar({
 
   const currentFile = files[0];
   const previewUrl = currentFile?.preview || defaultAvatar;
+
+  const handleDeleteAvatar = async () => {
+    setLoading(true);
+    setServerError(null);
+    setSuccessMsg(null);
+    try {
+      const response = await deleteAvatar();
+      setUserData(response?.data?.user);
+      setSuccessMsg("Avatar deleted successfully.");
+    } catch (error: any) {
+      setServerError(error?.response?.data?.error || "Unknown error.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleRemove = () => {
     if (currentFile) {
@@ -226,6 +241,15 @@ export default function Avatar({
           {loading ? "Uploading..." : "Send"}
         </AccentButton>
       </div>
+      {defaultAvatar && (
+        <Button
+          variant="destructive"
+          className="rounded-2xl"
+          onClick={handleDeleteAvatar}
+        >
+          {loading ? "Deleting..." : "Delete avatar"}
+        </Button>
+      )}
     </div>
   );
 }

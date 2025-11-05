@@ -36,3 +36,8 @@ export const uploadAvatar = async (formData: any): Promise<AxiosResponse> => {
   );
   return response;
 };
+
+export const deleteAvatar = async (): Promise<AxiosResponse> => {
+  const response = await axiosInstance.get("/settings/delete_avatar");
+  return response;
+};
