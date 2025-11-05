@@ -60,6 +60,7 @@ function SearchGamesResultPage() {
       {/* Resultados: ocupan el espacio restante y muestran una grilla de 2 columnas */}
       <main className="flex-1">
         <div className="mt-4">
+          <h1 className="text-4xl text-center font-bold font-orbitron mb-4">Results for {gameTitle}</h1>
           {gameResults && gameResults.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {gameResults.map((game: SearchedGame) => (
