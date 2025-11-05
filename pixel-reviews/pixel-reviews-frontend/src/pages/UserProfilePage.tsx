@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContextProvider";
 // Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, UserRound, Gift, PencilLine } from "lucide-react";
+import { Bell, UserRound, Gift, PencilLine, Library } from "lucide-react";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import NotFoundPage from "./NotFoundPage";
 import UserProfile from "@/components/userComponents/UserProfile";
@@ -25,7 +25,7 @@ function UserProfilePage() {
 
   const currentTab = tab || "profile";
 
-  const validTabs = ["profile", "notifications", "reviews", "wishlist"];
+  const validTabs = ["profile", "reviews"];
   const activeTab = validTabs.includes(currentTab) ? currentTab : "profile";
 
   useEffect(() => {
@@ -60,54 +60,66 @@ function UserProfilePage() {
   return (
     <div className="p-8 mt-6">
       {username == userData?.username ? (
-        <UserProfile user={userData} ownProfile={true} />
+        <div className="w-full">
+          <UserProfile user={userData} ownProfile={true} />
+        </div>
       ) : (
-        <UserProfile user={userDataProfile} />
+        <div>
+          <UserProfile user={userDataProfile} />
+        </div>
       )}
       <Tabs
         value={activeTab}
         onValueChange={handleTabChange}
         className="w-full text-sm text-muted-foreground mt-4"
       >
-        <TabsList className="grid w-full grid-cols-4" shape="pill">
+        <TabsList className="grid w-full grid-cols-2" shape="pill">
           <TabsTrigger value="profile">
             <UserRound />
             Profile
           </TabsTrigger>
-          <TabsTrigger value="notifications">
-            <Bell />
-            Notifications
-          </TabsTrigger>
+          {/* {<TabsTrigger value="notifications">
+            <Library />
+            Library
+          </TabsTrigger>} */}
           <TabsTrigger value="reviews">
             <PencilLine />
             Reviews
           </TabsTrigger>
-          <TabsTrigger value="wishlist">
+          {/* {<TabsTrigger value="wishlist">
             <Gift />
             Wishlist
-          </TabsTrigger>
+          </TabsTrigger>} */}
         </TabsList>
         {/* Tabs Content */}
         <TabsContent value="profile">
           <div className="mt-8">
-            <StatsCards userData={userData || undefined} />
+            {username == userData?.username ? (
+              <StatsCards userData={userData || undefined} />
+            ) : (
+              <StatsCards userData={userDataProfile || undefined} />
+            )}
           </div>
         </TabsContent>
-        <TabsContent value="notifications">
+        {/* {<TabsContent value="notifications">
           Content for Notifications
-        </TabsContent>
+        </TabsContent>} */}
         <TabsContent value="reviews">
           <div className="flex flex-col gap-4">
-            {userDataProfile?.reviews?.map((review) => (
-              <ProfileReviewCard review={review} />
-            ))}
+            {username == userData?.username
+              ? userData?.reviews?.map((review) => (
+                  <ProfileReviewCard key={review.review_id} review={review} />
+                ))
+              : userDataProfile?.reviews?.map((review) => (
+                  <ProfileReviewCard key={review.review_id} review={review} />
+                ))}
           </div>
         </TabsContent>
-        <TabsContent value="wishlist">
+        {/* {<TabsContent value="wishlist">
           <div>
             <WishlistStatsCards />
           </div>
-        </TabsContent>
+        </TabsContent>} */}
       </Tabs>
     </div>
   );

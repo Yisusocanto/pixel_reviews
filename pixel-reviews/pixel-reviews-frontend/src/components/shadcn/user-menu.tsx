@@ -54,10 +54,10 @@ export default function UserMenu() {
             <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
             <Link to={`/users/${userData?.username}/reviews`}>My Reviews</Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          {/* {<DropdownMenuItem>
             <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
             <span>Wishlist</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem>} */}
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>

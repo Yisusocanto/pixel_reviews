@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+// Components
 import { Card } from "../luxe/card";
 import { Avatar, AvatarImage, AvatarFallback } from "../luxe/avatar";
 import { Button } from "../luxe/button";
@@ -9,8 +11,8 @@ import {
   MapPin,
   Star,
 } from "lucide-react";
+// types
 import type { User } from "@/types/userTypes";
-import { Link } from "react-router-dom";
 // Utils
 import { dateFormatter } from "@/utils/dateFormatter";
 
@@ -21,11 +23,11 @@ interface UserProfileCardProps {
 
 function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
   return (
-    <Card className="flex grid-rows-1 m-auto w-7xl p-10 font-exo">
+    <Card className="flex flex-col md:flex-row gap-4 w-full p-10">
       {/*Avatar Image and edit button */}
       <div className="flex-1 flex flex-col items-center gap-4">
-        <Avatar hasBorder className="size-45">
-          {/*aca luego se pone la foto del usuario, cuando se implememnte la funcion */}
+        <Avatar hasBorder className="size-30 md:size-45">
+          {/* Avatar image */}
           <AvatarImage src={user?.avatarUrl} />
           <AvatarFallback>PP</AvatarFallback>
         </Avatar>
@@ -40,22 +42,29 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
       </div>
 
       {/*User info and stadistic */}
-      <div className="flex-4 columns-1">
-        <div className="flex gap-3 mb-4">
-          <h2 className="text-4xl font-orbitron font-bold">{user?.username}</h2>
-          <div className="flex items-center">
+      <div className="flex-4 text-center">
+        {/* Username and tags badges */}
+        <div className="flex justify-center md:justify-start mb-4">
+          <h2 className="text-4xl text-center md:text-start font-orbitron font-bold">
+            {user?.username}
+          </h2>
+          {/* Tags badges */}
+          {/* {<div className="flex items-center">
             <Badge variant={"secondary"} className="text-base">
               Verified
             </Badge>
             <Badge className="text-base">Verified</Badge>
-          </div>
+          </div>} */}
         </div>
-        <div className="flex mb-4">
-          {/*aca luego se pone la descripcion del usuario */}
-          <p className="text-xl text-muted-foreground">{user?.bio}</p>
+        <div className="flex mb-4 justify-center md:justify-start">
+          {/* User's bio */}
+          <p className="text-lg md:text-xl text-muted-foreground">
+            {user?.bio}
+          </p>
         </div>
-        <div className="grid grid-cols-2 mb-4 text-lg">
-          <div className="flex flex-col gap-4">
+        {/* More user info */}
+        <div className="grid grid-cols-1 md:grid-cols-2 mb-4 text-lg gap-2">
+          <div className="flex flex-col gap-2 items-center md:items-start">
             <span className="flex gap-2 items-center text-muted-foreground">
               <Calendar size={18} />
               {dateFormatter(user?.createdAt || "")}
@@ -65,7 +74,7 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
               <span>Average Rating: {user?.averageRating}</span>
             </span>
           </div>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2 items-center md:items-start">
             {user?.location && (
               <span className="flex gap-2 items-center text-muted-foreground">
                 <MapPin size={18} /> {user?.location}
@@ -74,16 +83,22 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
             {user?.website && (
               <span className="flex gap-2 items-center text-muted-foreground">
                 <LucideLink size={18} />
-                {user?.website}
+                <a
+                  href={user?.website}
+                  className="text-blue-400 hover:underline"
+                >
+                  {user?.website}
+                </a>
               </span>
             )}
           </div>
         </div>
-        {/* Contenedor principal: flex para alinear estadísticas a la izquierda y botón a la derecha */}
-        <div className="flex items-center justify-between gap-4 mb-4">
-          {/* Estadísticas: flex para alinearlas horizontalmente */}
-          <div className="flex gap-8">
-            {/* Cada estadística: flex-col para número arriba y texto abajo */}
+        {/* Statistics and follow button */}
+
+        {/* Estadísticas: flex para alinearlas horizontalmente */}
+        {/*
+          <div className="flex items-center justify-between gap-4 mb-4">
+          {<div className="flex gap-8">
             <div className="flex flex-col items-center">
               <span className="text-xl font-bold">10</span>
               <span className="text-base text-muted-foreground">Followers</span>
@@ -98,12 +113,13 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
               <span className="text-xl font-bold">10</span>
               <span className="text-base text-muted-foreground">Likes</span>
             </div>
-          </div>
-
-          {/* Botón: automáticamente se alinea a la derecha por justify-between */}
+          </div>} 
           <Button>Follow</Button>
-        </div>
-        <div className="flex flex-col gap-2 ">
+          </div>
+          */}
+
+        {/* Favorites genres */}
+        {/* {<div className="flex flex-col gap-2 ">
           <h3 className="text-lg">Favorite Genres</h3>
           <div className="flex gap-2">
             <Badge className="text-base" variant={"secondary"}>
@@ -119,7 +135,7 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
               Drama
             </Badge>
           </div>
-        </div>
+        </div>} */}
       </div>
     </Card>
   );
