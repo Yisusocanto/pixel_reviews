@@ -84,7 +84,7 @@ function LoginForm() {
                 <Lock />
               </InputAddon>
               <Input
-                type="text"
+                type="password"
                 variant="lg"
                 {...register("password")}
                 placeholder="**********"
