@@ -10,7 +10,6 @@ interface StatisticsProps {
 }
 
 function StatsCards({ userData }: StatisticsProps) {
-  useEffect(()=>console.log(userData))
   return (
     <div className="flex flex-col">
       <div className="flex flex-col md:flex-row gap-6 justify-between">
@@ -32,7 +31,7 @@ function StatsCards({ userData }: StatisticsProps) {
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Average Ratings</h3>
             <span className="text-primary font-bold text-4xl">
-              {userData?.averageRating}
+              {userData?.averageRating.toFixed(1)}
             </span>
             <span className="flex items-center gap-1">
               <Star className="text-yellow-400" size={14} /> de 5

@@ -49,7 +49,7 @@ const GameHero = ({ gameData }: GameHeroProps) => {
           <div className="flex items-center gap-2">
             <Star className="text-yellow-400 fill-yellow-400" />
             <span className="text-4xl font-bold">
-              {gameData?.averageRating}
+              {gameData?.averageRating.toFixed(1)}
             </span>
             <span className="text-xl text-primary-muted">/ 5</span>
           </div>

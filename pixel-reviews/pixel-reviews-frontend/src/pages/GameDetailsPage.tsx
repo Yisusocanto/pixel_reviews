@@ -260,7 +260,7 @@ function GameDetailsPage() {
               <div className="flex gap-2 items-center">
                 <Star size={36} className="text-yellow-400 fill-yellow-400" />
                 <span className="text-4xl text-bold">
-                  {gameData?.averageRating}
+                  {gameData?.averageRating.toFixed(1)}
                 </span>
                 <span className="text-base">/ 5</span>
               </div>
