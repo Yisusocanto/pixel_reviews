@@ -1,5 +1,6 @@
 import LoginForm from "../components/authComponents/LoginForm";
 import { Card } from "@/components/luxe/card";
+import logo from "@/assets/logo.png";
 
 function LoginPage() {
   return (
@@ -9,6 +10,11 @@ function LoginPage() {
         variant="shine"
       >
         <div className="my-auto flex-1 text-center lg:text-left w-3xs">
+          <img
+            src={logo}
+            alt="website's logo"
+            className="m-auto w-20 h-20 md:w-30 md:h-30"
+          />
           <h1 className="text-3xl text-white text-center font-bold mb-2">
             We are very happy to have you back
           </h1>

@@ -1,7 +1,7 @@
 import React, { useId, useState } from "react";
 import { SearchIcon } from "lucide-react";
 // App logo
-import Logo from "@/components/shadcn/logo";
+import logo from "@/assets/logo.png";
 import UserMenu from "@/components/shadcn/user-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,9 +22,7 @@ import { useAuth } from "@/context/AuthContextProvider";
 import { useNavigate, Link } from "react-router-dom";
 
 // Navigation links array to be used in both desktop and mobile menus
-const loggedInNavigationLinks = [
-  { href: "/", label: "Home", active: true }
-];
+const loggedInNavigationLinks = [{ href: "/", label: "Home", active: true }];
 
 const loggedOutNavigationLinks = [
   { href: "/", label: "Home", active: true },
@@ -121,7 +119,11 @@ export default function NavBar() {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="text-primary hover:text-primary/90">
-              <Logo />
+              <img
+                src={logo}
+                alt="website's logo"
+                className="w-8 h-5 sm:h-8 mask-cover"
+              />
             </Link>
           </div>
         </div>
