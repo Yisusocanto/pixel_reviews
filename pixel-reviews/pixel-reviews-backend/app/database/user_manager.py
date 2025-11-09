@@ -69,11 +69,11 @@ class UserManager(DatabaseBase):
             return UserSchema().dump(user)
 
     @classmethod
-    def get_user_by_email(cls, email: str) -> Optional[User]:
+    def get_user_by_email(cls, email: str) -> Optional[dict]:
         """Get user by email"""
         with cls.get_session() as session:
             user = session.query(User).filter(User.email == email).first()
-            return user
+            return UserSchema().dump(user)
 
     @classmethod
     def get_user_id(cls, username: str) -> Optional[int]:

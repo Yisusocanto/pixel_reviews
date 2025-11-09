@@ -65,7 +65,7 @@ def sign_up():
     token = JwtHandler.create_jwt(user_id)
     user = UserManager.get_user_by_username(username=username)
 
-    email_sender.welcome_email(email)
+    email_sender.welcome_email(email, username)
 
     # The response is created and the cookie is set with the token inside
     response = make_response(
@@ -184,14 +184,14 @@ def password_recovery():
         reset_token = reset_token_handler.generate_reset_tooken()
         # se guarda el reset_token en la base de datos
         AuthManager.create_password_reset_token(
-            user_id=user.user_id, reset_token=reset_token
+            user_id=user["user_id"], reset_token=reset_token
         )
         # se envia el email con el reset_token
-        email_sender.reset_token_email(email, user.username, reset_token)
+        email_sender.reset_token_email(email, user["username"], reset_token)
         return jsonify({"succes": "reset token created and sended"}), 200
     except Exception as e:
         print("error en reset token route", e)
-        return jsonify({"error": f"{e}"}), 500
+        return jsonify({"error": f"Unknown error."}), 500
 
 
 @auth_bp.route("/password_reset", methods=["POST"])
