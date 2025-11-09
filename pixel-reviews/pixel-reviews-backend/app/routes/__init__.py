@@ -1,6 +1,6 @@
-from flask import Flask, g
-from app.utils.jwt_handler import already_authenticated
+from flask import Flask
 import os
+from dotenv import load_dotenv
 from .auth import auth_bp
 from .users import users_bp
 from .main import main_bp
@@ -9,6 +9,7 @@ from .settings import settings_bp
 from flask_cors import CORS
 from app.extensions.marshmallow import ma
 
+load_dotenv()
 
 def create_app():
 
@@ -23,7 +24,7 @@ def create_app():
     
     CORS(app, 
     resources={r"/*": {
-        "origins": ["http://localhost:5173", "http://127.0.0.1:5173"],
+        "origins": os.getenv("LOCAL_FRONTEND_URL"),
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "expose_headers": ["Set-Cookie"],
