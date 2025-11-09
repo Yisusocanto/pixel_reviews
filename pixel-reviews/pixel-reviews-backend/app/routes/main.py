@@ -1,4 +1,4 @@
-from flask import Blueprint, g, jsonify
+from flask import Blueprint, g, jsonify, request
 from app.database import GameManager, ReviewManager
 from app.utils.jwt_handler import token_required
 from app.services.rawg_api import RawgApi
@@ -10,8 +10,35 @@ main_bp = Blueprint("main", __name__, url_prefix="/main")
 
 @main_bp.route("/")
 def index():
-    reviews = ReviewManager.get_recent_reviews(count=10)
-    return jsonify({"reviews": reviews}), 200
+    page = request.args.get("page")
+    limit = request.args.get("limit")
+
+    if page and limit:
+        try:
+            page_number = int(page)
+            limit_number = int(limit)
+        except Exception as e:
+            print(f"Error on route '/': {e}")
+            return jsonify(
+                {"error": "Type error on page or limit param. It should be Integer"}
+            )
+    else:
+        return jsonify({"error": "The query params 'page' and 'limit' are obligatory"})
+
+    offset = (page_number - 1) * limit_number
+    reviews = ReviewManager.get_reviews(limit=limit_number, offset=offset)
+    if reviews == "error":
+        return jsonify({"error": "unknown error"}), 500
+
+    return (
+        jsonify(
+            {
+                "results": reviews,
+                "info": {"page": page, "limit": limit, "results": len(reviews)},
+            }
+        ),
+        200,
+    )
 
 
 @main_bp.route("/search/<game_title>")

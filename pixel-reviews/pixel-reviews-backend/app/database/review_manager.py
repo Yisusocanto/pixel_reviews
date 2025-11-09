@@ -10,16 +10,23 @@ class ReviewManager(DatabaseBase):
     """Manages review and rating operations"""
 
     @classmethod
-    def get_recent_reviews(cls, count: int) -> List[dict]:
-        """Get most recent reviews"""
-        with cls.get_session() as session:
-            reviews = (
-                session.query(Review)
-                .order_by(desc(Review.created_at))
-                .limit(count)
-                .all()
-            )
-            return ReviewSchema().dump(reviews, many=True)
+    def get_reviews(cls, limit: int, offset: int):
+        """Return a limited number of reviews. ordered in descending order by their creation date."""
+        try:
+            with cls.get_session() as session:
+                reviews = (
+                    session.query(Review)
+                    .order_by(desc(Review.created_at))
+                    .offset(offset)
+                    .limit(limit)
+                    .all()
+                )
+                if not reviews:
+                    return []
+                return ReviewSchema().dump(reviews, many=True)
+        except Exception as e:
+            print(f"Error on get_recent_reviews: {e}")
+            return "error"
 
     @classmethod
     def create_or_update_review(
