@@ -50,7 +50,7 @@ function PasswordRecovery() {
 
   return (
     <div>
-      <div className="w-md m-auto mt-30">
+      <div className="w-xs sm:w-sm md:w-md m-auto mt-30">
         <Card
           variant="revealed-pointer"
           className="flex flex-col px-10 py-5 gap-5"
@@ -77,7 +77,7 @@ function PasswordRecovery() {
         <span className="text-destructive">{error}</span>
       </div>
 
-      {loading && <SpinnerComponent/>}
+      {loading && <SpinnerComponent />}
     </div>
   );
 }

@@ -56,7 +56,7 @@ function PasswordReset() {
 
   return (
     <div>
-      <div className="w-md m-auto mt-30">
+      <div className="w-xs sm:w-sm md:w-md m-auto mt-30">
         <Card
           variant="revealed-pointer"
           className="flex flex-col px-10 py-5 gap-5"
@@ -94,7 +94,7 @@ function PasswordReset() {
           </form>
         </Card>
         <span className="text-destructive">{errorMessage}</span>
-        {loading && <SpinnerComponent/>}
+        {loading && <SpinnerComponent />}
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                 variants={fadeUpVariants}
                 initial="hidden"
                 animate="visible"
-                className="mb-4 flex items-center justify-between"
+                className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between"
               >
                 <div>
                   <h2 className="text-xl font-orbitron md:text-2xl font-bold text-white/90 mb-1 hover:text-primary-muted">

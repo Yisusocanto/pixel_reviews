@@ -71,7 +71,7 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
             </span>
             <span className="flex gap-2 items-center text-muted-foreground">
               <Star size={18} />{" "}
-              <span>Average Rating: {user?.averageRating}</span>
+              <span>Average Rating: {user?.averageRating.toFixed(1)}</span>
             </span>
           </div>
           <div className="flex flex-col gap-2 items-center md:items-start">
