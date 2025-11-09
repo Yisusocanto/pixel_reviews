@@ -11,7 +11,7 @@ import ProfileReviewCard from "@/components/gameReviewComponents/ProfileReviewCa
 import StatsCards from "@/components/userComponents/StatsCards";
 import WishlistStatsCards from "@/components/userComponents/WishlistStatsCards";
 // Services
-import { userProfile } from "@/services/userDataService";
+import { getUserData } from "@/services/userService";
 // Types
 import type { User } from "../types/userTypes";
 
@@ -29,9 +29,9 @@ function UserProfilePage() {
   const activeTab = validTabs.includes(currentTab) ? currentTab : "profile";
 
   useEffect(() => {
-    const bringUserprofile = async () => {
+    const getUserProfileData = async () => {
       try {
-        const response = await userProfile(username || "");
+        const response = await getUserData(username || "");
         setUserDataProfile(response.data.user_data);
       } catch (error: any) {
         if (error.response.status == 401) navigate("/auth/login");
@@ -42,7 +42,7 @@ function UserProfilePage() {
         setLoading(false);
       }
     };
-    bringUserprofile();
+    getUserProfileData();
   }, []);
 
   const handleTabChange = (value: string) => {

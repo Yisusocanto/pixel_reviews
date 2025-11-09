@@ -18,7 +18,7 @@ import NotFoundPage from "./NotFoundPage";
 import type { Game, Rating, Review } from "@/types/gameTypes";
 // Services
 import { createRating } from "@/services/apiService";
-import { gameDetails } from "@/services/gameDataService";
+import { getGameDetails } from "@/services/gameService";
 // Utils
 import { dateFormatter } from "@/utils/dateFormatter";
 import { Button } from "@/components/ui/button";
@@ -49,7 +49,7 @@ function GameDetailsPage() {
   useEffect(() => {
     const bringGameDetails = async () => {
       try {
-        const response = await gameDetails(slug || "");
+        const response = await getGameDetails(slug || "");
         setGameData(response.data.game_data);
         setUserRating(response.data.user_rating_data);
         setUserReview(response.data.user_review_data);
@@ -91,16 +91,13 @@ function GameDetailsPage() {
     }
   };
 
-  if (loading) {
-    return <SpinnerComponent />;
-  }
-
   if (error == "404") {
     return <NotFoundPage />;
   }
 
   return (
     <div>
+      {loading && <SpinnerComponent />}
       <Toaster theme="dark" richColors={true} />
       <GameHero gameData={gameData || undefined} />
       <div className="flex flex-col md:flex-row gap-4 md:gap-0 w-full md:px-20  lg:px-35">

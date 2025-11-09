@@ -5,7 +5,7 @@ import { GameCard } from "@/components/gameComponents/GameCard";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import NotResultsPage from "./NotResultsPage";
 // Services
-import { searchGames } from "@/services/gameDataService";
+import { searchGames } from "@/services/gameService";
 // Types
 import type { SearchedGame } from "@/types/gameTypes";
 
