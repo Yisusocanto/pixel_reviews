@@ -19,7 +19,7 @@ class AuthManager(DatabaseBase):
 
     @classmethod
     def update_password(cls, user_id: int, new_password: str) -> Optional[dict]:
-        """Update user password"""
+        """Update user password (Only in password reset operations)"""
         try:
             with cls.get_session() as session:
                 user = session.query(User).filter(User.user_id == user_id).first()
@@ -44,6 +44,7 @@ class AuthManager(DatabaseBase):
                 if not user:
                     return None
 
+                # It is verified that the password entered by the user matches the one stored in the database
                 if not password_handler.check_password(current_password, user.password):
                     return None
 

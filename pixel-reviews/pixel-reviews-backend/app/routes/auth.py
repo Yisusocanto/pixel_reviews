@@ -13,19 +13,6 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 @auth_bp.route("/sign_up", methods=["POST"])
 def sign_up():
-    """
-    The `sign_up` function in a Python Flask route collects user data, validates it, encrypts the
-    password, creates a new user in the database, generates a JWT token, and sets it as a cookie before
-    returning a success message.
-
-    return: The `sign_up` function returns a response to the frontend after processing the user sign-up
-    request.
-
-    - If there are validation errors in the user data, a JSON response with a message indicating
-    the error message is returned with a status code of 401.
-    - If the user data is valid, the user is created
-    in the database, a JWT token is generated for the user, and a success message is returned with
-    """
     # User data sent from the frontend is collected
     response = request.get_json()
     email = response["email"]
@@ -76,7 +63,7 @@ def sign_up():
         token,
         max_age=86400,
         httponly=True,
-        secure=False,
+        secure=True,
         samesite="Lax",
     )
     return response, 200
@@ -84,20 +71,6 @@ def sign_up():
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
-    """
-    The `login` function in Python handles user authentication by validating the username and password,
-    creating a JWT token, and setting a cookie for session management.
-
-    return: The `login()` function returns a response with a message indicating the success or failure
-    of the login attempt.
-
-    - If the username is incorrect or does not exist in the database, a message
-    stating "username incorrect or not exists" is returned with a status code of 401.
-    - If the password
-    provided does not match the hashed password stored in the database, a message stating "the password
-    is incorrect" is returned
-    """
-
     # User data sent from the frontend is collected
     response_data = request.get_json()
     username = response_data["username"]
@@ -127,9 +100,9 @@ def login():
     response.set_cookie(
         "jwt_pixel_reviews",
         token,
-        max_age=86400,  # 24 horas en segundos
+        max_age=86400,
         httponly=True,
-        secure=False,  # False para desarrollo sin HTTPS
+        secure=True,
         samesite="Lax",
     )
     return response, 200
@@ -137,11 +110,6 @@ def login():
 
 @auth_bp.route("/logout", methods=["GET"])
 def logout():
-    """
-    The `logout` function in Python logs out a user by setting a cookie named "jwt_pixel_reviews" to an
-    empty string with a max age of 0.
-    return: A response object and a status code of 200 are being returned from the `logout` function.
-    """
     # The response is created with an empty token
     response = make_response()
     response.set_cookie(
@@ -149,7 +117,7 @@ def logout():
         "",
         max_age=0,
         httponly=True,
-        secure=False,
+        secure=True,
     )
     return response, 200
 
@@ -174,40 +142,45 @@ def password_recovery():
     response = request.get_json()
     email = response["email"]
 
-    # verificamos que el usuario existe
+    # check if the user exits
     user = UserManager.get_user_by_email(email=email)
     if not user:
         return jsonify({"error": "email not associated with any user"}), 401
 
     try:
-        # creamos un token con el util
+        # The reset token is created
         reset_token = reset_token_handler.generate_reset_tooken()
-        # se guarda el reset_token en la base de datos
+        # The reset token is saved in the database
         AuthManager.create_password_reset_token(
             user_id=user["user_id"], reset_token=reset_token
         )
-        # se envia el email con el reset_token
+        # The email with the reset token is sended
         email_sender.reset_token_email(email, user["username"], reset_token)
         return jsonify({"succes": "reset token created and sended"}), 200
+
     except Exception as e:
         print("error en reset token route", e)
-        return jsonify({"error": f"Unknown error."}), 500
+        return jsonify({"error": "Unknown error."}), 500
 
 
 @auth_bp.route("/password_reset", methods=["POST"])
 def password_reset():
     response = request.get_json()
+    # The reset token and new password is collected
     reset_token = response["reset_token"]
     new_password = response["new_password"]
 
-    check_token = AuthManager.check_reset_token(reset_token=reset_token)
-    if not check_token:
+    # The token is verified
+    token_checked = AuthManager.check_reset_token(reset_token=reset_token)
+    if not token_checked:
         return jsonify({"error": "token not valid or expired"}), 401
 
+    # the new password is checked
     hashed_password = password_handler.hash_password(new_password)
 
+    # The password is updated in the database
     message = AuthManager.update_password(
-        user_id=check_token.user_id, new_password=hashed_password
+        user_id=token_checked.user_id, new_password=hashed_password
     )
     if not message:
         return jsonify({"error": "error updating the password"}), 500

@@ -15,6 +15,7 @@ def index():
 
     if page and limit:
         try:
+            # Attempt to convert the page number and the review limit into integers
             page_number = int(page)
             limit_number = int(limit)
         except Exception as e:
@@ -25,7 +26,9 @@ def index():
     else:
         return jsonify({"error": "The query params 'page' and 'limit' are obligatory"})
 
+    # the offset value is calculated
     offset = (page_number - 1) * limit_number
+
     reviews = ReviewManager.get_reviews(limit=limit_number, offset=offset)
     if reviews == "error":
         return jsonify({"error": "unknown error"}), 500
@@ -44,6 +47,7 @@ def index():
 @main_bp.route("/search/<game_title>")
 @token_required
 def search(game_title):
+    # Fetch to the Rawg API
     game_list = rawg_api.search_games(game_title)
     if not game_list:
         return jsonify({"message": "No results"}), 404

@@ -11,7 +11,6 @@ users_bp = Blueprint("users", __name__, url_prefix="/users")
 def profile(username):
     user = UserManager.get_user_by_username(username=username)
     if not user:
-        print("ocurrio un error retornando el ususario")
         return (
             jsonify(
                 {"message": "An error ocurred returning the user data or do not exits"}

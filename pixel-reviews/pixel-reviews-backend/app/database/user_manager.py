@@ -32,7 +32,7 @@ class UserManager(DatabaseBase):
                     age=birth_date,
                 )
                 session.add(user)
-                session.flush()  # Para obtener el ID antes del commit
+                session.flush()  # To get the user_id before the commit
                 user_id = user.user_id
                 return user_id
 

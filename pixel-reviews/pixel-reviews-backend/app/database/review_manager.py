@@ -21,9 +21,12 @@ class ReviewManager(DatabaseBase):
                     .limit(limit)
                     .all()
                 )
+
                 if not reviews:
                     return []
+                
                 return ReviewSchema().dump(reviews, many=True)
+            
         except Exception as e:
             print(f"Error on get_recent_reviews: {e}")
             return "error"
@@ -80,20 +83,23 @@ class ReviewManager(DatabaseBase):
     @classmethod
     def _create_or_update_rating(cls, user_id: int, game_id: int, score: int) -> Rating:
         """Internal helper to create or update rating"""
-        with cls.get_session() as session:
-            rating = (
-                session.query(Rating)
-                .filter(Rating.user_id == user_id, Rating.game_id == game_id)
-                .first()
-            )
+        try:
+            with cls.get_session() as session:
+                rating = (
+                    session.query(Rating)
+                    .filter(Rating.user_id == user_id, Rating.game_id == game_id)
+                    .first()
+                )
 
-            if rating:
-                rating.score = score
-            else:
-                rating = Rating(user_id=user_id, game_id=game_id, score=score)
-                session.add(rating)
+                if rating:
+                    rating.score = score
+                else:
+                    rating = Rating(user_id=user_id, game_id=game_id, score=score)
+                    session.add(rating)
 
-            return rating
+                return rating
+        except Exception as e:
+            print(f"Error on _create_or_update_rating: {e}")
 
     @classmethod
     def get_user_rating(cls, game_id: int, user_id: int) -> Optional[dict]:
