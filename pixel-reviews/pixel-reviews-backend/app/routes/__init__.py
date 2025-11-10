@@ -19,7 +19,7 @@ def create_app():
     app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
     frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
-    
+
     # Para debug - verás esto en los logs de Render
     print(f"🔥 FRONTEND_URL: {frontend_url}")
 
@@ -28,22 +28,28 @@ def create_app():
     # Configuración CORS
     CORS(
         app,
-        origins=[frontend_url],
+        origins=["http://localhost:5173", "https://pixel-reviews-livid.vercel.app"],
         supports_credentials=True,
         allow_headers=["Content-Type", "Authorization"],
-        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     )
 
     # Headers adicionales para asegurar CORS
     @app.after_request
     def after_request(response):
-        origin = request.headers.get('Origin')
+        origin = request.headers.get("Origin")
         # Verifica que el origen sea el permitido
         if origin == frontend_url:
-            response.headers['Access-Control-Allow-Origin'] = origin
-            response.headers['Access-Control-Allow-Credentials'] = 'true'
-            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-            response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+            response.headers["Access-Control-Allow-Origin"] = (
+                "https://pixel-reviews-livid.vercel.app"
+            )
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            response.headers["Access-Control-Allow-Headers"] = (
+                "Content-Type, Authorization"
+            )
+            response.headers["Access-Control-Allow-Methods"] = (
+                "GET, POST, PUT, DELETE, OPTIONS"
+            )
         return response
 
     app.register_blueprint(auth_bp)
