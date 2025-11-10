@@ -8,8 +8,19 @@ rawg_api = RawgApi()
 main_bp = Blueprint("main", __name__, url_prefix="/main")
 
 
-@main_bp.route("/", strict_slashes=False)  # 🔥 AGREGA strict_slashes=False
+# 🔥 AGREGA ESTO - Manejo explícito de OPTIONS
+@main_bp.route("/", methods=["GET", "OPTIONS"])
 def index():
+    # Manejar preflight OPTIONS request
+    if request.method == "OPTIONS":
+        response = jsonify({"status": "ok"})
+        response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin'))
+        response.headers.add("Access-Control-Allow-Methods", "GET, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+        return response, 200
+    
+    # GET request normal
     page = request.args.get("page")
     limit = request.args.get("limit")
 
@@ -21,13 +32,13 @@ def index():
             print(f"❌ Error on route '/main': {e}")
             return jsonify(
                 {"error": "Type error on page or limit param. It should be Integer"}
-            ), 400  # 🔥 Agrega código de status
+            ), 400
     else:
-        return jsonify({"error": "The query params 'page' and 'limit' are obligatory"}), 400  # 🔥 Agrega código de status
+        return jsonify({"error": "The query params 'page' and 'limit' are obligatory"}), 400
 
     offset = (page_number - 1) * limit_number
 
-    try:  # 🔥 AGREGA TRY-CATCH
+    try:
         reviews = ReviewManager.get_reviews(limit=limit_number, offset=offset)
         if reviews == "error":
             return jsonify({"error": "Database error"}), 500
@@ -45,9 +56,17 @@ def index():
         return jsonify({"error": "Internal server error", "message": str(e)}), 500
 
 
-@main_bp.route("/search/<game_title>", strict_slashes=False)  # 🔥 Agrega aquí también
+@main_bp.route("/search/<game_title>", methods=["GET", "OPTIONS"])
 @token_required
 def search(game_title):
+    if request.method == "OPTIONS":
+        response = jsonify({"status": "ok"})
+        response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin'))
+        response.headers.add("Access-Control-Allow-Methods", "GET, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+        return response, 200
+        
     game_list = rawg_api.search_games(game_title)
     if not game_list:
         return jsonify({"message": "No results"}), 404
@@ -55,9 +74,17 @@ def search(game_title):
     return jsonify({"game_list": game_list}), 200
 
 
-@main_bp.route("/games/<slug>", strict_slashes=False)  # 🔥 Y aquí
+@main_bp.route("/games/<slug>", methods=["GET", "OPTIONS"])
 @token_required
 def game_details(slug):
+    if request.method == "OPTIONS":
+        response = jsonify({"status": "ok"})
+        response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin'))
+        response.headers.add("Access-Control-Allow-Methods", "GET, OPTIONS")
+        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        response.headers.add("Access-Control-Allow-Credentials", "true")
+        return response, 200
+        
     payload = g.user_payload
     user_id = int(payload["sub"])
 
