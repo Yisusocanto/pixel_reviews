@@ -1,11 +1,14 @@
 import os
 import sys
 from logging.config import fileConfig
+from dotenv import load_dotenv
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+
+load_dotenv()
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -19,12 +22,19 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 sys.path.append(os.getcwd())  # Añade el directorio del proyecto al path
 from app.models.base import Base  # Reemplaza con la ubicación correcta
-from app.models.user import User # Reemplaza con la ubicación correcta
+from app.models.user import User  # Reemplaza con la ubicación correcta
 from app.models.game import Game
 from app.models.review import Review
 from app.models.rating import Rating
 from app.models.developer import Developer
 from app.models.publisher import Publisher
+from app.models.password_reset_token import PasswordResetToken
+
+db_url = f"postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASS")}@{os.getenv("DB_HOST")}/{os.getenv("DB_NAME")}"
+
+if db_url:
+    # actualizar la opción en el config para que engine_from_config la use
+    config.set_main_option("sqlalchemy.url", db_url)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
@@ -74,9 +84,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=Base.metadata
-        )
+        context.configure(connection=connection, target_metadata=Base.metadata)
 
         with context.begin_transaction():
             context.run_migrations()
