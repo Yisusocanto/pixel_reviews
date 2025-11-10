@@ -24,7 +24,7 @@ def create_app():
     
     CORS(app, 
     resources={r"/*": {
-        "origins": os.getenv("LOCAL_FRONTEND_URL"),
+        "origins": os.getenv("FRONTEND_URL"),
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "expose_headers": ["Set-Cookie"],

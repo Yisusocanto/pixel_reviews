@@ -7,6 +7,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+DB_HOST = os.environ.get("DB_HOST")
+DB_USER = os.environ.get("DB_USER")
+DB_PASS = os.environ.get("DB_PASS")
+DB_NAME = os.environ.get("DB_NAME")
+
 class DatabaseBase:
     """Base class for all database managers"""
     
@@ -17,11 +22,7 @@ class DatabaseBase:
     def initialize(cls, database_url: str = None):
         """Initialize database connection (call once at app startup)"""
         if cls._engine is None:
-            local_database_url = os.getenv("LOCAL_DATABASE_URL")
-            db_url = database_url or os.getenv(
-                'DATABASE_URL',
-                local_database_url
-            )
+            db_url = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}/{DB_NAME}"
             cls._engine = create_engine(db_url)
             cls._SessionLocal = sessionmaker(bind=cls._engine)
     
