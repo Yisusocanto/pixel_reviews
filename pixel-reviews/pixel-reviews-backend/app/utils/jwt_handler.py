@@ -54,7 +54,7 @@ def token_required(f):
                 "jwt_pixel_reviews",
                 "",
                 max_age=0,
-                samesite="Lax",
+                samesite='None',
                 httponly=True,
                 secure=True,
             )
