@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import os
 from dotenv import load_dotenv
 from .auth import auth_bp
@@ -13,34 +13,38 @@ load_dotenv()
 
 
 def create_app():
-
     template_dir = os.path.abspath("templates")
     static_dir = os.path.abspath("templates/images")
 
     app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
-    frontend_url = os.getenv("FRONTEND_URL")
-
-    if frontend_url:
-        allowed_origins = [frontend_url]
-    else:
-        allowed_origins = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+    
+    # Para debug - verás esto en los logs de Render
+    print(f"🔥 FRONTEND_URL: {frontend_url}")
 
     ma.init_app(app)
 
+    # Configuración CORS
     CORS(
         app,
-        resources={
-            r"/*": {
-                "origins": allowed_origins,
-                "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-                "allow_headers": ["Content-Type", "Authorization"],
-                "expose_headers": ["Set-Cookie"],
-                "supports_credentials": True,
-                "send_wildcard": False,
-            }
-        },
+        origins=[frontend_url],
+        supports_credentials=True,
+        allow_headers=["Content-Type", "Authorization"],
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     )
+
+    # Headers adicionales para asegurar CORS
+    @app.after_request
+    def after_request(response):
+        origin = request.headers.get('Origin')
+        # Verifica que el origen sea el permitido
+        if origin == frontend_url:
+            response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Credentials'] = 'true'
+            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+            response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+        return response
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
