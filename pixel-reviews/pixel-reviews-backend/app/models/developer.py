@@ -1,7 +1,6 @@
 from .base import Base
 from sqlalchemy import Column, Integer, String, Table, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from sqlalchemy_serializer import SerializerMixin
 from typing import TYPE_CHECKING
 
 # Models
@@ -18,7 +17,7 @@ developers_association = Table(
 )
 
 
-class Developer(Base, SerializerMixin):
+class Developer(Base):
 
     __tablename__ = "developers"
 

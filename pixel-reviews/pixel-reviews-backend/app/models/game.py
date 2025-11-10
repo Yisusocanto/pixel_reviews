@@ -4,7 +4,6 @@ from datetime import date
 from .base import Base
 from .developer import developers_association
 from .publisher import publishers_association
-from sqlalchemy_serializer import SerializerMixin
 from typing import Optional, TYPE_CHECKING
 
 # Models
@@ -15,7 +14,7 @@ if TYPE_CHECKING:
     from app.models.publisher import Publisher
 
 
-class Game(Base, SerializerMixin):
+class Game(Base):
     __tablename__ = "games"
 
     game_id: Mapped[int] = mapped_column(primary_key=True)

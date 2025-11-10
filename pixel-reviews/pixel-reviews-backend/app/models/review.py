@@ -2,7 +2,6 @@ from .base import Base
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
-from sqlalchemy_serializer import SerializerMixin
 from typing import TYPE_CHECKING
 
 # Models
@@ -14,7 +13,7 @@ if TYPE_CHECKING:
 
 
 
-class Review(Base, SerializerMixin):
+class Review(Base):
     __tablename__ = "reviews"
 
     review_id: Mapped[int] = mapped_column(primary_key=True, nullable=False)

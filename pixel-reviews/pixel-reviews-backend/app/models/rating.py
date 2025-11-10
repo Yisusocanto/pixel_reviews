@@ -7,7 +7,6 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
-from sqlalchemy_serializer import SerializerMixin
 
 # Models
 if TYPE_CHECKING:
@@ -16,7 +15,7 @@ if TYPE_CHECKING:
     from app.models.review import Review
 
 
-class Rating(Base, SerializerMixin):
+class Rating(Base):
 
     __tablename__ = "ratings"
 

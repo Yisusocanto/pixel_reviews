@@ -2,7 +2,6 @@ from sqlalchemy import Column, String, Integer
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
 from .base import Base
-from sqlalchemy_serializer import SerializerMixin
 from typing import TYPE_CHECKING
 
 # Models
@@ -11,7 +10,7 @@ if TYPE_CHECKING:
     from app.models.rating import Rating
 
 
-class User(Base, SerializerMixin):
+class User(Base):
     __tablename__ = "users"
 
     user_id: Mapped[int] = mapped_column(
