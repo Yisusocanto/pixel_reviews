@@ -8,46 +8,46 @@ rawg_api = RawgApi()
 main_bp = Blueprint("main", __name__, url_prefix="/main")
 
 
-@main_bp.route("/")
+@main_bp.route("/", strict_slashes=False)  # 🔥 AGREGA strict_slashes=False
 def index():
     page = request.args.get("page")
     limit = request.args.get("limit")
 
     if page and limit:
         try:
-            # Attempt to convert the page number and the review limit into integers
             page_number = int(page)
             limit_number = int(limit)
         except Exception as e:
-            print(f"Error on route '/': {e}")
+            print(f"❌ Error on route '/main': {e}")
             return jsonify(
                 {"error": "Type error on page or limit param. It should be Integer"}
-            )
+            ), 400  # 🔥 Agrega código de status
     else:
-        return jsonify({"error": "The query params 'page' and 'limit' are obligatory"})
+        return jsonify({"error": "The query params 'page' and 'limit' are obligatory"}), 400  # 🔥 Agrega código de status
 
-    # the offset value is calculated
     offset = (page_number - 1) * limit_number
 
-    reviews = ReviewManager.get_reviews(limit=limit_number, offset=offset)
-    if reviews == "error":
-        return jsonify({"error": "unknown error"}), 500
+    try:  # 🔥 AGREGA TRY-CATCH
+        reviews = ReviewManager.get_reviews(limit=limit_number, offset=offset)
+        if reviews == "error":
+            return jsonify({"error": "Database error"}), 500
 
-    return (
-        jsonify(
+        return jsonify(
             {
                 "results": reviews,
                 "info": {"page": page, "limit": limit, "results": len(reviews)},
             }
-        ),
-        200,
-    )
+        ), 200
+    except Exception as e:
+        print(f"❌ ERROR en ReviewManager: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error", "message": str(e)}), 500
 
 
-@main_bp.route("/search/<game_title>")
+@main_bp.route("/search/<game_title>", strict_slashes=False)  # 🔥 Agrega aquí también
 @token_required
 def search(game_title):
-    # Fetch to the Rawg API
     game_list = rawg_api.search_games(game_title)
     if not game_list:
         return jsonify({"message": "No results"}), 404
@@ -55,7 +55,7 @@ def search(game_title):
     return jsonify({"game_list": game_list}), 200
 
 
-@main_bp.route("/games/<slug>")
+@main_bp.route("/games/<slug>", strict_slashes=False)  # 🔥 Y aquí
 @token_required
 def game_details(slug):
     payload = g.user_payload
@@ -72,13 +72,10 @@ def game_details(slug):
         game_id=game["game_id"], user_id=user_id
     )
 
-    return (
-        jsonify(
-            {
-                "game_data": game,
-                "user_rating_data": user_rating,
-                "user_review_data": user_review,
-            }
-        ),
-        200,
-    )
+    return jsonify(
+        {
+            "game_data": game,
+            "user_rating_data": user_rating,
+            "user_review_data": user_review,
+        }
+    ), 200
