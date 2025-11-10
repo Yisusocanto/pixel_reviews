@@ -1,8 +1,10 @@
 import { AxiosError } from "axios";
 import axios from "axios";
 
+const backendURL = import.meta.env.VITE_BACKEND_URL
+
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: backendURL,
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -10,7 +12,7 @@ const axiosInstance = axios.create({
 });
 
 // Quitar Content-Type cuando el body es FormData para no romper el boundary
-axiosInstance.interceptors.request.use((config: any) => {
+axiosInstance.interceptors.request.use((config: any) => { 
   if (config && config.data && config.data instanceof FormData) {
     // el navegador/axios añadirá el Content-Type correcto con boundary
     if (config.headers) {
