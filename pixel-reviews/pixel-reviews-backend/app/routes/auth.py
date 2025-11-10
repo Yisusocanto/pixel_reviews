@@ -64,7 +64,7 @@ def sign_up():
         max_age=86400,
         httponly=True,
         secure=True,
-        samesite="Lax",
+        samesite=None,
     )
     return response, 200
 
@@ -103,7 +103,7 @@ def login():
         max_age=86400,
         httponly=True,
         secure=True,
-        samesite="Lax",
+        samesite=None,
     )
     return response, 200
 
