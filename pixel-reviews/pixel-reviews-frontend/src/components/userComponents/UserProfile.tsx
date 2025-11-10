@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card } from "../luxe/card";
 import { Avatar, AvatarImage, AvatarFallback } from "../luxe/avatar";
 import { Button } from "../luxe/button";
-import { Badge } from "../ui/badge";
+// import { Badge } from "../ui/badge";
 import {
   SquarePen,
   Calendar,

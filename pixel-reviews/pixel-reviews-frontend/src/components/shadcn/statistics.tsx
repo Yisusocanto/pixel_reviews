@@ -2,12 +2,11 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardHeading,
   CardTitle,
 } from '@/components/ui/card';
-import { Rating } from '@/components/ui/rating';
+import { RatingComponent } from '@/components/ui/rating';
 
 export default function RatingStatisticsDemo() {
   return (
@@ -30,7 +29,7 @@ export default function RatingStatisticsDemo() {
           <div key={item.stars} className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <span className="text-sm font-medium w-2">{item.stars}</span>
-              <Rating rating={item.stars} />
+              <RatingComponent rating={item.stars} />
             </div>
             <div className="flex items-center gap-0.5 text-sm text-muted-foreground">
               <span>{item.count}</span>

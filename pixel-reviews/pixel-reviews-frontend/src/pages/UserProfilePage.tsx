@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContextProvider";
 // Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bell, UserRound, Gift, PencilLine, Library } from "lucide-react";
+import { UserRound, PencilLine } from "lucide-react";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import NotFoundPage from "./NotFoundPage";
 import UserProfile from "@/components/userComponents/UserProfile";
 import ProfileReviewCard from "@/components/gameReviewComponents/ProfileReviewCard";
 import StatsCards from "@/components/userComponents/StatsCards";
-import WishlistStatsCards from "@/components/userComponents/WishlistStatsCards";
+// import WishlistStatsCards from "@/components/userComponents/WishlistStatsCards";
 // Services
 import { getUserData } from "@/services/userService";
 // Types

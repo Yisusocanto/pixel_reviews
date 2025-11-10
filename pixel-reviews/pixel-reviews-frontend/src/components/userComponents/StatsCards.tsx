@@ -1,9 +1,9 @@
 // Components
 import { Card } from "../luxe/card";
-import { Clock8, Gamepad2, MessageSquare, Star } from "lucide-react";
+import { Gamepad2, MessageSquare, Star } from "lucide-react";
 // Types
 import type { User } from "@/types/userTypes";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 interface StatisticsProps {
   userData?: User;

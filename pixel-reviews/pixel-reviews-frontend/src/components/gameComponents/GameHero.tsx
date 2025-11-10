@@ -1,6 +1,6 @@
-import { Star, MessageCircle, Download, Link2, Heart } from "lucide-react";
-import { Badge } from "../ui/badge";
-import { Button } from "../luxe/button";
+import { Star, MessageCircle } from "lucide-react";
+// import { Badge } from "../ui/badge";
+// import { Button } from "../luxe/button";
 // Types
 import type { Game } from "@/types/gameTypes";
 

@@ -2,7 +2,6 @@ import {
   BoltIcon,
   BookOpenIcon,
   LogOutIcon,
-  PinIcon,
   UserPenIcon,
 } from "lucide-react";
 

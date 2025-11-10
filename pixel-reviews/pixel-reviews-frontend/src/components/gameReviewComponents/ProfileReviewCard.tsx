@@ -1,7 +1,7 @@
 // Components
-import { Eye, Heart, MessageCircle, Star, Calendar } from "lucide-react";
+import { Star, Calendar } from "lucide-react";
 import { Card } from "../luxe/card";
-import { Badge } from "../ui/badge";
+// import { Badge } from "../ui/badge";
 import { Link } from "react-router-dom";
 // Utils
 import { dateFormatter } from "@/utils/dateFormatter";
