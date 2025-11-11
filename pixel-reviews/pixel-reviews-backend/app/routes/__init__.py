@@ -24,7 +24,6 @@ def create_app():
 
     ma.init_app(app)
 
-    # 🔥 QUITA flask-cors y hazlo manual
     @app.before_request
     def handle_preflight():
         if request.method == "OPTIONS":

@@ -13,7 +13,7 @@ class RawgApi:
     def search_games(self, game_title: str) -> list | None:
         response = requests.get(
             f"{self.BASE_URL}/games",
-            params={"key": self.api_key, "search": game_title, "page_size": 5},
+            params={"key": self.api_key, "search": game_title, "page_size": 10},
         )
 
         if response.status_code != 200:
