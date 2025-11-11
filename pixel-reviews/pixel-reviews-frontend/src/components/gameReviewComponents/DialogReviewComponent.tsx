@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // Components
 import {
   Dialog,
@@ -56,7 +56,7 @@ function DialogReviewComponent({
     formState: { errors },
   } = useForm({ resolver: zodResolver(ReviewSchema) });
 
-  const [score, setScore] = useState<number>(userRating?.score || 0);
+  const [score, setScore] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false); // Dialog controller
 
   // Success toast
@@ -72,6 +72,11 @@ function DialogReviewComponent({
       description: `Error creating/updating the review: ${error}`,
       duration: 5000,
     });
+
+  // The score state is set as soon as userRating is available
+  useEffect(() => {
+    setScore(userRating?.score || 0);
+  }, [userRating]);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
