@@ -22,9 +22,8 @@ import SpinnerComponent from "./components/commonsComponents/SpinnerComponent";
 //Context and Config
 import { useAuth } from "./context/AuthContextProvider";
 import { setupAxiosInterceptors } from "./config/axiosConfig";
-
-
-
+// Analytics
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const { logoutFunction, loading } = useAuth();
@@ -35,11 +34,12 @@ function App() {
   }, []);
 
   if (loading) {
-    return <SpinnerComponent/>;
+    return <SpinnerComponent />;
   }
 
   return (
     <div className="min-h-screen flex flex-col font-exo">
+      <Analytics />
       <Background />
       <NavBar />
       <Routes>
@@ -59,9 +59,9 @@ function App() {
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/settings/:tab" element={<SettingsPage />} />
 
-        <Route path="/*" element={<NotFoundPage/>} />
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
