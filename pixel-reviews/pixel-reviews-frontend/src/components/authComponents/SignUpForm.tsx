@@ -183,8 +183,6 @@ function SignUpForm() {
                 aria-label="bithday"
                 onChange={(value) => {
                   if (value) {
-                    console.log(value);
-                    console.log(value.toString());
                     const formatted = value.toString();
                     setValue("birthday", formatted, { shouldValidate: true });
                   }
