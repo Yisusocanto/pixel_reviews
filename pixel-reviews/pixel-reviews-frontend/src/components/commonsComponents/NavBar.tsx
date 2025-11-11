@@ -36,6 +36,15 @@ export default function NavBar() {
   const navigate = useNavigate();
   const id = useId();
 
+  // Function that handles the search form
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (inputValue.trim()) {
+      navigate(`/search/${inputValue}`);
+    }
+  };
+
+  // Function that handles the navigation using react-router-dom
   const handleClickNavigation = (
     e: React.MouseEvent<HTMLAnchorElement>,
     targetPath: string
@@ -131,25 +140,28 @@ export default function NavBar() {
         <div className="grow">
           {/* Search form */}
           <div className="relative mx-auto w-full max-w-xs">
-            <Input
-              id={id}
-              className="peer h-8 ps-8 pe-10 text-white"
-              placeholder="Search..."
-              type="search"
-              onChange={(e) => setInputValue(e.target.value)}
-            />
-            <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 peer-disabled:opacity-50">
-              <SearchIcon size={16} />
-            </div>
-            <div className="text-muted-foreground  absolute inset-y-0 end-0 flex items-center justify-center ">
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => navigate(`/search/${inputValue}`)}
-              >
-                Search
-              </Button>
-            </div>
+            <form onSubmit={handleSearch}>
+              <Input
+                id={id}
+                className="peer h-8 ps-8 pe-10 text-white"
+                placeholder="Search..."
+                type="search"
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 peer-disabled:opacity-50">
+                <SearchIcon size={16} />
+              </div>
+              <div className="text-muted-foreground  absolute inset-y-0 end-0 flex items-center justify-center ">
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleSearch}
+                  type="submit"
+                >
+                  Search
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
         {/* Right side */}
