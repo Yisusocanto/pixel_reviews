@@ -8,10 +8,8 @@ rawg_api = RawgApi()
 main_bp = Blueprint("main", __name__, url_prefix="/main")
 
 
-# 🔥 AGREGA ESTO - Manejo explícito de OPTIONS
 @main_bp.route("/", methods=["GET", "OPTIONS"])
 def index():
-    # Manejar preflight OPTIONS request
     if request.method == "OPTIONS":
         response = jsonify({"status": "ok"})
         response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin'))
