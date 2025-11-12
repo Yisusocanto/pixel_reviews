@@ -22,15 +22,17 @@ const ProfileSettingsSchema = z.object({
     .string()
     .min(4, { message: "Minimum 4 characters" })
     .max(20, { message: "Maximum 30 characters" })
+    .trim()
     .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/, {
-      message: "Only letters are allowed",
+      message: "Only letters are allowed (no spaces).",
     }),
   lastname: z
     .string()
     .min(4, { message: "Minimum 4 characters" })
     .max(20, { message: "Maximum 30 characters" })
+    .trim()
     .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/, {
-      message: "Only letters are allowed",
+      message: "Only letters are allowed (no spaces).",
     }),
   location: z.preprocess(
     (val) => (typeof val === "string" && val.trim() === "" ? undefined : val),

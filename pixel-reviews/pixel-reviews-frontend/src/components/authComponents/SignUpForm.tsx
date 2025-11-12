@@ -21,24 +21,27 @@ const signUpSchema = z
       .string()
       .min(4, { message: "Minimum 4 characters" })
       .max(20, { message: "Maximum 20 characters" })
+      .trim()
       .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/, {
-        message: "Only letters are allowed",
+        message: "Only letters are allowed (no spaces).",
       }),
     lastname: z
       .string()
       .min(4, { message: "Minimum 4 characters" })
       .max(20, { message: "Maximum 20 characters" })
+      .trim()
       .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/, {
-        message: "Only letters are allowed",
+        message: "Only letters are allowed (no spaces).",
       }),
     username: z
       .string()
       .min(4, { message: "Minimum 4 characters" })
       .max(20, { message: "Maximum 20 characters" })
+      .trim()
       .regex(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/, {
-        message: "Only letters and numbers are allowed",
+        message: "Only letters and numbers are allowed (no spaces).",
       }),
-    email: z.email({ message: "invalid Email" }),
+    email: z.email({ message: "invalid Email" }).trim(),
     password: z
       .string()
       .min(6, { message: "Minimum 6 characters" })

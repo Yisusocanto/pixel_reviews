@@ -19,8 +19,9 @@ const loginSchema = z.object({
     .string()
     .min(4, { message: "Minimum 4 characters" })
     .max(20, { message: "Maximum 20 characters" })
+    .trim()
     .regex(/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]+$/, {
-      message: "Only letters and numbers are allowed",
+      message: "Only letters and numbers are allowed (no spaces)",
     }),
   password: z.string().min(6, { message: "Minimum 6 characters" }),
 });
