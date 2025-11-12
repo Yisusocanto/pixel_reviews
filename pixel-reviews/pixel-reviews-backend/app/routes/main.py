@@ -10,15 +10,6 @@ main_bp = Blueprint("main", __name__, url_prefix="/main")
 
 @main_bp.route("/", methods=["GET", "OPTIONS"])
 def index():
-    if request.method == "OPTIONS":
-        response = jsonify({"status": "ok"})
-        response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin'))
-        response.headers.add("Access-Control-Allow-Methods", "GET, OPTIONS")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        response.headers.add("Access-Control-Allow-Credentials", "true")
-        return response, 200
-    
-    # GET request normal
     page = request.args.get("page")
     limit = request.args.get("limit")
 
@@ -57,14 +48,6 @@ def index():
 @main_bp.route("/search/<game_title>", methods=["GET", "OPTIONS"])
 @token_required
 def search(game_title):
-    if request.method == "OPTIONS":
-        response = jsonify({"status": "ok"})
-        response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin'))
-        response.headers.add("Access-Control-Allow-Methods", "GET, OPTIONS")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        response.headers.add("Access-Control-Allow-Credentials", "true")
-        return response, 200
-        
     game_list = rawg_api.search_games(game_title)
     if not game_list:
         return jsonify({"message": "No results"}), 404
@@ -75,20 +58,12 @@ def search(game_title):
 @main_bp.route("/games/<slug>", methods=["GET", "OPTIONS"])
 @token_required
 def game_details(slug):
-    if request.method == "OPTIONS":
-        response = jsonify({"status": "ok"})
-        response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin'))
-        response.headers.add("Access-Control-Allow-Methods", "GET, OPTIONS")
-        response.headers.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-        response.headers.add("Access-Control-Allow-Credentials", "true")
-        return response, 200
-        
     payload = g.user_payload
     user_id = int(payload["sub"])
 
     game = GameManager.find_or_create_game(slug=slug)
     if not game:
-        return jsonify({"message": "game not exits or an error ocurred"}), 404
+        return jsonify({"message": "game not exits or an error occurred"}), 404
 
     user_rating = ReviewManager.get_user_rating(
         game_id=game["game_id"], user_id=user_id

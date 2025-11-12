@@ -19,28 +19,14 @@ def create_app():
     app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
     frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
-    
+
     print(f"🔥 FRONTEND_URL: {frontend_url}")
 
     ma.init_app(app)
 
-    @app.before_request
-    def handle_preflight():
-        if request.method == "OPTIONS":
-            response = app.make_default_options_response()
-            response.headers['Access-Control-Allow-Origin'] = frontend_url
-            response.headers['Access-Control-Allow-Credentials'] = 'true'
-            response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-            response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-            return response
+    CORS(app, origins=[frontend_url], supports_credentials=True, methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+         allow_headers=["Content-Type", "Authorization"])
 
-    @app.after_request
-    def after_request(response):
-        response.headers['Access-Control-Allow-Origin'] = frontend_url
-        response.headers['Access-Control-Allow-Credentials'] = 'true'
-        response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
-        return response
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)

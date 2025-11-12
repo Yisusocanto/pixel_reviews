@@ -47,7 +47,7 @@ def change_password():
     current_password = data["current_password"]
     new_password = data["new_password"]
 
-    # The new passwors is hashed
+    # The new password is hashed
     new_hashed_pw = password_handler.hash_password(new_password)
 
     # Extraction of the user_id
@@ -61,7 +61,7 @@ def change_password():
     if not user:
         return jsonify({"error": "The current password is incorrect"}), 401
 
-    return jsonify({"succes": "password changed successfully"}), 200
+    return jsonify({"success": "password changed successfully"}), 200
 
 
 @settings_bp.route("/upload_avatar", methods=["POST"])
