@@ -141,7 +141,7 @@ function DialogReviewComponent({
                     {...register("title")}
                     style={{ color: "rgb(246 246 246)" }}
                   />
-                  <span className="text-sm text-destructive">
+                  <span className="text-sm text-destructive-secondary">
                     {errors.title?.message}
                   </span>
                   <label htmlFor="content" className="text-base">
@@ -154,7 +154,7 @@ function DialogReviewComponent({
                     variant="lg"
                     className="bg-main-secondary"
                   />
-                  <span className="text-sm text-destructive">
+                  <span className="text-sm text-destructive-secondary">
                     {errors.content?.message}
                   </span>
                 </div>

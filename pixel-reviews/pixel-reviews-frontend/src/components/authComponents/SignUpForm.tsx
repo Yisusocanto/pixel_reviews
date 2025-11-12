@@ -237,7 +237,7 @@ function SignUpForm() {
           <AccentButton>Create user</AccentButton>
         </div>
       </form>
-      <span className="text-destructive mt-2">{errorMessage}</span>
+      <span className="text-destructive-secondary mt-2">{errorMessage}</span>
       <span className="text-center mt-4">
         Already have an account?{" "}
         <Link

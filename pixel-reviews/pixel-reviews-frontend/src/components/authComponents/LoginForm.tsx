@@ -96,7 +96,7 @@ function LoginForm() {
           <AccentButton>Login</AccentButton>
         </div>
       </form>
-      <p className="mt-2 text-red-500">{errorMessage}</p>
+      <p className="mt-2 text-destructive-secondary">{errorMessage}</p>
       <span className="flex justify-center gap-2 mt-4 ">
         Don't have an account?
         <Link
