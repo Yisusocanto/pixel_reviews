@@ -22,8 +22,8 @@ class Review(Base):
     rating_id: Mapped[int] = mapped_column(
         ForeignKey("ratings.rating_id"), nullable=False, unique=True
     )
-    title: Mapped[str] = mapped_column(String(50), nullable=False)
-    content: Mapped[str] = mapped_column(String(250), nullable=False)
+    title: Mapped[str] = mapped_column(String(100), nullable=False)
+    content: Mapped[str] = mapped_column(String(3000), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         default=datetime.utcnow, nullable=False
     )
@@ -31,7 +31,7 @@ class Review(Base):
         default=datetime.utcnow, onupdate=datetime.utcnow
     )
 
-    # Realationships
+    # Relationships
     game: Mapped["Game"] = relationship(back_populates="reviews")
     author: Mapped["User"] = relationship(back_populates="reviews")
     rating: Mapped["Rating"] = relationship(back_populates="review")

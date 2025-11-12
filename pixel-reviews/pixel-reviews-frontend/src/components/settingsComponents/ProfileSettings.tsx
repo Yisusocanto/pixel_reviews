@@ -21,7 +21,7 @@ const ProfileSettingsSchema = z.object({
   name: z
     .string()
     .min(4, { message: "Minimum 4 characters" })
-    .max(20, { message: "Maximum 30 characters" })
+    .max(20, { message: "Maximum 20 characters" })
     .trim()
     .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/, {
       message: "Only letters are allowed (no spaces).",
@@ -29,7 +29,7 @@ const ProfileSettingsSchema = z.object({
   lastname: z
     .string()
     .min(4, { message: "Minimum 4 characters" })
-    .max(20, { message: "Maximum 30 characters" })
+    .max(20, { message: "Maximum 20 characters" })
     .trim()
     .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]+$/, {
       message: "Only letters are allowed (no spaces).",
@@ -47,7 +47,7 @@ const ProfileSettingsSchema = z.object({
     z
       .string()
       .min(20, { message: "Minimun 20 characters" })
-      .max(300, { message: "Maximun 300 characters" })
+      .max(300, { message: "Maximun 500 characters" })
       .optional()
   ),
   website: z.preprocess(

@@ -19,7 +19,7 @@ class Game(Base):
 
     game_id: Mapped[int] = mapped_column(primary_key=True)
     rawg_id: Mapped[int] = mapped_column(unique=True, nullable=False)
-    title: Mapped[str] = mapped_column(String(200), nullable=False)
+    title: Mapped[str] = mapped_column(String(), nullable=False)
     slug: Mapped[str] = mapped_column(nullable=False, index=True)
     release_date: Mapped[Optional[date]] = mapped_column(nullable=True)
     image_url: Mapped[Optional[str]] = mapped_column(nullable=True)
