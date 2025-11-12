@@ -95,10 +95,15 @@ function GameDetailsPage() {
     return <NotFoundPage />;
   }
 
+  if (loading || !gameData) {
+    return <SpinnerComponent/>
+  }
+
   return (
     <div>
-      {loading && <SpinnerComponent />}
+      {/* Success or error notification */}
       <Toaster theme="dark" richColors={true} />
+      {/* Game Hero */}
       <GameHero gameData={gameData || undefined} />
       <div className="flex flex-col md:flex-row gap-4 md:gap-0 w-full md:px-20  lg:px-35">
         {/* Left side */}
