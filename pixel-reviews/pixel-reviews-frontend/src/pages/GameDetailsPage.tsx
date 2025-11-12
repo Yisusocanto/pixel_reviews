@@ -96,7 +96,7 @@ function GameDetailsPage() {
   }
 
   if (loading || !gameData) {
-    return <SpinnerComponent/>
+    return <SpinnerComponent />;
   }
 
   return (
@@ -171,6 +171,13 @@ function GameDetailsPage() {
             {/* reviews of the videogame */}
             <TabsContent value="reviews">
               <div className="flex flex-col gap-4 items-center m-auto w-full max-w-sm md:max-w-xl mt-8">
+                {/* Conditional if there are no reviews of the game, display a message */}
+                {!userReview && gameData.reviews?.length == 0 ? (
+                  <p className="text-center text-primary-muted">
+                    This game has no reviews yet
+                  </p>
+                ) : null}
+
                 {/* Review of the main user if exits */}
                 {userReview ? (
                   <div className="w-full flex flex-col gap-4">
@@ -181,6 +188,7 @@ function GameDetailsPage() {
                     <Separator />
                   </div>
                 ) : null}
+
                 {/* All the reviews that have a game */}
                 {gameData?.reviews
                   ?.filter(

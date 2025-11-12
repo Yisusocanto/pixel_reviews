@@ -106,13 +106,27 @@ function UserProfilePage() {
         </TabsContent>} */}
         <TabsContent value="reviews">
           <div className="flex flex-col gap-4">
-            {username == userData?.username
-              ? userData?.reviews?.map((review) => (
-                  <ProfileReviewCard key={review.review_id} review={review} />
-                ))
-              : userDataProfile?.reviews?.map((review) => (
-                  <ProfileReviewCard key={review.review_id} review={review} />
-                ))}
+            {(() => {
+              {/* Select the reviews to use */}
+              const reviews =
+                username === userData?.username
+                  ? userData?.reviews
+                  : userDataProfile?.reviews;
+
+              {/* If there is no reviews show a message */}
+              if (!reviews || reviews.length === 0) {
+                return (
+                  <p className="text-center text-primary-muted mt-8">
+                    This user has not written any reviews yet.
+                  </p>
+                );
+              }
+
+              {/* Renders of the reviews */}
+              return reviews.map((review) => (
+                <ProfileReviewCard key={review.review_id} review={review} />
+              ));
+            })()}
           </div>
         </TabsContent>
         {/* {<TabsContent value="wishlist">
