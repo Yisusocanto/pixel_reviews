@@ -45,7 +45,7 @@ function UserProfile({ user, ownProfile = false }: UserProfileCardProps) {
       <div className="flex-4 text-center">
         {/* Username and tags badges */}
         <div className="flex justify-center md:justify-start mb-4">
-          <h2 className="text-4xl text-center md:text-start font-orbitron font-bold">
+          <h2 className="text-xl sm:text-2xl md:text-4xl max-w-xl md:max-w-full text-center md:text-start font-orbitron font-bold">
             {user?.username}
           </h2>
           {/* Tags badges */}
