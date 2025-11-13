@@ -59,6 +59,7 @@ function DialogReviewComponent({
   } = useForm({ resolver: zodResolver(ReviewSchema) });
 
   const [score, setScore] = useState<number>(0);
+  const [ratingError, setRatingError] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false); // Dialog controller
 
   // Success toast
@@ -85,6 +86,10 @@ function DialogReviewComponent({
   const contentInput = useCharacterLimit(3000, userReview?.content);
 
   const onSubmit = handleSubmit(async (data) => {
+    if (score == 0) {
+      setRatingError("You must give a rating");
+      return;
+    }
     try {
       const { title, content } = data;
       const response = await createReview(
@@ -135,6 +140,11 @@ function DialogReviewComponent({
                 showValue
                 onRatingChange={setScore}
               />
+              {ratingError && (
+                <span className="text-destructive-secondary">
+                  {ratingError}
+                </span>
+              )}
               {/* Form */}
               <form className="mt-4 mb-8">
                 <div className="flex flex-col gap-2">
