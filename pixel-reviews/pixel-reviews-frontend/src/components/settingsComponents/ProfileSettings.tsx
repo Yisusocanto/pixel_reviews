@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "@/context/AuthContextProvider";
+import { useCharacterLimit } from "@/hooks/useCharacterLimit";
 // Components
 import { Input } from "../luxe/input";
 import { Textarea } from "../ui/textarea";
@@ -47,7 +48,7 @@ const ProfileSettingsSchema = z.object({
     z
       .string()
       .min(20, { message: "Minimun 20 characters" })
-      .max(300, { message: "Maximun 500 characters" })
+      .max(500, { message: "Maximun 500 characters" })
       .optional()
   ),
   website: z.preprocess(
@@ -67,8 +68,8 @@ interface ProfileSettingsProps {
 
 function ProfileSettings({ user }: ProfileSettingsProps) {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false); 
-  const {setUserData} = useAuth()
+  const [loading, setLoading] = useState<boolean>(false);
+  const { setUserData } = useAuth();
   const {
     register,
     handleSubmit,
@@ -98,6 +99,11 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
       duration: 5000,
     });
 
+  // Individual characterLimit hook's instances for each input
+  const locationInput = useCharacterLimit(40, user?.location ?? "");
+  const bioInput = useCharacterLimit(500, user?.bio ?? "");
+  const websiteInput = useCharacterLimit(100, user?.website ?? "");
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       setLoading(true);
@@ -108,8 +114,8 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
         data.bio || "",
         data.website || ""
       );
-      const user = response?.data?.user
-      setUserData(user)
+      const user = response?.data?.user;
+      setUserData(user);
       displaySuccessToast();
       setIsDisabled(true);
     } catch (error: any) {
@@ -125,6 +131,7 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
       {loading && <SpinnerComponent />}
       <form onSubmit={onSubmit} onChange={() => setIsDisabled(false)}>
         <div className="flex flex-col gap-4 px-1 md:px-4">
+          {/* Name input */}
           <div className="flex flex-col">
             <label htmlFor="name">Name</label>
             <Input
@@ -138,6 +145,7 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
               <HelperText color="failure">{errors.name?.message}</HelperText>
             )}
           </div>
+          {/* Lastname input */}
           <div className="flex flex-col">
             <label htmlFor="lastname">Lastname</label>
             <Input
@@ -153,6 +161,7 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
               </HelperText>
             )}
           </div>
+          {/* Location input */}
           <div className="flex flex-col">
             <label htmlFor="location">Location</label>
             <Input
@@ -160,31 +169,40 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
               className="w-full"
               type="text"
               placeholder={user?.location ? "" : "Caracas, Venezuela"}
-              defaultValue={user?.location}
-              {...register("location")}
+              maxLength={locationInput.maxLength}
+              {...register("location", {
+                onChange: (e) => locationInput.handleChange(e.target.value),
+              })}
             />
-            {errors.location && (
+            <div className="flex justify-between">
               <HelperText color="failure">
                 {errors.location?.message}
               </HelperText>
-            )}
+              <HelperText>
+                {locationInput.characterCount}/{locationInput.maxLength}
+              </HelperText>
+            </div>
           </div>
+          {/* Bio input */}
           <div className="flex flex-col">
             <label htmlFor="bio">Biography</label>
             <Textarea
               className="bg-main-secondary"
-              {...register("bio")}
+              {...register("bio", {
+                onChange: (e) => bioInput.handleChange(e.target.value),
+              })}
               defaultValue={user?.bio}
               variant="lg"
+              maxLength={bioInput.maxLength}
             />
-            {errors.bio ? (
-              <HelperText color="failure">{errors.bio.message}</HelperText>
-            ) : (
-              <HelperText color="gray">
-                Write your bio between 20 to 300 characters
+            <div className="flex justify-between">
+              <HelperText color="failure">{errors.bio?.message}</HelperText>
+              <HelperText>
+                {bioInput.characterCount}/{bioInput.maxLength}
               </HelperText>
-            )}
+            </div>
           </div>
+          {/* Website input */}
           <div className="flex flex-col">
             <label htmlFor="website">Website</label>
             <Input
@@ -193,11 +211,17 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
               type="text"
               placeholder={user?.website ? "" : "www.mywebsite.com"}
               defaultValue={user?.website}
-              {...register("website")}
+              maxLength={websiteInput.maxLength}
+              {...register("website", {
+                onChange: (e) => websiteInput.handleChange(e.target.value),
+              })}
             />
-            {errors.website && (
+            <div className="flex justify-between">
               <HelperText color="failure">{errors.website?.message}</HelperText>
-            )}
+              <HelperText>
+                {websiteInput.characterCount}/{websiteInput.maxLength}
+              </HelperText>
+            </div>
           </div>
           <Separator />
           <div className="flex justify-end ">

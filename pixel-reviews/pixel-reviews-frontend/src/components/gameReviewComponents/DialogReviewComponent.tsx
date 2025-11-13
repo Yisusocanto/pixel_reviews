@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
+import { useCharacterLimit } from "@/hooks/useCharacterLimit";
 // Components
 import {
   Dialog,
@@ -22,6 +23,7 @@ import AccentButton from "../commonsComponents/AccentButton";
 import { createReview } from "@/services/apiService";
 // types
 import type { Game, Rating, Review } from "@/types/gameTypes";
+import { HelperText } from "flowbite-react";
 
 // Form Schema
 const ReviewSchema = z.object({
@@ -32,7 +34,7 @@ const ReviewSchema = z.object({
   content: z
     .string()
     .min(4, { message: "The field should have minimun 4 characters" })
-    .max(1000, { message: "The field should have maximun 1000 characters" }),
+    .max(3000, { message: "The field should have maximun 3000 characters" }),
 });
 
 interface DialogReviewProps {
@@ -77,6 +79,10 @@ function DialogReviewComponent({
   useEffect(() => {
     setScore(userRating?.score || 0);
   }, [userRating]);
+
+  // Individual characterLimit hook's instances for each input
+  const titleInput = useCharacterLimit(100, userReview?.title);
+  const contentInput = useCharacterLimit(3000, userReview?.content);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
@@ -129,8 +135,10 @@ function DialogReviewComponent({
                 showValue
                 onRatingChange={setScore}
               />
-              <form action="" className="mt-4 mb-8">
+              {/* Form */}
+              <form className="mt-4 mb-8">
                 <div className="flex flex-col gap-2">
+                  {/* Review's Title */}
                   <label htmlFor="title" className="text-base">
                     Title
                   </label>
@@ -138,25 +146,43 @@ function DialogReviewComponent({
                     type="text"
                     className="text-primary w-full"
                     defaultValue={userReview?.title}
-                    {...register("title")}
+                    {...register("title", {
+                      onChange: (e) => titleInput.handleChange(e.target.value),
+                    })}
                     style={{ color: "rgb(246 246 246)" }}
+                    maxLength={titleInput.maxLength}
                   />
-                  <span className="text-sm text-destructive-secondary">
-                    {errors.title?.message}
-                  </span>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-destructive-secondary">
+                      {errors.title?.message}
+                    </span>
+                    <HelperText className="mt-0">
+                      {titleInput.characterCount}/{titleInput.maxLength}
+                    </HelperText>
+                  </div>
+                  {/* Review's Content */}
                   <label htmlFor="content" className="text-base">
                     Content
                   </label>
                   <Textarea
                     id="content"
-                    {...register("content")}
+                    {...register("content", {
+                      onChange: (e) =>
+                        contentInput.handleChange(e.target.value),
+                    })}
                     defaultValue={userReview?.content}
                     variant="lg"
                     className="bg-main-secondary"
+                    maxLength={contentInput.maxLength}
                   />
-                  <span className="text-sm text-destructive-secondary">
-                    {errors.content?.message}
-                  </span>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-destructive-secondary">
+                      {errors.content?.message}
+                    </span>
+                    <HelperText className="mt-0">
+                      {contentInput.characterCount}/{contentInput.maxLength}
+                    </HelperText>
+                  </div>
                 </div>
               </form>
             </div>
