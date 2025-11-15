@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { RatingComponent } from "@/components/ui/rating";
 import { ReviewCard } from "@/components/gameReviewComponents/ReviewCard";
 import { Card } from "@/components/luxe/card";
-import { Star } from "lucide-react";
+import { Star, Heart } from "lucide-react";
 // import { Badge } from "@/components/ui/badge";
 import { toast, Toaster } from "sonner";
 import GameHero from "@/components/gameComponents/GameHero";
@@ -27,7 +27,7 @@ function GameDetailsPage() {
   const [gameData, setGameData] = useState<Game | null>(null);
   const [userRating, setUserRating] = useState<Rating | null>(null);
   const [userReview, setUserReview] = useState<Review | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(""); 
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const { slug } = useParams();
@@ -104,7 +104,7 @@ function GameDetailsPage() {
       {/* Success or error notification */}
       <Toaster theme="dark" richColors={true} />
       {/* Game Hero */}
-      <GameHero gameData={gameData || undefined} />
+      <GameHero gameData={gameData || undefined} setGameData={setGameData} />
       <div className="flex flex-col md:flex-row gap-4 md:gap-0 w-full md:px-20  lg:px-35">
         {/* Left side */}
         <div className="flex-2">
@@ -339,6 +339,18 @@ function GameDetailsPage() {
             </Card>
           </div>
           {/* Community Card */}
+          {<div className="w-full max-w-sm">
+            <Card className="flex flex-col gap-4">
+              <h3 className="text-lg">Community</h3>
+              <div className="flex justify-between">
+                <div className="flex gap-2 items-center">
+                  <Heart size={18} />
+                  <span className="text-lg">In Wishlist</span>
+                </div>
+                <span className="text-lg">{gameData.wishlist?.length}</span>
+              </div>
+            </Card>
+          </div>}
           {/* {<div className="w-sm m-auto">
             <Card className="flex flex-col gap-4">
               <h3 className="text-lg">Community</h3>

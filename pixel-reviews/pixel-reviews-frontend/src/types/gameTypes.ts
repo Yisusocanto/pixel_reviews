@@ -1,4 +1,5 @@
 import type { User } from "@/types/userTypes";
+import type { WishlistItem } from "./wishlistType";
 
 export interface Game {
   averageRating: number;
@@ -14,6 +15,7 @@ export interface Game {
   publishers?: Array<Publisher>;
   ratings?: Array<Rating>;
   reviews?: Array<Review>;
+  wishlist?: Array<WishlistItem>
 }
 
 export interface SearchedGame {
