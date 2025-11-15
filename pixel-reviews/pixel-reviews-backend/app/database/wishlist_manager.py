@@ -17,7 +17,7 @@ class WishlistManager(DatabaseBase):
                 session.flush()
                 return WishlistItemSchema().dump(new_wishlist_item)
         except IntegrityError as i:
-            print("Error on remove_from_wishlist:", i)
+            print("Error on add integrity:", i)
             return {"error": "Game already in wishlist."}
         except Exception as e:
             print("Error on add_to_wishlist:", e)

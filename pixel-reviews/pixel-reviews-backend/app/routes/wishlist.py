@@ -36,6 +36,9 @@ def add_to_wishlist():
     if isinstance(wishlist_item, dict) and "error" in wishlist_item:
         return jsonify(wishlist_item), 500
 
+    if not wishlist_item:
+        return jsonify({"error": "Unknown error."}), 500
+
     return jsonify({"user": user, "game": game, "wishlist_item": wishlist_item}), 200
 
 @wishlist_bp.route("/remove_from_wishlist", methods=["POST"])

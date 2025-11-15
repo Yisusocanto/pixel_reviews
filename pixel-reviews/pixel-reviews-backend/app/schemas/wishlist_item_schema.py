@@ -8,5 +8,19 @@ class WishlistItemSchema(SQLAlchemySchema):
     wishlist_item_id = auto_field(data_key="wishlistItemId")
     added_at = auto_field(data_key="addedAt")
     # Relationships
-    game = fields.Nested("GameSchema", exclude=("wishlist",))
-    user = fields.Nested("UserSchema", exclude=("wishlist",))
+    game = fields.Nested(
+        "GameSchema", exclude=(
+            "wishlist",
+            "reviews",
+            "ratings",
+            "developers",
+            "publishers",
+        )
+    )
+    user = fields.Nested(
+        "UserSchema", exclude=(
+            "wishlist",
+            "reviews",
+            "ratings"
+        )
+    )
