@@ -6,8 +6,8 @@ function LoginPage() {
   return (
     <div className="p-6 mt-10 md:mt-15">
       <Card
-        className="w-full max-w-4xl rounded-2xl flex flex-col md:flex-row mx-auto p-6 md:p-8 gap-6 md:gap-8"
-        variant="shine"
+        className="bg-(--accent-color) w-full max-w-4xl rounded-2xl flex flex-col md:flex-row mx-auto p-6 md:p-8 gap-6 md:gap-8"
+        variant="default"
       >
         <div className="my-auto flex-1 text-center lg:text-left w-3xs">
           <img

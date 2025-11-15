@@ -7,7 +7,7 @@ function SignUpPage() {
     <div className="p-6 mt-5 md:mt-15">
       <Card
         className="bg-(--accent-color) w-full max-w-4xl mx-auto rounded-2xl flex flex-col md:flex-row  p-6 md:p-8 gap-6 md:gap-8"
-        variant="shine"
+        variant="default"
       >
         <div className="flex-1 my-auto text-center lg:text-left">
           <img
