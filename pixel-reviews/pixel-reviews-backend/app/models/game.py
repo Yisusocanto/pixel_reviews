@@ -4,6 +4,7 @@ from datetime import date
 from .base import Base
 from .developer import developers_association
 from .publisher import publishers_association
+from .wishlist_item import WishlistItem
 from typing import Optional, TYPE_CHECKING
 
 # Models
@@ -12,6 +13,7 @@ if TYPE_CHECKING:
     from app.models.rating import Rating
     from app.models.developer import Developer
     from app.models.publisher import Publisher
+    from app.models.wishlist_item import WishlistItem
 
 
 class Game(Base):
@@ -38,6 +40,7 @@ class Game(Base):
     publishers: Mapped[list["Publisher"]] = relationship(
         secondary=publishers_association, back_populates="games", lazy="dynamic"
     )
+    wishlist: Mapped[list["WishlistItem"]] = relationship(back_populates="game", cascade="all, delete-orphan", lazy="dynamic")
 
     @property
     def average_rating(self):
@@ -52,6 +55,10 @@ class Game(Base):
     @property
     def total_reviews(self):
         return self.reviews.count()
+
+    @property
+    def total_wishlist(self):
+        return self.wishlist.count()
 
     def __str__(self):
         return self.title

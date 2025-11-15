@@ -5,6 +5,7 @@ from .developer import Developer
 from .publisher import Publisher
 from .rating import Rating
 from .password_reset_token import PasswordResetToken
+from .wishlist_item import WishlistItem
 
 __all__ = [
     "User",
@@ -14,4 +15,5 @@ __all__ = [
     "Publisher",
     "Rating",
     "PasswordResetToken",
+    "WishlistItem",
 ]

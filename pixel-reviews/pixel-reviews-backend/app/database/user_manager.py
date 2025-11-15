@@ -1,6 +1,6 @@
 from app.database.base import DatabaseBase
 from app.models import User
-from app.schemas.user_schema import UserSchema
+from app.schemas import UserSchema
 from sqlalchemy import exc
 from datetime import datetime
 from typing import Optional

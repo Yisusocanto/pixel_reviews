@@ -19,8 +19,9 @@ class GameSchema(SQLAlchemySchema):
     ratings = fields.Nested("RatingSchema", many=True, exclude=("game",))
     developers = fields.Nested("DeveloperSchema", many=True, exclude=("games",))
     publishers = fields.Nested("PublisherSchema", many=True, exclude=("games",))
+    wishlist = fields.Nested("WishlistItemSchema", many=True, exclude=("game",))
 
-    # Propertys
+    # Properties
     average_rating = fields.Method("get_average_rating", data_key="averageRating")
     total_ratings = fields.Method("get_total_ratings", data_key="totalRatings")
     total_reviews = fields.Method("get_total_reviews", data_key="totalReviews")
@@ -33,3 +34,6 @@ class GameSchema(SQLAlchemySchema):
 
     def get_total_reviews(self, obj):
         return obj.total_reviews
+
+    def get_total_wishlist(self, obj):
+        return obj.total_wishlist
