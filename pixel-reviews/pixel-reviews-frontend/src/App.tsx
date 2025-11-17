@@ -41,27 +41,39 @@ function App() {
     <div className="min-h-screen flex flex-col font-exo">
       <Analytics />
       <Background />
-      <NavBar />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/auth/signup" element={<SignUpPage />} />
-        <Route path="/auth/login" element={<LoginPage />} />
-        <Route path="/auth/logout" element={<LogOutPage />} />
-        <Route path="/auth/password_recovery" element={<PasswordRecovery />} />
-        <Route path="/auth/password_reset" element={<PasswordReset />} />
+      <div className="flex flex-col min-h-screen">
+        <header>
+          <NavBar />
+        </header>
+        <main className="flex-grow">
+          <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth/signup" element={<SignUpPage />} />
+          <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/logout" element={<LogOutPage />} />
+          <Route
+            path="/auth/password_recovery"
+            element={<PasswordRecovery />}
+          />
+          <Route path="/auth/password_reset" element={<PasswordReset />} />
 
-        <Route path="/users/:username/" element={<UserProfilePage />} />
-        <Route path="/users/:username/:tab" element={<UserProfilePage />} />
+          <Route path="/users/:username/" element={<UserProfilePage />} />
+          <Route path="/users/:username/:tab" element={<UserProfilePage />} />
 
-        <Route path="/search/:gameTitle" element={<SearchGamesResultPage />} />
-        <Route path="/games/:slug" element={<GameDetailsPage />} />
+          <Route
+            path="/search/:gameTitle"
+            element={<SearchGamesResultPage />}
+          />
+          <Route path="/games/:slug" element={<GameDetailsPage />} />
 
-        <Route path="/settings" element={<SettingsPage />} />
-        <Route path="/settings/:tab" element={<SettingsPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings/:tab" element={<SettingsPage />} />
 
-        <Route path="/*" element={<NotFoundPage />} />
-      </Routes>
-      <Footer />
+          <Route path="/*" element={<NotFoundPage />} />
+        </Routes>
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 }

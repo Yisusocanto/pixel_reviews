@@ -13,9 +13,9 @@ def profile(username):
     if not user:
         return (
             jsonify(
-                {"message": "An error ocurred returning the user data or do not exits"}
+                {"error": "An error occurred returning the user data or do not exits"}
             ),
             404,
         )
 
-    return jsonify({"user_data": user}), 200
+    return jsonify({"user": user}), 200

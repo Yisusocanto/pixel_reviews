@@ -6,10 +6,10 @@ import type { User } from "@/types/userTypes";
 // import { useEffect } from "react";
 
 interface StatisticsProps {
-  userData?: User;
+  user?: User;
 }
 
-function StatsCards({ userData }: StatisticsProps) {
+function StatsCards({ user }: StatisticsProps) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col md:flex-row gap-6 justify-between">
@@ -17,7 +17,7 @@ function StatsCards({ userData }: StatisticsProps) {
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Total Reviews</h3>
             <span className="text-primary font-bold text-4xl">
-              {userData?.totalReviews}
+              {user?.totalReviews}
             </span>
             {/* {<span className="text-green-500">+12 este mes</span>} */}
           </div>
@@ -31,7 +31,7 @@ function StatsCards({ userData }: StatisticsProps) {
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Average Ratings</h3>
             <span className="text-primary font-bold text-4xl">
-              {userData?.averageRating.toFixed(1)}
+              {user?.averageRating.toFixed(1)}
             </span>
             <span className="flex items-center gap-1">
               <Star className="text-yellow-400" size={14} /> de 5
@@ -47,7 +47,7 @@ function StatsCards({ userData }: StatisticsProps) {
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Total Ratings</h3>
             <span className="text-primary font-bold text-4xl">
-              {userData?.totalRatings}
+              {user?.totalRatings}
             </span>
             {/* {<span className="text-green-500">+12 este mes</span>} */}
           </div>

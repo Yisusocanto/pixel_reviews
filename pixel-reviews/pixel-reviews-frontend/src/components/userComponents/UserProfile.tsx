@@ -17,7 +17,7 @@ import type { User } from "@/types/userTypes";
 import { dateFormatter } from "@/utils/dateFormatter";
 
 interface UserProfileCardProps {
-  user: User | null;
+  user?: User;
   ownProfile?: boolean;
 }
 

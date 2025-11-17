@@ -14,9 +14,10 @@ import { Button } from "../ui/button";
 
 interface WishlistItemCardProps {
   wishlistItem: WishlistItem;
+  ownProfile: boolean;
 }
 
-function WishlistItemCard({ wishlistItem }: WishlistItemCardProps) {
+function WishlistItemCard({ wishlistItem, ownProfile }: WishlistItemCardProps) {
   const { userData, setUserData } = useAuth();
   const displayErrorToast = (e: any) => {
     toast.error("Error", {
@@ -51,7 +52,10 @@ function WishlistItemCard({ wishlistItem }: WishlistItemCardProps) {
         <div className="flex flex-4 flex-row">
           <div className="flex flex-4 flex-col gap-4">
             <h3 className="text-2xl text-primary font-orbitron font-bold ">
-              <Link to={`/games/${wishlistItem.game.slug}`} className="hover:text-primary-muted">
+              <Link
+                to={`/games/${wishlistItem.game.slug}`}
+                className="hover:text-primary-muted"
+              >
                 {wishlistItem.game.title}
               </Link>
             </h3>
@@ -68,14 +72,13 @@ function WishlistItemCard({ wishlistItem }: WishlistItemCardProps) {
               </span>
             </div>
           </div>
-          <div className="flex flex-1 justify-end">
-            <Button
-              variant="ghost"
-              onClick={handleRemoveFromWishlist}
-            >
-              <Heart className="text-destructive fill-destructive size-6" />
-            </Button>
-          </div>
+          {ownProfile && (
+            <div className="flex flex-1 justify-end">
+              <Button variant="ghost" onClick={handleRemoveFromWishlist}>
+                <Heart className="text-destructive fill-destructive size-6" />
+              </Button>
+            </div>
+          )}
         </div>
       </Card>
     </div>

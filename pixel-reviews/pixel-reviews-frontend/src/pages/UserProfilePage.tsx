@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContextProvider";
 // Components
@@ -12,16 +11,11 @@ import StatsCards from "@/components/userComponents/StatsCards";
 import WishlistStatsCards from "@/components/userComponents/WishlistStatsCards";
 import WishlistItemCard from "@/components/userComponents/WishlistItemCard";
 // Services
-import { getUserData } from "@/services/userService";
-// Types
-import type { User } from "../types/userTypes";
+import { useGetUser } from "@/hooks/fetching/useGetUser";
 
 function UserProfilePage() {
   const { username, tab } = useParams();
   const { userData } = useAuth();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [userDataProfile, setUserDataProfile] = useState<User | null>(null);
   const navigate = useNavigate();
 
   const currentTab = tab || "profile";
@@ -29,60 +23,47 @@ function UserProfilePage() {
   const validTabs = ["profile", "reviews", "wishlist"];
   const activeTab = validTabs.includes(currentTab) ? currentTab : "profile";
 
-  useEffect(() => {
-    const getUserProfileData = async () => {
-      try {
-        const response = await getUserData(username || "");
-        setUserDataProfile(response.data.user_data);
-      } catch (error: any) {
-        if (error.response.status == 401) navigate("/auth/login");
-        if (error.response.status == 404) {
-          setError("404");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-    getUserProfileData();
-  }, []);
+  const { data, error, isError, isLoading } = useGetUser(username ?? "");
 
   const handleTabChange = (value: string) => {
     navigate(`/users/${username}/${value}`);
   };
 
-  if (loading) {
+  if (isLoading) {
     return <SpinnerComponent />;
   }
 
-  if (error == "404") {
-    return <NotFoundPage />;
+  if (error && isError) {
+    // @ts-ignore
+    if (error.response.status == 404) return <NotFoundPage />;
+    // @ts-ignore
+    if (error.response.status == 401) navigate("/auth/login");
+    // Unknown error component
   }
+
+  if (!data) {
+    return <h1>No results</h1>;
+  }
+
+  const displayUser = username == userData?.username ? userData : data.user;
 
   return (
     <div className="p-8 mt-6">
-      {username == userData?.username ? (
-        <div className="w-full">
-          <UserProfile user={userData} ownProfile={true} />
-        </div>
-      ) : (
-        <div>
-          <UserProfile user={userDataProfile} />
-        </div>
-      )}
+      <UserProfile
+        user={displayUser ?? undefined}
+        ownProfile={username == displayUser?.username}
+      />
       <Tabs
         value={activeTab}
         onValueChange={handleTabChange}
         className="w-full text-sm text-muted-foreground mt-4"
       >
         <TabsList className="grid w-full grid-cols-3" shape="pill">
+          {/* Triggers tabs */}
           <TabsTrigger value="profile">
             <UserRound />
             Profile
           </TabsTrigger>
-          {/* {<TabsTrigger value="notifications">
-            <Library />
-            Library
-          </TabsTrigger>} */}
           <TabsTrigger value="reviews">
             <PencilLine />
             Reviews
@@ -95,31 +76,13 @@ function UserProfilePage() {
         {/* Tabs Content */}
         <TabsContent value="profile">
           <div className="mt-8">
-            {username == userData?.username ? (
-              <StatsCards userData={userData || undefined} />
-            ) : (
-              <StatsCards userData={userDataProfile || undefined} />
-            )}
+            <StatsCards user={displayUser ?? undefined} />
           </div>
         </TabsContent>
-        {/* {<TabsContent value="notifications">
-          Content for Notifications
-        </TabsContent>} */}
         <TabsContent value="reviews">
           <div className="flex flex-col gap-4">
             {(() => {
-              {
-                /* Select the reviews to use */
-              }
-              const reviews =
-                username === userData?.username
-                  ? userData?.reviews
-                  : userDataProfile?.reviews;
-
-              {
-                /* If there is no reviews show a message */
-              }
-              if (!reviews || reviews.length === 0) {
+              if (!displayUser?.reviews || displayUser?.reviews?.length === 0) {
                 return (
                   <p className="text-center text-primary-muted mt-8">
                     This user has not written any reviews yet.
@@ -127,10 +90,7 @@ function UserProfilePage() {
                 );
               }
 
-              {
-                /* Renders of the reviews */
-              }
-              return reviews.map((review) => (
+              return displayUser?.reviews.map((review) => (
                 <ProfileReviewCard key={review.review_id} review={review} />
               ));
             })()}
@@ -138,10 +98,11 @@ function UserProfilePage() {
         </TabsContent>
         <TabsContent value="wishlist">
           <div className="flex flex-col gap-4">
-            <WishlistStatsCards wishlist={userData?.wishlist} />
-            {userData?.wishlist?.map((wishlistItem) => (
+            <WishlistStatsCards wishlist={displayUser?.wishlist} />
+            {displayUser?.wishlist?.map((wishlistItem) => (
               <WishlistItemCard
                 wishlistItem={wishlistItem}
+                ownProfile={username == userData?.username}
                 key={wishlistItem.wishlistItemId}
               />
             ))}
