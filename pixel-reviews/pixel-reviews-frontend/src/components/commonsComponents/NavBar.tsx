@@ -21,20 +21,23 @@ import {
 import { useAuth } from "@/context/AuthContextProvider";
 import { useNavigate, Link } from "react-router-dom";
 
-// Navigation links array to be used in both desktop and mobile menus
-const loggedInNavigationLinks = [{ href: "/", label: "Home", active: true }];
-
-const loggedOutNavigationLinks = [
-  { href: "/", label: "Home", active: true },
-  { href: "/auth/login", label: "Login" },
-  { href: "/auth/signup", label: "Sign Up" },
-];
-
 export default function NavBar() {
-  const { activeSession } = useAuth();
+  const { activeSession, userData } = useAuth();
   const [inputValue, setInputValue] = useState<string>("");
   const navigate = useNavigate();
   const id = useId();
+
+  // Navigation links array to be used in both desktop and mobile menus
+  const loggedInNavigationLinks = [
+    { href: "/", label: "Home", active: true },
+    { href: `/users/${userData?.username}/wishlist`, label: "Wishlist" },
+  ];
+
+  const loggedOutNavigationLinks = [
+    { href: "/", label: "Home", active: true },
+    { href: "/auth/login", label: "Login" },
+    { href: "/auth/signup", label: "Sign Up" },
+  ];
 
   // Function that handles the search form
   const handleSearch = (e: React.FormEvent) => {

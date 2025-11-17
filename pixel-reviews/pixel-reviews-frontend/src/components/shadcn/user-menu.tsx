@@ -1,12 +1,5 @@
-import {
-  BoltIcon,
-  BookOpenIcon,
-  LogOutIcon,
-  UserPenIcon,
-} from "lucide-react";
-
+import { BoltIcon, BookOpenIcon, LogOutIcon, UserPenIcon, Gift } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -17,8 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-//main
 import { useAuth } from "@/context/AuthContextProvider";
 import { Link } from "react-router-dom";
 
@@ -47,16 +38,16 @@ export default function UserMenu() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <Link to={`/users/${userData?.username}`}>My Profile</Link>
+            <Link to={`/users/${userData?.username}`}>Profile</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <Link to={`/users/${userData?.username}/reviews`}>My Reviews</Link>
+            <Link to={`/users/${userData?.username}/reviews`}>Reviews</Link>
           </DropdownMenuItem>
-          {/* {<DropdownMenuItem>
-            <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Wishlist</span>
-          </DropdownMenuItem>} */}
+          <DropdownMenuItem>
+            <Gift size={16} className="opacity-60" aria-hidden="true" />
+            <Link to={`/users/${userData?.username}/wishlist`}>Wishlist</Link>
+          </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
