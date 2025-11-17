@@ -152,8 +152,8 @@ const GameHero = ({ gameData, setGameData }: GameHeroProps) => {
               
               className={`size-5 ${
                 inWishlist
-                  ? "text-destructive-secondary fill-destructive-secondary"
-                  : "text-destructive-secondary"
+                  ? "text-destructive fill-destructive"
+                  : "text-destructive"
               }`}
             />
             {inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
