@@ -20,7 +20,7 @@ import { Textarea } from "../ui/textarea";
 import { toast, Toaster } from "sonner";
 import AccentButton from "../commonsComponents/AccentButton";
 // Services
-import { createReview } from "@/services/apiService";
+import { createReview, deleteReview } from "@/services/apiService";
 // types
 import type { Game, Rating, Review } from "@/types/gameTypes";
 import { HelperText } from "flowbite-react";
@@ -63,9 +63,9 @@ function DialogReviewComponent({
   const [isOpen, setIsOpen] = useState<boolean>(false); // Dialog controller
 
   // Success toast
-  const displaySuccessToast = () =>
-    toast.success("Review created", {
-      description: "The review has been created/edited successfully",
+  const displaySuccessToast = (operation: string) =>
+    toast.success(`Review ${operation}`, {
+      description: `The review has been ${operation} successfully`,
       duration: 5000,
     });
 
@@ -101,12 +101,27 @@ function DialogReviewComponent({
       setUserRating(response.data.rating);
       setUserReview(response.data.review);
       setIsOpen(false);
-      displaySuccessToast();
+      displaySuccessToast("created/edited");
     } catch (error: any) {
       displayErrorToast(error.response.data.error);
       setIsOpen(false);
     }
   });
+
+  const handleDeleteReview = async () => {
+    if (gameData && userReview) {
+      try {
+        await deleteReview(gameData?.game_id, userReview?.author?.user_id || 0);
+        setUserRating(null)
+        setUserReview(null)
+        displaySuccessToast("deleted");
+      } catch (error: any) {
+        displayErrorToast(error.response.data.error);
+      } finally {
+        setIsOpen(false);
+      }
+    }
+  };
 
   return (
     <div>
@@ -202,9 +217,16 @@ function DialogReviewComponent({
             <DialogClose asChild>
               <Button>Close</Button>
             </DialogClose>
+            <div className="flex gap-2">
+              <DialogClose asChild>
+              <Button variant="destructive" onClick={handleDeleteReview}>
+                Delete
+              </Button>
+            </DialogClose>
             <DialogClose asChild>
               <AccentButton onClick={onSubmit}>Review It</AccentButton>
             </DialogClose>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

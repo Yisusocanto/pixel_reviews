@@ -80,3 +80,19 @@ def create_or_update_review():
         return jsonify({"error", "An error ocurred creating the review"}), 500
 
     return jsonify({"review": review, "rating": rating}), 200
+
+@api_bp.route("/delete_review", methods=["POST"])
+@token_required
+def delete_review():
+    data = request.get_json()
+    game_id = data["game_id"]
+    user_id = data["user_id"]
+
+    if not game_id and not user_id:
+        return jsonify({"error": "game_id and user_id were not provided."}), 400
+
+    success = ReviewManager.delete_review(game_id, user_id)
+    if not success:
+        return jsonify({"error": "The review does not exits."}), 400
+
+    return jsonify({"success": "The review has been deleted successfully."}), 200

@@ -28,3 +28,14 @@ export const createReview = async (
 
   return response;
 };
+
+export const deleteReview = async (
+  gameID: number,
+  userID: number
+): Promise<AxiosResponse> => {
+  const response = await axiosInstance.post("/api/delete_review", {
+    game_id: gameID,
+    user_id: userID,
+  });
+  return response;
+};

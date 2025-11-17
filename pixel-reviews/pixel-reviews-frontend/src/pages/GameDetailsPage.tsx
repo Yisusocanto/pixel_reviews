@@ -265,7 +265,7 @@ function GameDetailsPage() {
         <div className="flex-1 flex flex-col gap-4 items-center sm:pla mx-8">
           {/* Rating and Review Card */}
           <div className="w-full max-w-sm">
-            <Card variant="shine" className="flex flex-col gap-4">
+            <Card variant="default" className="flex flex-col items-center gap-4">
               <h3 className="text-lg">Rate this game</h3>
               <div className="flex gap-2 items-center">
                 <Star size={36} className="text-yellow-400 fill-yellow-400" />

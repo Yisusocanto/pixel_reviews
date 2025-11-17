@@ -67,6 +67,23 @@ class ReviewManager(DatabaseBase):
             return ReviewSchema().dump(review)
 
     @classmethod
+    def delete_review(cls, game_id: int, user_id: int) -> Optional[bool]:
+        """Delete a review if it exits."""
+        try:
+            with cls.get_session() as session:
+                review = session.query(Review).filter(Review.game_id == game_id, Review.user_id == user_id).first()
+                if not review:
+                    return None
+
+                rating = review.rating
+                session.delete(review)
+                session.delete(rating)
+                return True
+        except Exception as e:
+            print(f"Error on delete_review: {e}")
+            return None
+
+    @classmethod
     def get_user_review(cls, game_id: int, user_id: int) -> Optional[dict]:
         """Get user's review for a specific game"""
         with cls.get_session() as session:
