@@ -28,7 +28,7 @@ def sign_up():
         return (
             jsonify(
                 {
-                    "message": error,
+                    "error": error,
                 }
             ),
             401,
@@ -47,7 +47,7 @@ def sign_up():
         age=age,
     )
     if isinstance(user_id, dict) and "error" in user_id:
-        return jsonify({"message": user_id["error"]}), 409
+        return jsonify({"error": user_id["error"]}), 409
 
     token = JwtHandler.create_jwt(user_id)
     user = UserManager.get_user_by_username(username=username)
@@ -56,7 +56,7 @@ def sign_up():
 
     # The response is created and the cookie is set with the token inside
     response = make_response(
-        jsonify({"message": "User created succesfully", "user_data": user})
+        jsonify({"user": user})
     )
     response.set_cookie(
         "jwt_pixel_reviews",
@@ -80,12 +80,12 @@ def login():
     hashed_password = AuthManager.get_hashed_password(username=username)
     if not hashed_password:
         return (
-            jsonify({"message": "username incorrect or not exits"}),
+            jsonify({"error": "username incorrect or not exits"}),
             401,
         )
 
     if not password_handler.check_password(password, hashed_password):
-        return jsonify({"message": "the password is incorrect"}), 401
+        return jsonify({"error": "the password is incorrect"}), 401
 
     user_id = UserManager.get_user_id(username=username)
     token = JwtHandler.create_jwt(user_id)
@@ -94,7 +94,7 @@ def login():
 
     # The response is created and the cookie is set with the token inside
     response = make_response(
-        jsonify({"message": "session started successfully", "user_data": user})
+        jsonify({"user": user})
     )
 
     response.set_cookie(
@@ -154,9 +154,9 @@ def password_recovery():
         AuthManager.create_password_reset_token(
             user_id=user["user_id"], reset_token=reset_token
         )
-        # The email with the reset token is sended
+        # The email with the reset token is sent
         email_sender.reset_token_email(email, user["username"], reset_token)
-        return jsonify({"succes": "reset token created and sended"}), 200
+        return jsonify({"success": "reset token created and sent"}), 200
 
     except Exception as e:
         print("error en reset token route", e)
@@ -171,8 +171,8 @@ def password_reset():
     new_password = response["new_password"]
 
     # The token is verified
-    token_checked = AuthManager.check_reset_token(reset_token=reset_token)
-    if not token_checked:
+    user_id = AuthManager.check_reset_token(reset_token=reset_token)
+    if not user_id:
         return jsonify({"error": "token not valid or expired"}), 401
 
     # the new password is checked
@@ -180,7 +180,7 @@ def password_reset():
 
     # The password is updated in the database
     message = AuthManager.update_password(
-        user_id=token_checked.user_id, new_password=hashed_password
+        user_id=user_id, new_password=hashed_password
     )
     if not message:
         return jsonify({"error": "error updating the password"}), 500

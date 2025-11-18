@@ -12,12 +12,6 @@ export const useGetUser = (username: string) => {
       queryKey: ["user", username],
       queryFn: () => getUserData(username),
       enabled: !!username,
-      retry: (failureCount, error: any) => {
-        if (error?.response?.status >= 400 && error?.response?.status < 500) {
-          return false;
-        }
-        return failureCount < 2;
-      },
     });
   return {
     data,

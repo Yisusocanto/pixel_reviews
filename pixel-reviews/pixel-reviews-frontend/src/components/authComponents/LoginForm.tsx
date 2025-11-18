@@ -1,9 +1,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/context/AuthContextProvider";
+import { Link } from "react-router-dom";
 import useAlreadyAuth from "@/hooks/useAlreadyAuth";
 // Components
 import { Label, HelperText } from "flowbite-react";
@@ -11,9 +9,8 @@ import { Lock, AtSign } from "lucide-react";
 import { Input, InputAddon, InputGroup } from "../ui/input";
 import AccentButton from "../commonsComponents/AccentButton";
 // Services
-import { login } from "@/services/authService";
+import { useLogin } from "@/hooks/fetching/useLogin";
 
-// The loin schema for the validations
 const loginSchema = z.object({
   username: z
     .string()
@@ -28,9 +25,6 @@ const loginSchema = z.object({
 
 function LoginForm() {
   useAlreadyAuth();
-  const [errorMessage, setErrorMessage] = useState("");
-  const { setActiveSession, setUserData } = useAuth();
-  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -39,16 +33,10 @@ function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
-  // hnadle of the api call
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      const response = await login(data);
-      setActiveSession(true);
-      setUserData(response.data.user_data);
-      navigate("/");
-    } catch (error: any) {
-      setErrorMessage(error.response?.data?.message || "Unknown error");
-    }
+  const { mutate: loginUser, isPending, isError, error } = useLogin();
+
+  const onSubmit = handleSubmit(async (formData) => {
+    loginUser(formData);
   });
 
   return (
@@ -72,6 +60,7 @@ function LoginForm() {
                 {...register("username")}
                 placeholder="johndoe1234"
                 autoFocus
+                disabled={isPending}
               />
             </InputGroup>
             <HelperText color="failure">{errors.username?.message}</HelperText>
@@ -89,14 +78,19 @@ function LoginForm() {
                 variant="lg"
                 {...register("password")}
                 placeholder="**********"
+                disabled={isPending}
               />
             </InputGroup>
             <HelperText color="failure">{errors.password?.message}</HelperText>
           </div>
-          <AccentButton>Login</AccentButton>
+          <AccentButton disabled={isPending}>
+            {isPending ? "Logging in..." : "Log in"}
+          </AccentButton>
         </div>
       </form>
-      <p className="mt-2 text-destructive-secondary">{errorMessage}</p>
+      <p className="mt-2 text-destructive-secondary">
+        {isError ? error.response.data.error : null}
+      </p>
       <span className="flex justify-center gap-2 mt-4 ">
         Don't have an account?
         <Link

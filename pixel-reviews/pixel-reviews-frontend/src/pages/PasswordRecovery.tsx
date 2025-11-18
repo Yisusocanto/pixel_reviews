@@ -4,11 +4,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { passwordRecovery } from "@/services/authService";
 import useAlreadyAuth from "@/hooks/useAlreadyAuth";
-import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import { Card } from "@/components/luxe/card";
 import { Input } from "@/components/luxe/input";
 import { Button } from "@/components/luxe/button";
 import { HelperText } from "flowbite-react";
+import { useMutation } from "@tanstack/react-query";
 
 const PasswordRecoverySchema = z.object({
   email: z.email({ message: "Please enter a valid email" }),
@@ -16,26 +16,30 @@ const PasswordRecoverySchema = z.object({
 
 function PasswordRecovery() {
   useAlreadyAuth();
-  const [error, setError] = useState<string>("");
   const [emailSended, setEmailSended] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: zodResolver(PasswordRecoverySchema) });
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      setLoading(true);
-      await passwordRecovery(data.email);
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: (email: string) => passwordRecovery(email),
+    onSuccess: () => {
       setEmailSended(true);
-    } catch (error: any) {
-      setError(error.response.data.error);
-    } finally {
-      setLoading(false);
-    }
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
   });
+
+  const onSubmit = handleSubmit(async (data) => {
+    mutate(data.email);
+  });
+
+  if (isError && !error.response) {
+    return <h1>Internal server error.</h1>;
+  }
 
   if (emailSended) {
     return (
@@ -70,14 +74,18 @@ function PasswordRecovery() {
               style={{ color: "rgb(246 246 246)" }}
               placeholder="johndoe@example.com"
             />
-            <HelperText color="failure">{errors.email?.message}</HelperText>
-            <Button className="mt-4">Send Email</Button>
+            <HelperText color="failure">
+              {errors ? errors.email?.message : null}
+            </HelperText>
+            <Button className="mt-4" disabled={isPending}>
+              {isPending ? "Sending email..." : "Send email"}
+            </Button>
           </form>
         </Card>
-        <span className="text-destructive">{error}</span>
+        <span className="text-destructive">
+          {isError ? error.response.data.error : null}
+        </span>
       </div>
-
-      {loading && <SpinnerComponent />}
     </div>
   );
 }

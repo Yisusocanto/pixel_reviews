@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,7 +7,7 @@ import { Card } from "@/components/luxe/card";
 import { Input } from "@/components/luxe/input";
 import { HelperText } from "flowbite-react";
 import { Button } from "@/components/luxe/button";
-import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
+import { useMutation } from "@tanstack/react-query";
 
 const PasswordResetSchema = z
   .object({
@@ -31,9 +30,7 @@ const PasswordResetSchema = z
   });
 
 function PasswordReset() {
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [searhcParms] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const {
     register,
@@ -41,17 +38,25 @@ function PasswordReset() {
     formState: { errors },
   } = useForm({ resolver: zodResolver(PasswordResetSchema) });
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      setLoading(true);
-      const token = searhcParms.get("token");
-      await passwordReset(token || "", data.password);
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: ({
+      resetToken,
+      newPassword,
+    }: {
+      resetToken: string;
+      newPassword: string;
+    }) => passwordReset(resetToken, newPassword),
+    onSuccess: () => {
       navigate("/auth/login");
-    } catch (error: any) {
-      setErrorMessage(error.response.data.error);
-    } finally {
-      setLoading(false);
-    }
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
+  });
+
+  const onSubmit = handleSubmit(async (formData) => {
+    const token = searchParams.get("token");
+    mutate({ resetToken: token ?? "", newPassword: formData.password });
   });
 
   return (
@@ -90,11 +95,14 @@ function PasswordReset() {
               {errors.confirmPassword?.message}
             </HelperText>
 
-            <Button className="mt-4">Create new password</Button>
+            <Button className="mt-4" disabled={isPending}>
+              {isPending ? "Creating a new password" : "Create new password"}
+            </Button>
           </form>
         </Card>
-        <span className="text-destructive">{errorMessage}</span>
-        {loading && <SpinnerComponent />}
+        <span className="text-destructive">
+          {isError ? error.response.data.error : null}
+        </span>
       </div>
     </div>
   );

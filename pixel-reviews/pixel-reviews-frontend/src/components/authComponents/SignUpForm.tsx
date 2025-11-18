@@ -1,10 +1,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import useAlreadyAuth from "@/hooks/useAlreadyAuth";
-import { useAuth } from "@/context/AuthContextProvider";
 // Components
 import { Input, InputAddon, InputGroup } from "../ui/input";
 import { DateField, DateInput } from "../ui/datefield";
@@ -12,9 +10,8 @@ import { AtSign, CalendarDays, Mail, Lock } from "lucide-react";
 import AccentButton from "../commonsComponents/AccentButton";
 import { Label, HelperText } from "flowbite-react";
 // Services
-import { signUp } from "@/services/authService";
+import { useSignUp } from "@/hooks/fetching/useSignUp";
 
-//Form validation scheme
 const signUpSchema = z
   .object({
     name: z
@@ -73,12 +70,10 @@ const signUpSchema = z
     }
   );
 
-//the start of the component
 function SignUpForm() {
   useAlreadyAuth();
-  const [errorMessage, setErrormessage] = useState("");
-  const navigate = useNavigate();
-  const { setActiveSession, setUserData } = useAuth();
+
+  const { mutate: signUpUser, isPending, isError, error } = useSignUp();
 
   const {
     register,
@@ -89,16 +84,8 @@ function SignUpForm() {
     resolver: zodResolver(signUpSchema),
   });
 
-  // Sends the data to the backend, if there is an error it saves it in the state or if the user creation is successful it redirects
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      const response = await signUp(data);
-      setActiveSession(true);
-      setUserData(response.data.user_data);
-      navigate("/");
-    } catch (error: any) {
-      setErrormessage(error.response?.data?.message || "Unknown error");
-    }
+  const onSubmit = handleSubmit(async (formData) => {
+    signUpUser(formData);
   });
 
   return (
@@ -234,12 +221,16 @@ function SignUpForm() {
               {errors.confirmPassword?.message}
             </HelperText>
           </div>
-          <AccentButton>Create user</AccentButton>
+          <AccentButton disabled={isPending}>
+            {isPending ? "Creating user..." : "Create user"}
+          </AccentButton>
         </div>
       </form>
-      <span className="text-destructive-secondary mt-2">{errorMessage}</span>
+      <span className="text-destructive-secondary mt-2">
+        {isError ? error.response.data.error : null}
+      </span>
       <span className="text-center mt-4">
-        Already have an account?{" "}
+        Already have an account?
         <Link
           to="/auth/login"
           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"

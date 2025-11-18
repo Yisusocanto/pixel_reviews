@@ -72,7 +72,7 @@ class AuthManager(DatabaseBase):
             return None
 
     @classmethod
-    def check_reset_token(cls, reset_token: str) -> Optional[PasswordResetToken]:
+    def check_reset_token(cls, reset_token: str) -> Optional[int]:
         """Verify and consume reset token"""
         try:
             with cls.get_session() as session:
@@ -90,7 +90,7 @@ class AuthManager(DatabaseBase):
 
                 token.token = None
                 token.expires_at = None
-                return token
+                return token.user_id
 
         except Exception as e:
             print("Error checking reset token:", e)
