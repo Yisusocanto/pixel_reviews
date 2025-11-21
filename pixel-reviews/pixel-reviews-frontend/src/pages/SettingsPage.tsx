@@ -15,7 +15,7 @@ import { User, Shield, ImageUp } from "lucide-react";
 
 function SettingsPage() {
   const { tab } = useParams();
-  const { userData } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const currentTab = tab || "profile";
@@ -53,22 +53,16 @@ function SettingsPage() {
               Auth
             </span>
           </TabsTrigger>
-          {/* {<TabsTrigger value="notifications">
-            <span>Notifications</span>
-          </TabsTrigger>
-          <TabsTrigger value="data">
-            <span>Data</span>
-          </TabsTrigger>} */}
         </TabsList>
         <div>
           <TabsContent value="profile">
             <Card>
-              <ProfileSettings user={userData || undefined} />
+              <ProfileSettings user={user || undefined} />
             </Card>
           </TabsContent>
           <TabsContent value="avatar">
             <Card>
-              <AvatarSettings defaultAvatar={userData?.avatarUrl} />
+              <AvatarSettings defaultAvatar={user?.avatarUrl} />
             </Card>
           </TabsContent>
           <TabsContent value="auth">
@@ -76,8 +70,6 @@ function SettingsPage() {
               <AuthSettings />
             </Card>
           </TabsContent>
-          {/* {<TabsContent value="notifications">noti content</TabsContent>
-          <TabsContent value="data">data content</TabsContent>} */}
         </div>
       </Tabs>
     </div>

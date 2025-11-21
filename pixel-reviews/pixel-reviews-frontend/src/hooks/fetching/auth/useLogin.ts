@@ -1,6 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login } from "@/services/authService";
-import { useAuth } from "@/context/AuthContextProvider";
 import { useNavigate } from "react-router-dom";
 
 interface LoginData {
@@ -9,14 +8,13 @@ interface LoginData {
 }
 
 export const useLogin = () => {
-  const { setActiveSession, setUserData } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: LoginData) => login(data),
     onSuccess: (data) => {
-      setActiveSession(true);
-      setUserData(data.user);
+      queryClient.setQueryData(["authUser"], data.user);
       navigate("/");
     },
     onError: (error: any) => {

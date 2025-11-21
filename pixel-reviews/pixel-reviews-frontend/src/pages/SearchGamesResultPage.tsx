@@ -1,43 +1,24 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 // Components
 import { GameCard } from "@/components/gameComponents/GameCard";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import NotResultsPage from "./NotResultsPage";
 // Services
-import { searchGames } from "@/services/gameService";
+import { useSearchGames } from "@/hooks/fetching/useGetGames";
 // Types
 import type { SearchedGame } from "@/types/gameTypes";
 
 function SearchGamesResultPage() {
-  const [gameResults, setGameResults] = useState<Array<SearchedGame> | null>(
-    null
-  );
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(true);
   const { gameTitle } = useParams();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const bringGameResults = async () => {
-      try {
-        const response = await searchGames(gameTitle || "");
-        setGameResults(response.data.game_list);
-      } catch (error: any) {
-        if (error.status == 401) navigate("/auth/login");
-        if (error.status == 404) setError("404");
-      } finally {
-        setLoading(false);
-      }
-    };
-    bringGameResults();
-  }, [gameTitle, navigate]);
+  const { data, isLoading, isError, error } = useSearchGames(gameTitle || "");
 
-  if (loading) {
+  if (isLoading) {
     return <SpinnerComponent />;
   }
 
-  if (error == "404") {
+  //@ts-ignore
+  if (isError && error.response.status == 404) {
     return <NotResultsPage gameTitle={gameTitle || ""} />;
   }
 
@@ -60,10 +41,12 @@ function SearchGamesResultPage() {
       {/* Resultados: ocupan el espacio restante y muestran una grilla de 2 columnas */}
       <main className="flex-1">
         <div className="mt-4">
-          <h1 className="text-4xl text-center font-bold font-orbitron mb-4">Results for {gameTitle}</h1>
-          {gameResults && gameResults.length > 0 ? (
+          <h1 className="text-4xl text-center font-bold font-orbitron mb-4">
+            Results for {gameTitle}
+          </h1>
+          {data && data.game_list.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {gameResults.map((game: SearchedGame) => (
+              {data.game_list.map((game: SearchedGame) => (
                 <div key={game.slug} className="w-fit m-auto">
                   <Link to={`/games/${game.slug}`}>
                     <GameCard

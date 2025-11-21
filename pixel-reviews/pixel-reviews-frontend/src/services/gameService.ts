@@ -1,14 +1,18 @@
 import axiosInstance from "@/config/axiosConfig";
-import type { AxiosResponse } from "axios";
+import type { Game, Review, Rating } from "@/types/gameTypes";
 
-export const getGameDetails = async (slug: string): Promise<AxiosResponse> => {
-  const response = await axiosInstance.get(`/main/games/${slug}`);
-  return response;
+interface GameDetails {
+  game: Game | null;
+  userRating: Rating | null;
+  userReview: Review | null;
+}
+
+export const getGameDetails = async (slug: string): Promise<GameDetails> => {
+  const { data } = await axiosInstance.get(`/main/games/${slug}`);
+  return data;
 };
 
-export const searchGames = async (
-  gameTitle: string
-): Promise<AxiosResponse> => {
-  const response = await axiosInstance.get(`/main/search/${gameTitle}`);
-  return response;
+export const searchGames = async (gameTitle: string) => {
+  const { data } = await axiosInstance.get(`/main/search/${gameTitle}`);
+  return data;
 };

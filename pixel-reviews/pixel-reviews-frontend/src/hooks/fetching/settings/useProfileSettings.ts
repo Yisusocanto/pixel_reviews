@@ -1,0 +1,40 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProfile } from "@/services/settingService";
+import { toast } from "sonner";
+
+interface ProfileData {
+  name: string;
+  lastname: string;
+  location: string;
+  bio: string;
+  website: string;
+}
+
+// Success toast
+const displaySuccessToast = () =>
+  toast.success("Profile updated", {
+    description: "The Profile has been edited successfully",
+    duration: 5000,
+  });
+
+// Success toast
+const displayErrorToast = (error: string) =>
+  toast.error("Error", {
+    description: `Error updating the review: ${error}`,
+    duration: 5000,
+  });
+
+export const useProfileSettings = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (profileData: ProfileData) => updateProfile(profileData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      displaySuccessToast();
+    },
+    onError: (error: any) => {
+      console.log(error);
+      displayErrorToast(error.response.data.error);
+    },
+  });
+};

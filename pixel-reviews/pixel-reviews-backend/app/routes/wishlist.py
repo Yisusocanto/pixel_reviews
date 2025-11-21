@@ -31,10 +31,7 @@ def add_to_wishlist():
     if not wishlist_item:
         return jsonify({"error": "Unknown error."}), 500
 
-    user = UserManager.get_user_by_id(user_id)
-    game = GameManager.get_game_by_id(game_id)
-
-    return jsonify({"user": user, "game": game, "wishlist_item": wishlist_item}), 200
+    return jsonify({"success": "Game has been added to the wishlist successfully."}), 200
 
 @wishlist_bp.route("/remove_from_wishlist", methods=["POST"])
 @token_required
@@ -53,8 +50,5 @@ def remove_from_wishlist():
     if isinstance(message, dict) and "error" in message:
         return jsonify(message), 500
 
-    user = UserManager.get_user_by_id(user_id)
-    game = GameManager.get_game_by_id(game_id)
-
-    return jsonify({"user": user, "game": game}), 200
+    return jsonify({"success": "Game has been removed from the wishlist successfully."}), 200
 

@@ -1,10 +1,9 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
-
 //pages
 import GameDetailsPage from "./pages/GameDetailsPage";
-import Index from "./pages/Index";
+import Feed from "./pages/Feed";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import SearchGamesResultPage from "./pages/SearchGamesResultPage";
@@ -26,14 +25,14 @@ import { setupAxiosInterceptors } from "./config/axiosConfig";
 import { Analytics } from "@vercel/analytics/react";
 
 function App() {
-  const { logoutFunction, loading } = useAuth();
+  const { logout, isLoading } = useAuth();
 
   //The interceptor is inicializated
   useEffect(() => {
-    setupAxiosInterceptors(logoutFunction);
+    setupAxiosInterceptors(logout);
   }, []);
 
-  if (loading) {
+  if (isLoading) {
     return <SpinnerComponent />;
   }
 
@@ -42,35 +41,33 @@ function App() {
       <Analytics />
       <Background />
       <div className="flex flex-col min-h-screen">
-        <header>
-          <NavBar />
-        </header>
+        <NavBar />
         <main className="flex-grow">
           <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth/signup" element={<SignUpPage />} />
-          <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/auth/logout" element={<LogOutPage />} />
-          <Route
-            path="/auth/password_recovery"
-            element={<PasswordRecovery />}
-          />
-          <Route path="/auth/password_reset" element={<PasswordReset />} />
+            <Route path="/" element={<Feed />} />
+            <Route path="/auth/signup" element={<SignUpPage />} />
+            <Route path="/auth/login" element={<LoginPage />} />
+            <Route path="/auth/logout" element={<LogOutPage />} />
+            <Route
+              path="/auth/password_recovery"
+              element={<PasswordRecovery />}
+            />
+            <Route path="/auth/password_reset" element={<PasswordReset />} />
 
-          <Route path="/users/:username/" element={<UserProfilePage />} />
-          <Route path="/users/:username/:tab" element={<UserProfilePage />} />
+            <Route path="/users/:username/" element={<UserProfilePage />} />
+            <Route path="/users/:username/:tab" element={<UserProfilePage />} />
 
-          <Route
-            path="/search/:gameTitle"
-            element={<SearchGamesResultPage />}
-          />
-          <Route path="/games/:slug" element={<GameDetailsPage />} />
+            <Route
+              path="/search/:gameTitle"
+              element={<SearchGamesResultPage />}
+            />
+            <Route path="/games/:slug" element={<GameDetailsPage />} />
 
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/settings/:tab" element={<SettingsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/settings/:tab" element={<SettingsPage />} />
 
-          <Route path="/*" element={<NotFoundPage />} />
-        </Routes>
+            <Route path="/*" element={<NotFoundPage />} />
+          </Routes>
         </main>
         <Footer />
       </div>

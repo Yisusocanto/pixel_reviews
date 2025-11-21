@@ -13,11 +13,11 @@ settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
 def update_profile():
     # New data of the user
     data = request.get_json()
-    name = data["name"]
-    lastname = data["lastname"]
-    location = data["location"]
-    bio = data["bio"]
-    website = data["website"]
+    name = data.get("name", "")
+    lastname = data.get("lastname", "")
+    location = data.get("location", "")
+    bio = data.get("bio", "")
+    website = data.get("website", "")
 
     # Extraction of the user_id
     payload = g.user_payload

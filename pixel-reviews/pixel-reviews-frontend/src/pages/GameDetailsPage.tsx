@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 // Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
@@ -15,23 +15,21 @@ import DialogReviewComponent from "@/components/gameReviewComponents/DialogRevie
 import RatingStatistics from "@/components/gameReviewComponents/RatingStatistics";
 import NotFoundPage from "./NotFoundPage";
 // Types
-import type { Game, Rating, Review } from "@/types/gameTypes";
+import type { Developer, Publisher, Review } from "@/types/gameTypes";
 // Services
-import { createRating } from "@/services/apiService";
-import { getGameDetails } from "@/services/gameService";
+import { useGameDetails } from "@/hooks/fetching/useGetGames";
+import { useCreateRating } from "@/hooks/fetching/useReview";
 // Utils
 import { dateFormatter } from "@/utils/dateFormatter";
 import { Button } from "@/components/ui/button";
 
 function GameDetailsPage() {
-  const [gameData, setGameData] = useState<Game | null>(null);
-  const [userRating, setUserRating] = useState<Rating | null>(null);
-  const [userReview, setUserReview] = useState<Review | null>(null);
-  const [error, setError] = useState(""); 
-  const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const { slug } = useParams();
-  const navigate = useNavigate();
+
+  const { data, isLoading, isError, error } = useGameDetails(slug ?? "");
+
+  const { mutate: createRating } = useCreateRating(slug ?? "");
 
   // Preview helpers
   const PREVIEW_WORDS = 40;
@@ -43,25 +41,8 @@ function GameDetailsPage() {
       : words.slice(0, PREVIEW_WORDS).join(" ") + "…";
   };
   const isLongDescription =
-    !!gameData?.description &&
-    gameData.description.split(/\s+/).length > PREVIEW_WORDS;
-
-  useEffect(() => {
-    const bringGameDetails = async () => {
-      try {
-        const response = await getGameDetails(slug || "");
-        setGameData(response.data.game_data);
-        setUserRating(response.data.user_rating_data);
-        setUserReview(response.data.user_review_data);
-      } catch (error: any) {
-        if (error.status == 401) navigate("/auth/login");
-        if (error.status == 404) setError("404");
-      } finally {
-        setLoading(false);
-      }
-    };
-    bringGameDetails();
-  }, [slug, navigate]);
+    !!data?.game?.description &&
+    data.game.description.split(/\s+/).length > PREVIEW_WORDS;
 
   const displaySuccessToast = () => {
     toast.success("Rating created", {
@@ -78,24 +59,24 @@ function GameDetailsPage() {
   };
 
   const handleRatingChange = async (score: number) => {
-    if (gameData) {
-      try {
-        const response = await createRating(gameData.game_id, score);
-        setUserRating(response.data.rating);
-        setUserReview(response.data.review);
-        displaySuccessToast();
-      } catch (error: any) {
-        setError(error.response.data.error);
-        displayErrorToast(error.response.data.error);
-      }
+    if (data?.game) {
+      createRating(
+        { gameID: data.game.game_id, score: score },
+        {
+          onSuccess: () => displaySuccessToast(),
+          onError: (error: any) =>
+            displayErrorToast(error.response.data.error ?? "Unknown error"),
+        }
+      );
     }
   };
 
-  if (error == "404") {
+  //@ts-ignore
+  if (isError && error?.status == 404) {
     return <NotFoundPage />;
   }
 
-  if (loading || !gameData) {
+  if (isLoading || !data?.game) {
     return <SpinnerComponent />;
   }
 
@@ -104,7 +85,7 @@ function GameDetailsPage() {
       {/* Success or error notification */}
       <Toaster theme="dark" richColors={true} />
       {/* Game Hero */}
-      <GameHero gameData={gameData || undefined} setGameData={setGameData} />
+      <GameHero gameData={data?.game || undefined} />
       <div className="flex flex-col md:flex-row gap-4 md:gap-0 w-full md:px-20  lg:px-35">
         {/* Left side */}
         <div className="flex-2">
@@ -122,7 +103,7 @@ function GameDetailsPage() {
 
                   {/* If description is short, show it all */}
                   {!isLongDescription ? (
-                    <p>{gameData?.description}</p>
+                    <p>{data?.game?.description}</p>
                   ) : (
                     <div className="relative">
                       {/* Preview or full text with smooth max-height transition */}
@@ -134,8 +115,8 @@ function GameDetailsPage() {
                         aria-expanded={isOpen}
                       >
                         {isOpen
-                          ? gameData?.description
-                          : getPreview(gameData?.description)}
+                          ? data?.game?.description
+                          : getPreview(data?.game?.description)}
                       </p>
 
                       {/* Gradient overlay when collapsed */}
@@ -163,7 +144,7 @@ function GameDetailsPage() {
                 <div className="w-full items-center">
                   <RatingStatistics
                     classname="m-auto md:m-0"
-                    gameData={gameData || undefined}
+                    gameData={data?.game || undefined}
                   />
                 </div>
               </div>
@@ -172,29 +153,30 @@ function GameDetailsPage() {
             <TabsContent value="reviews">
               <div className="flex flex-col gap-4 items-center m-auto w-full max-w-sm md:max-w-xl mt-8">
                 {/* Conditional if there are no reviews of the game, display a message */}
-                {!userReview && gameData.reviews?.length == 0 ? (
+                {!data.userReview && data?.game.reviews?.length == 0 ? (
                   <p className="text-center text-primary-muted">
                     This game has no reviews yet
                   </p>
                 ) : null}
 
                 {/* Review of the main user if exits */}
-                {userReview ? (
+                {data.userReview ? (
                   <div className="w-full flex flex-col gap-4">
                     <h3 className="text-xl text-bold text-center">
                       Your Review
                     </h3>
-                    <ReviewCard review={userReview} />
+                    <ReviewCard review={data.userReview} />
                     <Separator />
                   </div>
                 ) : null}
 
                 {/* All the reviews that have a game */}
-                {gameData?.reviews
+                {data?.game?.reviews
                   ?.filter(
-                    (review) => review.review_id !== userReview?.review_id
+                    (review: Review) =>
+                      review.review_id !== data.userReview?.review_id
                   )
-                  .map((review, index) => (
+                  .map((review: Review, index: number) => (
                     <ReviewCard
                       review={review}
                       key={review.review_id ?? index}
@@ -265,34 +247,35 @@ function GameDetailsPage() {
         <div className="flex-1 flex flex-col gap-4 items-center sm:pla mx-8">
           {/* Rating and Review Card */}
           <div className="w-full max-w-sm">
-            <Card variant="default" className="flex flex-col items-center gap-4">
+            <Card
+              variant="default"
+              className="flex flex-col items-center gap-4"
+            >
               <h3 className="text-lg">Rate this game</h3>
               <div className="flex gap-2 items-center">
                 <Star size={36} className="text-yellow-400 fill-yellow-400" />
                 <span className="text-4xl text-bold">
-                  {gameData?.averageRating.toFixed(1)}
+                  {data?.game?.averageRating.toFixed(1)}
                 </span>
                 <span className="text-base">/ 5</span>
               </div>
               <span className="text-base text-primary-muted">
-                Total Reviews: {gameData?.totalRatings}
+                Total Reviews: {data?.game?.totalRatings}
               </span>
               <Separator />
               <h4 className="text-lg">Your rating</h4>
               <RatingComponent
                 size="lg"
-                rating={userRating?.score || 0}
+                rating={data.userRating?.score || 0}
                 editable
                 showValue
                 onRatingChange={handleRatingChange}
               />
 
               <DialogReviewComponent
-                gameData={gameData || undefined}
-                userRating={userRating || undefined}
-                setUserRating={setUserRating}
-                userReview={userReview || undefined}
-                setUserReview={setUserReview}
+                gameData={data.game || undefined}
+                userRating={data.userRating || undefined}
+                userReview={data.userReview || undefined}
               />
             </Card>
           </div>
@@ -302,26 +285,30 @@ function GameDetailsPage() {
               <h3 className="text-lg text-bold">Information</h3>
               <div>
                 <h4 className="text-lg text-primary-muted">Developers</h4>
-                {gameData?.developers?.map((developer, index) => (
-                  <div className="flex flex-col" key={index}>
-                    <span className="text-lg">{developer.name}</span>
-                  </div>
-                ))}
+                {data?.game?.developers?.map(
+                  (developer: Developer, index: number) => (
+                    <div className="flex flex-col" key={index}>
+                      <span className="text-lg">{developer.name}</span>
+                    </div>
+                  )
+                )}
               </div>
               <Separator />
               <div>
                 <h4 className="text-lg text-primary-muted">Publishers</h4>
-                {gameData?.publishers?.map((publisher, index) => (
-                  <div className="flex flex-col" key={index}>
-                    <span className="text-lg">{publisher.name}</span>
-                  </div>
-                ))}
+                {data?.game?.publishers?.map(
+                  (publisher: Publisher, index: number) => (
+                    <div className="flex flex-col" key={index}>
+                      <span className="text-lg">{publisher.name}</span>
+                    </div>
+                  )
+                )}
               </div>
               <Separator />
               <div>
                 <h4 className="text-lg text-primary-muted">Release Date</h4>
                 <span className="text-lg">
-                  {dateFormatter(gameData?.releaseDate || "")}
+                  {dateFormatter(data?.game?.releaseDate || "")}
                 </span>
               </div>
               {/* {<Separator />
@@ -339,18 +326,22 @@ function GameDetailsPage() {
             </Card>
           </div>
           {/* Community Card */}
-          {<div className="w-full max-w-sm">
-            <Card className="flex flex-col gap-4">
-              <h3 className="text-lg">Community</h3>
-              <div className="flex justify-between">
-                <div className="flex gap-2 items-center">
-                  <Heart size={18} />
-                  <span className="text-lg">In Wishlist</span>
+          {
+            <div className="w-full max-w-sm">
+              <Card className="flex flex-col gap-4">
+                <h3 className="text-lg">Community</h3>
+                <div className="flex justify-between">
+                  <div className="flex gap-2 items-center">
+                    <Heart size={18} />
+                    <span className="text-lg">In Wishlist</span>
+                  </div>
+                  <span className="text-lg">
+                    {data?.game?.wishlist?.length}
+                  </span>
                 </div>
-                <span className="text-lg">{gameData.wishlist?.length}</span>
-              </div>
-            </Card>
-          </div>}
+              </Card>
+            </div>
+          }
           {/* {<div className="w-sm m-auto">
             <Card className="flex flex-col gap-4">
               <h3 className="text-lg">Community</h3>

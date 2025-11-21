@@ -74,8 +74,8 @@ def game_details(slug):
 
     return jsonify(
         {
-            "game_data": game,
-            "user_rating_data": user_rating,
-            "user_review_data": user_review,
+            "game": game,
+            "userRating": user_rating,
+            "userReview": user_review,
         }
     ), 200

@@ -7,11 +7,11 @@ import { useAuth } from "../context/AuthContextProvider";
  * exists.
  */
 function useAlreadyAuth() {
-  const { activeSession } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (activeSession) {
+    if (isAuthenticated) {
       navigate("/");
     }
   });

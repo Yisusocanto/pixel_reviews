@@ -15,7 +15,7 @@ import { useGetUser } from "@/hooks/fetching/useGetUser";
 
 function UserProfilePage() {
   const { username, tab } = useParams();
-  const { userData } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   const currentTab = tab || "profile";
@@ -45,13 +45,13 @@ function UserProfilePage() {
     return <h1>No results</h1>;
   }
 
-  const displayUser = username == userData?.username ? userData : data.user;
+  const displayUser = username == user?.username ? user : data.user;
 
   return (
     <div className="p-8 mt-6">
       <UserProfile
         user={displayUser ?? undefined}
-        ownProfile={username == displayUser?.username}
+        ownProfile={username == user?.username}
       />
       <Tabs
         value={activeTab}
@@ -102,7 +102,7 @@ function UserProfilePage() {
             {displayUser?.wishlist?.map((wishlistItem) => (
               <WishlistItemCard
                 wishlistItem={wishlistItem}
-                ownProfile={username == userData?.username}
+                ownProfile={username == user?.username}
                 key={wishlistItem.wishlistItemId}
               />
             ))}

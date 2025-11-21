@@ -1,43 +1,44 @@
 import axiosInstance from "@/config/axiosConfig";
-import type { AxiosResponse } from "axios";
 
-export const updateProfile = async (
-  name: string,
-  lastname: string,
-  location: string,
-  bio: string,
-  website: string
-): Promise<AxiosResponse> => {
-  const response = axiosInstance.post("/settings/update_profile", {
-    name,
-    lastname,
-    location,
-    bio,
-    website,
+interface ProfileData {
+  name: string;
+  lastname: string;
+  location: string;
+  bio: string;
+  website: string;
+}
+
+export const updateProfile = async (profileData: ProfileData) => {
+  const { data } = await axiosInstance.post("/settings/update_profile", {
+    name: profileData.name,
+    lastname: profileData.lastname,
+    location: profileData.location,
+    bio: profileData.bio,
+    website: profileData.website,
   });
-  return response;
+  return data;
 };
 
 export const changePassword = async (
   currentPassword: string,
   newPassword: string
-): Promise<AxiosResponse> => {
-  const response = axiosInstance.post("/settings/change_password", {
+) => {
+  const { data } = await axiosInstance.post("/settings/change_password", {
     current_password: currentPassword,
     new_password: newPassword,
   });
-  return response;
+  return data;
 };
 
-export const uploadAvatar = async (formData: any): Promise<AxiosResponse> => {
-  const response = await axiosInstance.post(
+export const uploadAvatar = async (formData: any) => {
+  const { data } = await axiosInstance.post(
     "/settings/upload_avatar",
     formData
   );
-  return response;
+  return data;
 };
 
-export const deleteAvatar = async (): Promise<AxiosResponse> => {
-  const response = await axiosInstance.get("/settings/delete_avatar");
-  return response;
+export const deleteAvatar = async () => {
+  const { data } = await axiosInstance.get("/settings/delete_avatar");
+  return data;
 };

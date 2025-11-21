@@ -1,16 +1,12 @@
 import axiosInstance from "@/config/axiosConfig";
-import type { AxiosResponse } from "axios";
 
-export const createRating = async (
-  gameID: number,
-  score: number
-): Promise<AxiosResponse> => {
-  const response = await axiosInstance.post("/api/create_rating", {
+export const createRating = async (gameID: number, score: number) => {
+  const { data } = await axiosInstance.post("/api/create_rating", {
     game_id: gameID,
     score: score,
   });
 
-  return response;
+  return data;
 };
 
 export const createReview = async (
@@ -18,24 +14,21 @@ export const createReview = async (
   reviewTitle: string,
   reviewContent: string,
   score: number
-): Promise<AxiosResponse> => {
-  const response = await axiosInstance.post("/api/create_review", {
+) => {
+  const { data } = await axiosInstance.post("/api/create_review", {
     game_id: gameID,
     review_title: reviewTitle,
     review_content: reviewContent,
     score: score,
   });
 
-  return response;
+  return data;
 };
 
-export const deleteReview = async (
-  gameID: number,
-  userID: number
-): Promise<AxiosResponse> => {
-  const response = await axiosInstance.post("/api/delete_review", {
+export const deleteReview = async (gameID: number, userID: number) => {
+  const { data } = await axiosInstance.post("/api/delete_review", {
     game_id: gameID,
     user_id: userID,
   });
-  return response;
+  return data;
 };

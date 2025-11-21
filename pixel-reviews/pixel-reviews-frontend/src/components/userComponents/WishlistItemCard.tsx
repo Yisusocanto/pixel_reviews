@@ -5,7 +5,7 @@ import { Calendar, Star, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 // Services
-import { removeFromWishlist } from "@/services/wishlistService";
+import { useRemoveFromWishlist } from "@/hooks/fetching/wishlist/useWishlist";
 // Types
 import type { WishlistItem } from "@/types/wishlistType";
 // Utils
@@ -18,24 +18,28 @@ interface WishlistItemCardProps {
 }
 
 function WishlistItemCard({ wishlistItem, ownProfile }: WishlistItemCardProps) {
-  const { userData, setUserData } = useAuth();
+  const { user } = useAuth();
+  const { mutate: removeFromWishlist } = useRemoveFromWishlist(
+    wishlistItem.game.slug
+  );
+
   const displayErrorToast = (e: any) => {
     toast.error("Error", {
       description: `Error removing from the wishlist ${e}`,
       duration: 5000,
     });
   };
+
   const handleRemoveFromWishlist = async () => {
-    if (userData) {
-      try {
-        const response = await removeFromWishlist(
-          wishlistItem.game.game_id,
-          userData?.user_id
-        );
-        setUserData(response.data.user);
-      } catch (error: any) {
-        displayErrorToast(error);
-      }
+    if (user) {
+      removeFromWishlist(
+        { gameID: wishlistItem.game.game_id, userID: user?.user_id },
+        {
+          onError: (error) => {
+            displayErrorToast(error.response.data.error ?? "Unknown error");
+          },
+        }
+      );
     }
   };
   return (

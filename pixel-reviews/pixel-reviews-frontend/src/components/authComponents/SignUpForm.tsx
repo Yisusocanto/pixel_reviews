@@ -10,7 +10,7 @@ import { AtSign, CalendarDays, Mail, Lock } from "lucide-react";
 import AccentButton from "../commonsComponents/AccentButton";
 import { Label, HelperText } from "flowbite-react";
 // Services
-import { useSignUp } from "@/hooks/fetching/useSignUp";
+import { useSignUp } from "@/hooks/fetching/auth/useSignUp";
 
 const signUpSchema = z
   .object({

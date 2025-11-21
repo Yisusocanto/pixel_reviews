@@ -132,9 +132,9 @@ def verify():
     if payload:
         user_id = int(payload["sub"])
         user = UserManager.get_user_by_id(user_id=user_id)
-        return jsonify({"message": "user authenticated", "user_data": user}), 200
+        return jsonify({"user": user}), 200
     else:
-        return jsonify({"message": "user not authenticated"}), 401
+        return jsonify({"error": "user not authenticated"}), 401
 
 
 @auth_bp.route("/password_recovery", methods=["POST"])

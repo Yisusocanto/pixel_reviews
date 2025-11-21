@@ -20,7 +20,7 @@ def create_or_update_rating():
         return jsonify({"error": "data missing"}), 400
 
     # Return error 400 if the score is not between 1 and 5
-    if score < 1 and score > 5:
+    if 1 > score > 5:
         return jsonify({"error": "score out of range"}), 400
 
     # Extraction of the user_id

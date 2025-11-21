@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +9,7 @@ import { LockIcon, Save } from "lucide-react";
 import SpinnerComponent from "../commonsComponents/SpinnerComponent";
 import AccentButton from "../commonsComponents/AccentButton";
 // Services
-import { changePassword } from "@/services/settingService";
+import { useAuthSettings } from "@/hooks/fetching/settings/useAuthSettings";
 
 const AuthSettingsSchema = z
   .object({
@@ -39,11 +38,11 @@ const AuthSettingsSchema = z
   });
 
 function AuthSettings() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const { mutate: changePassword, isPending } = useAuthSettings();
   const {
     register,
     handleSubmit,
-    setValue,
+    reset,
     formState: { errors },
   } = useForm({ resolver: zodResolver(AuthSettingsSchema) });
 
@@ -62,23 +61,25 @@ function AuthSettings() {
     });
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      setLoading(true);
-      await changePassword(data.currentPassword, data.newPassword);
-      displaySuccessToast();
-      setValue("confirmNewPassword", "");
-      setValue("currentPassword", "");
-      setValue("newPassword", "");
-    } catch (error: any) {
-      displayErrorToast(error?.response?.data?.error);
-    } finally {
-      setLoading(false);
-    }
+    changePassword(
+      { currentPassword: data.currentPassword, newPassword: data.newPassword },
+      {
+        onSuccess: () => {
+          displaySuccessToast();
+          reset();
+        },
+        onError: (error: any) => {
+          displayErrorToast(
+            error?.response?.data?.error || "Error changing the password"
+          );
+        },
+      }
+    );
   });
   return (
     <div>
       <Toaster theme="dark" richColors={true} />
-      {loading && <SpinnerComponent />}
+      {isPending && <SpinnerComponent />}
       <form onSubmit={onSubmit}>
         <div className="flex flex-col gap-4 px-1 md:px-4">
           <div className="flex gap-2 items-center">

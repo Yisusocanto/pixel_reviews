@@ -9,7 +9,7 @@ import { Lock, AtSign } from "lucide-react";
 import { Input, InputAddon, InputGroup } from "../ui/input";
 import AccentButton from "../commonsComponents/AccentButton";
 // Services
-import { useLogin } from "@/hooks/fetching/useLogin";
+import { useLogin } from "@/hooks/fetching/auth/useLogin";
 
 const loginSchema = z.object({
   username: z

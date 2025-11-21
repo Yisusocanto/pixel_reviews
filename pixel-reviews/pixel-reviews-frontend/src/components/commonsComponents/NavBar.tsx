@@ -22,7 +22,7 @@ import { useAuth } from "@/context/AuthContextProvider";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function NavBar() {
-  const { activeSession, userData } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [inputValue, setInputValue] = useState<string>("");
   const navigate = useNavigate();
   const id = useId();
@@ -30,7 +30,7 @@ export default function NavBar() {
   // Navigation links array to be used in both desktop and mobile menus
   const loggedInNavigationLinks = [
     { href: "/", label: "Home", active: true },
-    { href: `/users/${userData?.username}/wishlist`, label: "Wishlist" },
+    { href: `/users/${user?.username}/wishlist`, label: "Wishlist" },
   ];
 
   const loggedOutNavigationLinks = [
@@ -99,7 +99,7 @@ export default function NavBar() {
             <PopoverContent align="start" className="w-36 p-1 md:hidden">
               <NavigationMenu className="max-w-none *:w-full">
                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                  {activeSession
+                  {isAuthenticated
                     ? loggedInNavigationLinks.map((link, index) => (
                         <NavigationMenuItem key={index} className="w-full">
                           <NavigationMenuLink
@@ -172,7 +172,7 @@ export default function NavBar() {
           {/* Notification */}
 
           {/* User menu */}
-          {activeSession ? <UserMenu /> : null}
+          {isAuthenticated ? <UserMenu /> : null}
         </div>
       </div>
       {/* Bottom navigation */}
@@ -180,7 +180,7 @@ export default function NavBar() {
         {/* Navigation menu */}
         <NavigationMenu>
           <NavigationMenuList className="gap-2">
-            {activeSession
+            {isAuthenticated
               ? loggedInNavigationLinks.map((link, index) => (
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink

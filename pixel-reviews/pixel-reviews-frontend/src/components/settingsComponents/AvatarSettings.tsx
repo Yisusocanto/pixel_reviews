@@ -5,7 +5,6 @@ import {
   useFileUpload,
   type FileWithPreview,
 } from "@/hooks/use-file-upload";
-import { useAuth } from "@/context/AuthContextProvider";
 // Components
 import {
   Alert,
@@ -20,8 +19,10 @@ import AccentButton from "../commonsComponents/AccentButton";
 // Utils
 import { cn } from "@/lib/utils";
 // Services
-import { uploadAvatar, deleteAvatar } from "@/services/settingService";
-
+import {
+  useUploadAvatar,
+  useDeleteAvatar,
+} from "@/hooks/fetching/settings/useAvatarSettings";
 interface AvatarProps {
   maxSize?: number;
   className?: string;
@@ -35,7 +36,6 @@ export default function Avatar({
   onFileChange,
   defaultAvatar,
 }: AvatarProps) {
-  const { setUserData } = useAuth();
   const [
     { files, isDragging, errors },
     {
@@ -57,32 +57,14 @@ export default function Avatar({
     },
   });
 
-  const [loading, setLoading] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   const currentFile = files[0];
   const previewUrl = currentFile?.preview || defaultAvatar;
 
-  const handleDeleteAvatar = async () => {
-    setLoading(true);
-    setServerError(null);
-    setSuccessMsg(null);
-    try {
-      const response = await deleteAvatar();
-      setUserData(response?.data?.user);
-      setSuccessMsg("Avatar deleted successfully.");
-    } catch (error: any) {
-      setServerError(error?.response?.data?.error || "Unknown error.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleRemove = () => {
     if (currentFile) {
       removeFile(currentFile.id);
-      setServerError(null);
       setSuccessMsg(null);
     }
   };
@@ -97,37 +79,46 @@ export default function Avatar({
     return null;
   };
 
-  const handleUpload = async () => {
-    setServerError(null);
+  const {
+    mutate: uploadAvatar,
+    isPending: isUploading,
+    isError: isUploadError,
+    error: uploadError,
+  } = useUploadAvatar();
+
+  const {
+    mutate: deleteAvatar,
+    isPending: isDeleting,
+    isError: isDeleteError,
+    error: deleteError,
+  } = useDeleteAvatar();
+
+  const handleDeleteAvatar = () => {
+    setSuccessMsg(null);
+
+    deleteAvatar(undefined, {
+      onSuccess: () => {
+        setSuccessMsg("Avatar deleted successfully.");
+      },
+    });
+  };
+
+  const handleUpload = () => {
     setSuccessMsg(null);
 
     const nativeFile = getNativeFile(currentFile);
     if (!nativeFile) {
-      setServerError("There is no file to upload.");
       return;
     }
 
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", nativeFile, nativeFile.name);
+    const formData = new FormData();
+    formData.append("file", nativeFile, nativeFile.name);
 
-      const response = await uploadAvatar(formData);
-
-      const user = response?.data?.user ?? null;
-      if (response?.status === 200 && user) {
+    uploadAvatar(formData, {
+      onSuccess: () => {
         setSuccessMsg("Avatar uploaded successfully.");
-        setUserData(user);
-      } else {
-        setServerError("Error uploading the avatar.");
-      }
-    } catch (err: any) {
-      setServerError(
-        err?.response?.data?.error ?? err?.message ?? "Unknown error"
-      );
-    } finally {
-      setLoading(false);
-    }
+      },
+    });
   };
 
   return (
@@ -208,14 +199,20 @@ export default function Avatar({
       )}
 
       {/* Server or success messages */}
-      {serverError && (
+      {(isUploadError || isDeleteError) && (
         <Alert variant="destructive" appearance="light" className="mt-5">
           <AlertIcon>
             <TriangleAlert />
           </AlertIcon>
           <AlertContent>
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{serverError}</AlertDescription>
+            <AlertDescription>
+              {isUploadError
+                ? (uploadError as any)?.response?.data?.error ||
+                  "Unknown upload error."
+                : (deleteError as any)?.response?.data?.error ||
+                  "Unknown delete error."}
+            </AlertDescription>
           </AlertContent>
         </Alert>
       )}
@@ -236,9 +233,11 @@ export default function Avatar({
         <AccentButton
           size="sm"
           onClick={handleUpload}
-          disabled={!currentFile || loading || errors.length > 0}
+          disabled={
+            !currentFile || isUploading || isDeleting || errors.length > 0
+          }
         >
-          {loading ? "Uploading..." : "Send"}
+          {isUploading ? "Uploading..." : "Send"}
         </AccentButton>
       </div>
       {defaultAvatar && (
@@ -246,8 +245,9 @@ export default function Avatar({
           variant="destructive"
           className="rounded-2xl"
           onClick={handleDeleteAvatar}
+          disabled={isDeleting || isUploading}
         >
-          {loading ? "Deleting..." : "Delete avatar"}
+          {isDeleting ? "Deleting..." : "Delete avatar"}
         </Button>
       )}
     </div>

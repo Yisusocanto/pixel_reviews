@@ -20,7 +20,7 @@ import { Textarea } from "../ui/textarea";
 import { toast, Toaster } from "sonner";
 import AccentButton from "../commonsComponents/AccentButton";
 // Services
-import { createReview, deleteReview } from "@/services/apiService";
+import { useCreateReview, useDeleteReview } from "@/hooks/fetching/useReview";
 // types
 import type { Game, Rating, Review } from "@/types/gameTypes";
 import { HelperText } from "flowbite-react";
@@ -39,17 +39,13 @@ const ReviewSchema = z.object({
 
 interface DialogReviewProps {
   userRating?: Rating;
-  setUserRating: React.Dispatch<Rating | null>;
   userReview?: Review;
-  setUserReview: React.Dispatch<Review | null>;
   gameData?: Game;
 }
 
 function DialogReviewComponent({
   userRating,
-  setUserRating,
   userReview,
-  setUserReview,
   gameData,
 }: DialogReviewProps) {
   const {
@@ -61,6 +57,13 @@ function DialogReviewComponent({
   const [score, setScore] = useState<number>(0);
   const [ratingError, setRatingError] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false); // Dialog controller
+
+  const { mutate: createReview, error: createReviewError } = useCreateReview(
+    gameData?.slug || ""
+  );
+  const { mutate: deleteReview, error: deleteReviewError } = useDeleteReview(
+    gameData?.slug || ""
+  );
 
   // Success toast
   const displaySuccessToast = (operation: string) =>
@@ -90,36 +93,40 @@ function DialogReviewComponent({
       setRatingError("You must give a rating");
       return;
     }
-    try {
-      const { title, content } = data;
-      const response = await createReview(
-        gameData?.game_id || 0,
-        title,
-        content,
-        score
-      );
-      setUserRating(response.data.rating);
-      setUserReview(response.data.review);
-      setIsOpen(false);
-      displaySuccessToast("created/edited");
-    } catch (error: any) {
-      displayErrorToast(error.response.data.error);
-      setIsOpen(false);
-    }
+
+    createReview(
+      {
+        gameID: gameData?.game_id || 0,
+        reviewTitle: data.title,
+        reviewContent: data.content,
+        score: score,
+      },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+          displaySuccessToast("created/edited");
+        },
+        onError: () => {
+          displayErrorToast(createReviewError.response.data.error);
+        },
+      }
+    );
   });
 
   const handleDeleteReview = async () => {
     if (gameData && userReview) {
-      try {
-        await deleteReview(gameData?.game_id, userReview?.author?.user_id || 0);
-        setUserRating(null)
-        setUserReview(null)
-        displaySuccessToast("deleted");
-      } catch (error: any) {
-        displayErrorToast(error.response.data.error);
-      } finally {
-        setIsOpen(false);
-      }
+      deleteReview(
+        { gameID: gameData?.game_id, userID: userReview?.author?.user_id || 0 },
+        {
+          onSuccess: () => {
+            setIsOpen(false);
+            displaySuccessToast("deleted");
+          },
+          onError: () => {
+            displayErrorToast(deleteReviewError.response.data.error);
+          },
+        }
+      );
     }
   };
 
@@ -219,13 +226,13 @@ function DialogReviewComponent({
             </DialogClose>
             <div className="flex gap-2">
               <DialogClose asChild>
-              <Button variant="destructive" onClick={handleDeleteReview}>
-                Delete
-              </Button>
-            </DialogClose>
-            <DialogClose asChild>
-              <AccentButton onClick={onSubmit}>Review It</AccentButton>
-            </DialogClose>
+                <Button variant="destructive" onClick={handleDeleteReview}>
+                  Delete
+                </Button>
+              </DialogClose>
+              <DialogClose asChild>
+                <AccentButton onClick={onSubmit}>Review It</AccentButton>
+              </DialogClose>
             </div>
           </DialogFooter>
         </DialogContent>

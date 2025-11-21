@@ -37,12 +37,12 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthContextProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <AuthContextProvider>
           <App />
-        </BrowserRouter>
-        <ReactQueryDevtools />
-      </AuthContextProvider>
+          <ReactQueryDevtools />
+        </AuthContextProvider>
+      </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>
 );

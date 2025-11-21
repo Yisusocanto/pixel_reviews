@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAuth } from "@/context/AuthContextProvider";
 import { useCharacterLimit } from "@/hooks/useCharacterLimit";
 // Components
 import { Input } from "../luxe/input";
@@ -10,11 +9,11 @@ import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
 import SpinnerComponent from "../commonsComponents/SpinnerComponent";
 import { HelperText } from "flowbite-react";
-import { toast, Toaster } from "sonner";
+import { Toaster } from "sonner";
 import { Save } from "lucide-react";
 import AccentButton from "../commonsComponents/AccentButton";
 // Services
-import { updateProfile } from "@/services/settingService";
+import { useProfileSettings } from "@/hooks/fetching/settings/useProfileSettings";
 // Types
 import type { User } from "@/types/userTypes";
 
@@ -68,8 +67,6 @@ interface ProfileSettingsProps {
 
 function ProfileSettings({ user }: ProfileSettingsProps) {
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const [loading, setLoading] = useState<boolean>(false);
-  const { setUserData } = useAuth();
   const {
     register,
     handleSubmit,
@@ -85,50 +82,41 @@ function ProfileSettings({ user }: ProfileSettingsProps) {
     },
   });
 
-  // Success toast
-  const displaySuccessToast = () =>
-    toast.success("Profile updated", {
-      description: "The Profile has been edited successfully",
-      duration: 5000,
-    });
+  // // Success toast
+  // const displaySuccessToast = () =>
+  //   toast.success("Profile updated", {
+  //     description: "The Profile has been edited successfully",
+  //     duration: 5000,
+  //   });
 
-  // Success toast
-  const displayErrorToast = (error: string) =>
-    toast.error("Error", {
-      description: `Error updating the review: ${error}`,
-      duration: 5000,
-    });
+  // // Success toast
+  // const displayErrorToast = (error: string) =>
+  //   toast.error("Error", {
+  //     description: `Error updating the review: ${error}`,
+  //     duration: 5000,
+  //   });
 
   // Individual characterLimit hook's instances for each input
   const locationInput = useCharacterLimit(40, user?.location ?? "");
   const bioInput = useCharacterLimit(500, user?.bio ?? "");
   const websiteInput = useCharacterLimit(100, user?.website ?? "");
 
+  const { mutate: updateUserProfile, isPending } = useProfileSettings();
+
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      setLoading(true);
-      const response = await updateProfile(
-        data.name,
-        data.lastname,
-        data.location || "",
-        data.bio || "",
-        data.website || ""
-      );
-      const user = response?.data?.user;
-      setUserData(user);
-      displaySuccessToast();
-      setIsDisabled(true);
-    } catch (error: any) {
-      displayErrorToast(error?.response?.data?.error ?? "Unknown error");
-    } finally {
-      setLoading(false);
-    }
+    updateUserProfile({
+      name: data.name,
+      lastname: data.lastname,
+      location: data.location ?? "",
+      bio: data.bio ?? "",
+      website: data.website ?? "",
+    });
   });
 
   return (
     <div>
       <Toaster theme="dark" richColors={true} />
-      {loading && <SpinnerComponent />}
+      {isPending && <SpinnerComponent />}
       <form onSubmit={onSubmit} onChange={() => setIsDisabled(false)}>
         <div className="flex flex-col gap-4 px-1 md:px-4">
           {/* Name input */}

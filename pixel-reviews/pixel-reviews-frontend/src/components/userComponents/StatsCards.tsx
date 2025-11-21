@@ -3,7 +3,6 @@ import { Card } from "../luxe/card";
 import { Gamepad2, MessageSquare, Star } from "lucide-react";
 // Types
 import type { User } from "@/types/userTypes";
-// import { useEffect } from "react";
 
 interface StatisticsProps {
   user?: User;

@@ -1,4 +1,4 @@
-import { useState, useEffect, type Dispatch } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContextProvider";
 // Components
 import { Star, MessageCircle, Heart } from "lucide-react";
@@ -6,25 +6,38 @@ import { Star, MessageCircle, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from "sonner";
 // Services
-import { addToWishlist, removeFromWishlist } from "@/services/wishlistService";
+import {
+  useAddToWishlist,
+  useRemoveFromWishlist,
+} from "@/hooks/fetching/wishlist/useWishlist";
 // Types
 import type { Game } from "@/types/gameTypes";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
+import type { WishlistItem } from "@/types/wishlistType";
 
 interface GameHeroProps {
   gameData?: Game;
-  setGameData: Dispatch<Game>;
 }
 
-const GameHero = ({ gameData, setGameData }: GameHeroProps) => {
-  const [loading, setLoading] = useState<boolean>(false);
+const GameHero = ({ gameData }: GameHeroProps) => {
   const [inWishlist, setInWishlist] = useState<boolean>(false);
-  const { userData, setUserData } = useAuth();
+  const { user } = useAuth();
+
+  const {
+    mutate: addToWishlist,
+    isPending: isAddToWishlistPending,
+    error: addToWishlistError,
+  } = useAddToWishlist();
+  const {
+    mutate: removeFromWishlist,
+    isPending: isRemoveFromWishlistPending,
+    error: removeFromWishlistError,
+  } = useRemoveFromWishlist();
 
   useEffect(() => {
     // It is checked whether the game is already added to the user's wishlist.
-    if (userData) {
-      const game = userData.wishlist?.filter((wishlistItem) => {
+    if (user) {
+      const game = user.wishlist?.filter((wishlistItem: WishlistItem) => {
         return wishlistItem.game.game_id == gameData?.game_id;
       });
       if (game && game.length > 0) {
@@ -36,42 +49,40 @@ const GameHero = ({ gameData, setGameData }: GameHeroProps) => {
   }, []);
 
   const handleAddToWishlist = async () => {
-    if (gameData && userData) {
-      setLoading(true);
-      try {
-        const response = await addToWishlist(
-          gameData?.game_id,
-          userData?.user_id
-        );
-        setInWishlist(true);
-        setGameData(response.data.game);
-        setUserData(response.data.user);
-        displaySuccessToast("added to");
-      } catch (error: any) {
-        displayErrorToast(error.response.data.error);
-      } finally {
-        setLoading(false);
-      }
+    if (gameData && user) {
+      addToWishlist(
+        { gameID: gameData?.game_id, userID: user?.user_id },
+        {
+          onSuccess: () => {
+            setInWishlist(true);
+            displaySuccessToast("add to");
+          },
+          onError: () => {
+            displayErrorToast(
+              addToWishlistError.response.data.error ?? "Unknown error"
+            );
+          },
+        }
+      );
     }
   };
 
   const handleRemoveToWishlist = async () => {
-    if (gameData && userData) {
-      setLoading(true);
-      try {
-        const response = await removeFromWishlist(
-          gameData?.game_id,
-          userData?.user_id
-        );
-        setInWishlist(false);
-        setGameData(response.data.game);
-        setUserData(response.data.user);
-        displaySuccessToast("remove from");
-      } catch (error: any) {
-        displayErrorToast(error.response.data.error);
-      } finally {
-        setLoading(false);
-      }
+    if (gameData && user) {
+      removeFromWishlist(
+        { gameID: gameData.game_id, userID: user.user_id },
+        {
+          onSuccess: () => {
+            setInWishlist(false);
+            displaySuccessToast("remove from");
+          },
+          onError: () => {
+            displayErrorToast(
+              removeFromWishlistError.response.data.error ?? "Unknown error"
+            );
+          },
+        }
+      );
     }
   };
 
@@ -91,7 +102,9 @@ const GameHero = ({ gameData, setGameData }: GameHeroProps) => {
 
   return (
     <div className="relative w-full h-[70vh] overflow-hidden">
-      {loading ? <SpinnerComponent /> : null}
+      {isAddToWishlistPending || isRemoveFromWishlistPending ? (
+        <SpinnerComponent />
+      ) : null}
       <Toaster theme="dark" richColors={true} />
       {/* Background image */}
       <div
@@ -149,7 +162,6 @@ const GameHero = ({ gameData, setGameData }: GameHeroProps) => {
             onClick={inWishlist ? handleRemoveToWishlist : handleAddToWishlist}
           >
             <Heart
-              
               className={`size-5 ${
                 inWishlist
                   ? "text-destructive fill-destructive"

@@ -1,14 +1,14 @@
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useContext } from "react";
 import type { ReactNode } from "react";
-import axiosInstance from "../config/axiosConfig";
-import type {User} from '../types/userTypes'
+import type { User } from "../types/userTypes";
+import { useSession } from "@/hooks/fetching/auth/useSession";
+import { useLogOut } from "@/hooks/fetching/auth/useLogOut";
+
 interface AuthContextType {
-  activeSession: boolean;
-  setActiveSession: (value: boolean) => void;
-  logoutFunction: () => void;
-  loading: boolean;
-  userData: User | null;
-  setUserData: (data: User | null) => void;
+  isAuthenticated: boolean;
+  logout: () => void;
+  isLoading: boolean;
+  user: User | undefined;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -18,42 +18,23 @@ interface AuthContextProviderProps {
 }
 
 function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [activeSession, setActiveSession] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [userData, setUserData] = useState<User | null>(null);
+  const { data: user, isLoading, isError } = useSession();
 
-  // Checks if there is an active section when loading
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Call to the endpoit wo verifies the token
-        const response = await axiosInstance.get("/auth/verify");
-        setUserData(response.data.user_data);
-        // If the token is valid
-        setActiveSession(true);
-      } catch (error) {
-        console.log("The user is not authenticated");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { mutate: logoutMutate } = useLogOut();
 
-    checkAuth();
-  }, []);
+  const isAuthenticated = !!user && !isError;
 
-  const logoutFunction = () => {
-    setActiveSession(false);
+  const logout = () => {
+    logoutMutate();
   };
 
   return (
     <AuthContext.Provider
       value={{
-        activeSession,
-        setActiveSession,
-        logoutFunction,
-        loading,
-        userData,
-        setUserData,
+        isAuthenticated,
+        logout,
+        isLoading,
+        user,
       }}
     >
       {children}
