@@ -27,12 +27,12 @@ const GameHero = ({ gameData }: GameHeroProps) => {
     mutate: addToWishlist,
     isPending: isAddToWishlistPending,
     error: addToWishlistError,
-  } = useAddToWishlist();
+  } = useAddToWishlist(gameData?.slug ?? "");
   const {
     mutate: removeFromWishlist,
     isPending: isRemoveFromWishlistPending,
     error: removeFromWishlistError,
-  } = useRemoveFromWishlist();
+  } = useRemoveFromWishlist(gameData?.slug ?? "");
 
   useEffect(() => {
     // It is checked whether the game is already added to the user's wishlist.
