@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { useInView } from "framer-motion";
+import { useRef } from "react";
 // Components
 import GameReviewCard from "@/components/gameReviewComponents/GameReviewCard";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
@@ -18,14 +17,17 @@ function Feed() {
     status,
   } = useInfiniteReviews();
 
-  const loadMoreRef = useRef(null);
-  const isInView = useInView(loadMoreRef);
-
-  useEffect(() => {
-    if (isInView && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [isInView, hasNextPage, fetchNextPage]);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastElementRef = (node: HTMLDivElement | null) => {
+    if (isFetchingNextPage) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasNextPage) {
+        fetchNextPage();
+      }
+    });
+    if (node) observer.current.observe(node);
+  };
 
   if (status === "pending") {
     return <SpinnerComponent />;
@@ -50,7 +52,7 @@ function Feed() {
       ))}
 
       <div
-        ref={loadMoreRef}
+        ref={lastElementRef}
         className="h-10 w-full flex justify-center items-center"
       >
         {isFetchingNextPage && <SpinnerComponent />}
