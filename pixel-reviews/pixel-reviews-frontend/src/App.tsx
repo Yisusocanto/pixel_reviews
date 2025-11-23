@@ -23,6 +23,7 @@ import { useAuth } from "./context/AuthContextProvider";
 import { setupAxiosInterceptors } from "./config/axiosConfig";
 // Analytics
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
   const { logout, isLoading } = useAuth();
@@ -39,6 +40,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col font-exo">
       <Analytics />
+      <SpeedInsights />
       <Background />
       <div className="flex flex-col min-h-screen">
         <NavBar />
