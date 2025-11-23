@@ -37,7 +37,7 @@ class AuthManager(DatabaseBase):
     def change_password(
         cls, user_id: int, current_password: str, new_password: str
     ) -> Optional[User]:
-        "Change the user's old password to a new one"
+        """Change the user's old password to a new one"""
         try:
             with cls.get_session() as session:
                 user = session.query(User).filter(User.user_id == user_id).first()

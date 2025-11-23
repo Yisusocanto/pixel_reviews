@@ -15,7 +15,7 @@ def create_or_update_rating():
     game_id = data.get("game_id")
     score = data.get("score")
 
-    # Return error 400 (bad request) if one of those does not exits
+    # Return error 400 (bad request) if one of those does not exit
     if not game_id or not score:
         return jsonify({"error": "data missing"}), 400
 
@@ -36,7 +36,7 @@ def create_or_update_rating():
     review = ReviewManager.get_user_review(game_id=game_id, user_id=user_id)
 
     if not rating:
-        return jsonify({"error": "An error ocurred creating the rating"})
+        return jsonify({"error": "An error occurred creating the rating"})
 
     return jsonify({"rating": rating, "review": review}), 200
 
@@ -59,7 +59,7 @@ def create_or_update_review():
     if not game_id:
         return jsonify({"error": "game_id cannot be empty"}), 400
 
-    if score < 1 and score > 5:
+    if 1 > score > 5:
         return jsonify({"error": "score out of range"}), 400
 
     # Extraction of the user_id
@@ -77,21 +77,14 @@ def create_or_update_review():
     rating = ReviewManager.get_user_rating(game_id=game_id, user_id=user_id)
 
     if not review:
-        return jsonify({"error", "An error ocurred creating the review"}), 500
+        return jsonify({"error", "An error occurred creating the review"}), 500
 
     return jsonify({"review": review, "rating": rating}), 200
 
-@api_bp.route("/delete_review", methods=["POST"])
+@api_bp.route("/delete_review/<int:review_id>", methods=["DELETE"])
 @token_required
-def delete_review():
-    data = request.get_json()
-    game_id = data["game_id"]
-    user_id = data["user_id"]
-
-    if not game_id and not user_id:
-        return jsonify({"error": "game_id and user_id were not provided."}), 400
-
-    success = ReviewManager.delete_review(game_id, user_id)
+def delete_review(review_id):
+    success = ReviewManager.delete_review(review_id)
     if not success:
         return jsonify({"error": "The review does not exits."}), 400
 

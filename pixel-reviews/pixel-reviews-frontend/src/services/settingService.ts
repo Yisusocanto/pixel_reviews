@@ -9,7 +9,7 @@ interface ProfileData {
 }
 
 export const updateProfile = async (profileData: ProfileData) => {
-  const { data } = await axiosInstance.post("/settings/update_profile", {
+  const { data } = await axiosInstance.patch("/settings/update_profile", {
     name: profileData.name,
     lastname: profileData.lastname,
     location: profileData.location,
@@ -23,7 +23,7 @@ export const changePassword = async (
   currentPassword: string,
   newPassword: string
 ) => {
-  const { data } = await axiosInstance.post("/settings/change_password", {
+  const { data } = await axiosInstance.patch("/settings/change_password", {
     current_password: currentPassword,
     new_password: newPassword,
   });
@@ -31,7 +31,7 @@ export const changePassword = async (
 };
 
 export const uploadAvatar = async (formData: any) => {
-  const { data } = await axiosInstance.post(
+  const { data } = await axiosInstance.patch(
     "/settings/upload_avatar",
     formData
   );
@@ -39,6 +39,6 @@ export const uploadAvatar = async (formData: any) => {
 };
 
 export const deleteAvatar = async () => {
-  const { data } = await axiosInstance.get("/settings/delete_avatar");
+  const { data } = await axiosInstance.delete("/settings/delete_avatar");
   return data;
 };

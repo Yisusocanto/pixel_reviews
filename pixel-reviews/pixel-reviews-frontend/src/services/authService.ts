@@ -1,6 +1,5 @@
 import axiosInstance from "../config/axiosConfig";
 
-//requests functions
 export const signUp = async (formData: object) => {
   const { data } = await axiosInstance.post("/auth/sign_up", formData);
   return data;
@@ -27,9 +26,11 @@ export const passwordReset = async (
   resetToken: string,
   newPassword: string
 ) => {
-  const { data } = await axiosInstance.post("/auth/password_reset", {
-    reset_token: resetToken,
-    new_password: newPassword,
-  });
+  const { data } = await axiosInstance.patch(
+    `/auth/password_reset/${resetToken}`,
+    {
+      new_password: newPassword,
+    }
+  );
   return data;
 };

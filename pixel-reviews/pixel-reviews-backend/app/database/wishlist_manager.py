@@ -24,11 +24,11 @@ class WishlistManager(DatabaseBase):
             return None
 
     @classmethod
-    def remove_from_wishlist(cls, user_id: int, game_id: int) -> dict | bool:
+    def remove_from_wishlist(cls, wishlist_item_id: int) -> dict | bool:
         """Removes a wishlist item from the database"""
         try:
             with cls.get_session() as session:
-                wishlist_item = session.query(WishlistItem).filter(WishlistItem.user_id ==user_id, WishlistItem.game_id == game_id).first()
+                wishlist_item = session.query(WishlistItem).filter(WishlistItem.wishlist_item_id == wishlist_item_id).first()
                 if not wishlist_item:
                     return {"error": "WishlistItem not found."}
 

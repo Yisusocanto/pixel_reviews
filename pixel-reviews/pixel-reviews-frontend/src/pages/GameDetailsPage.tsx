@@ -17,8 +17,8 @@ import NotFoundPage from "./NotFoundPage";
 // Types
 import type { Developer, Publisher, Review } from "@/types/gameTypes";
 // Services
-import { useGameDetails } from "@/hooks/fetching/useGetGames";
-import { useCreateRating } from "@/hooks/fetching/useReview";
+import { useGameDetails } from "@/hooks/fetching/games/useGetGames";
+import { useCreateRating } from "@/hooks/fetching/reviews/useReview";
 // Utils
 import { dateFormatter } from "@/utils/dateFormatter";
 import { Button } from "@/components/ui/button";

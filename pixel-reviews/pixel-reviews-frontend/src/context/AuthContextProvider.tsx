@@ -45,7 +45,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth debe ser usado dentro de un AuthContextProvider");
+    throw new Error("useAuth must be used within an AuthContextProvider");
   }
   return context;
 };

@@ -14,7 +14,7 @@ function useAlreadyAuth() {
     if (isAuthenticated) {
       navigate("/");
     }
-  });
+  }, [isAuthenticated, navigate]);
 }
 
 export default useAlreadyAuth;

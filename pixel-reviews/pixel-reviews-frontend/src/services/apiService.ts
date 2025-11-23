@@ -25,10 +25,7 @@ export const createReview = async (
   return data;
 };
 
-export const deleteReview = async (gameID: number, userID: number) => {
-  const { data } = await axiosInstance.post("/api/delete_review", {
-    game_id: gameID,
-    user_id: userID,
-  });
+export const deleteReview = async (reviewID: number) => {
+  const { data } = await axiosInstance.delete(`/api/delete_review/${reviewID}`);
   return data;
 };

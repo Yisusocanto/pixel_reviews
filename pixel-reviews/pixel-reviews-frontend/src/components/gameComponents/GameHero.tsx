@@ -21,6 +21,7 @@ interface GameHeroProps {
 
 const GameHero = ({ gameData }: GameHeroProps) => {
   const [inWishlist, setInWishlist] = useState<boolean>(false);
+  const [wishlistItemId, setWishlistItemId] = useState<number | null>(null);
   const { user } = useAuth();
 
   const {
@@ -36,22 +37,24 @@ const GameHero = ({ gameData }: GameHeroProps) => {
 
   useEffect(() => {
     // It is checked whether the game is already added to the user's wishlist.
-    if (user) {
-      const game = user.wishlist?.filter((wishlistItem: WishlistItem) => {
-        return wishlistItem.game.game_id == gameData?.game_id;
+    if (user && gameData) {
+      const foundGame = user.wishlist?.find((wishlistItem: WishlistItem) => {
+        return wishlistItem.game.game_id == gameData.game_id;
       });
-      if (game && game.length > 0) {
+      if (foundGame) {
         setInWishlist(true);
+        setWishlistItemId(foundGame.wishlistItemId);
       } else {
         setInWishlist(false);
+        setWishlistItemId(null);
       }
     }
-  }, []);
+  }, [user, gameData]);
 
   const handleAddToWishlist = async () => {
     if (gameData && user) {
       addToWishlist(
-        { gameID: gameData?.game_id, userID: user?.user_id },
+        { gameID: gameData.game_id, userID: user.user_id },
         {
           onSuccess: () => {
             setInWishlist(true);
@@ -59,7 +62,8 @@ const GameHero = ({ gameData }: GameHeroProps) => {
           },
           onError: () => {
             displayErrorToast(
-              addToWishlistError.response.data.error ?? "Unknown error"
+              (addToWishlistError as any)?.response?.data?.error ??
+                "Unknown error"
             );
           },
         }
@@ -68,21 +72,20 @@ const GameHero = ({ gameData }: GameHeroProps) => {
   };
 
   const handleRemoveToWishlist = async () => {
-    if (gameData && user) {
-      removeFromWishlist(
-        { gameID: gameData.game_id, userID: user.user_id },
-        {
-          onSuccess: () => {
-            setInWishlist(false);
-            displaySuccessToast("remove from");
-          },
-          onError: () => {
-            displayErrorToast(
-              removeFromWishlistError.response.data.error ?? "Unknown error"
-            );
-          },
-        }
-      );
+    if (gameData && user && wishlistItemId) {
+      removeFromWishlist(wishlistItemId, {
+        onSuccess: () => {
+          setInWishlist(false);
+          setWishlistItemId(null);
+          displaySuccessToast("remove from");
+        },
+        onError: () => {
+          displayErrorToast(
+            (removeFromWishlistError as any)?.response?.data?.error ??
+              "Unknown error"
+          );
+        },
+      });
     }
   };
 

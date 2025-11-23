@@ -8,10 +8,9 @@ export const addToWishlist = async (gameID: number, userID: number) => {
   return data;
 };
 
-export const removeFromWishlist = async (gameID: number, userID: number) => {
-  const { data } = await axiosInstance.post("/wishlist/remove_from_wishlist", {
-    game_id: gameID,
-    user_id: userID,
-  });
+export const removeFromWishlist = async (wishlistItemID: number) => {
+  const { data } = await axiosInstance.delete(
+    `/wishlist/remove_from_wishlist/${wishlistItemID}`
+  );
   return data;
 };

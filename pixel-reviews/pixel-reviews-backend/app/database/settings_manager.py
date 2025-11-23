@@ -17,7 +17,7 @@ class SettingManager(DatabaseBase):
         website: str,
     ) -> Optional[dict]:
         """Method that update the user data.
-        - Return a dict with the user data if is succesful.
+        - Return a dict with the user data if is successful.
         - Return none if there is a problem or any error."""
         try:
             with cls.get_session() as session:
@@ -40,8 +40,8 @@ class SettingManager(DatabaseBase):
     def save_avatar(
         cls, user_id: int, public_id: str, secure_url: str
     ) -> Optional[dict]:
-        """Method that save the user's avatar data in the database. It receives the `user_id`, `public_vatar`, and `secure_url` as parameters.
-        - Return a `dict` with the user data if is succesful.
+        """Method that save the user's avatar data in the database. It receives the `user_id`, `public_avatar`, and `secure_url` as parameters.
+        - Return a `dict` with the user data if is successful.
         - Return `None` if there is a problem or any error."""
         try:
             with cls.get_session() as session:
@@ -59,7 +59,7 @@ class SettingManager(DatabaseBase):
 
     @classmethod
     def get_avatar_public_id(cls, user_id: int) -> Optional[str]:
-        """Method that get the `avatar_public_id` of the user. It reveives the `user_id` as its only parameter.
+        """Method that get the `avatar_public_id` of the user. It receives the `user_id` as its only parameter.
         - Return the `avatar_public_id` if exits.
         - Return `None` if there is a problem or any error."""
         try:

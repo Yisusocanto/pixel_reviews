@@ -20,7 +20,10 @@ import { Textarea } from "../ui/textarea";
 import { toast, Toaster } from "sonner";
 import AccentButton from "../commonsComponents/AccentButton";
 // Services
-import { useCreateReview, useDeleteReview } from "@/hooks/fetching/useReview";
+import {
+  useCreateReview,
+  useDeleteReview,
+} from "@/hooks/fetching/reviews/useReview";
 // types
 import type { Game, Rating, Review } from "@/types/gameTypes";
 import { HelperText } from "flowbite-react";
@@ -107,7 +110,7 @@ function DialogReviewComponent({
           displaySuccessToast("created/edited");
         },
         onError: () => {
-          displayErrorToast(createReviewError.response.data.error);
+          displayErrorToast((createReviewError as any)?.response?.data?.error);
         },
       }
     );
@@ -115,18 +118,15 @@ function DialogReviewComponent({
 
   const handleDeleteReview = async () => {
     if (gameData && userReview) {
-      deleteReview(
-        { gameID: gameData?.game_id, userID: userReview?.author?.user_id || 0 },
-        {
-          onSuccess: () => {
-            setIsOpen(false);
-            displaySuccessToast("deleted");
-          },
-          onError: () => {
-            displayErrorToast(deleteReviewError.response.data.error);
-          },
-        }
-      );
+      deleteReview(userReview.review_id, {
+        onSuccess: () => {
+          setIsOpen(false);
+          displaySuccessToast("deleted");
+        },
+        onError: () => {
+          displayErrorToast((deleteReviewError as any)?.response?.data?.error);
+        },
+      });
     }
   };
 

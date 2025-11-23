@@ -10,9 +10,6 @@ export const useUploadAvatar = () => {
         queryKey: ["authUser"],
       });
     },
-    onError: (error: any) => {
-      console.log("Error uploading avatar", error);
-    },
   });
 };
 
@@ -24,9 +21,6 @@ export const useDeleteAvatar = () => {
       queryClient.invalidateQueries({
         queryKey: ["authUser"],
       });
-    },
-    onError: (error: any) => {
-      console.log("Error deleting avatar", error);
     },
   });
 };

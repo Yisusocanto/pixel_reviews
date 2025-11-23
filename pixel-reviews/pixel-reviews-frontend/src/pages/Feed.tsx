@@ -3,7 +3,7 @@ import { useRef } from "react";
 import GameReviewCard from "@/components/gameReviewComponents/GameReviewCard";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 // Hooks
-import { useInfiniteReviews } from "@/hooks/fetching/useInfiniteReviews";
+import { useInfiniteReviews } from "@/hooks/fetching/reviews/useInfiniteReviews";
 // Types
 import type { Review } from "@/types/gameTypes";
 

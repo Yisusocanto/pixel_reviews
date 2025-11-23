@@ -33,20 +33,11 @@ def add_to_wishlist():
 
     return jsonify({"success": "Game has been added to the wishlist successfully."}), 200
 
-@wishlist_bp.route("/remove_from_wishlist", methods=["POST"])
+@wishlist_bp.route("/remove_from_wishlist/<wishlist_item_id>", methods=["DELETE"])
 @token_required
-def remove_from_wishlist():
-    data = request.get_json()
-    # wishlist_item's data
-    game_id = data.get("game_id")
-    user_id = data.get("user_id")
-
-    # An error is returned if there is no game_id or user_id
-    if not game_id or not user_id:
-        return jsonify({"error": "game_id and user_id were not provided."}), 400
-
-    # An attempt to remove the game from the wishlist
-    message = WishlistManager.remove_from_wishlist(user_id, game_id)
+def remove_from_wishlist(wishlist_item_id):
+     # An attempt to remove the game from the wishlist
+    message = WishlistManager.remove_from_wishlist(wishlist_item_id)
     if isinstance(message, dict) and "error" in message:
         return jsonify(message), 500
 

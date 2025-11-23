@@ -11,7 +11,7 @@ import StatsCards from "@/components/userComponents/StatsCards";
 import WishlistStatsCards from "@/components/userComponents/WishlistStatsCards";
 import WishlistItemCard from "@/components/userComponents/WishlistItemCard";
 // Services
-import { useGetUser } from "@/hooks/fetching/useGetUser";
+import { useGetUser } from "@/hooks/fetching/users/useGetUser";
 
 function UserProfilePage() {
   const { username, tab } = useParams();

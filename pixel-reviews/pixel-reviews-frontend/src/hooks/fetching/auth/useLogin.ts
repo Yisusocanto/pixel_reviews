@@ -17,8 +17,5 @@ export const useLogin = () => {
       queryClient.setQueryData(["authUser"], data.user);
       navigate("/");
     },
-    onError: (error: any) => {
-      console.error("Login error:", error);
-    },
   });
 };

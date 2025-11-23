@@ -14,17 +14,13 @@ export const useAddToWishlist = (gameSlug: string) => {
         queryKey: ["authUser"],
       });
     },
-    onError: (error: any) => {
-      console.log(error);
-    },
   });
 };
 
 export const useRemoveFromWishlist = (gameSlug: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ gameID, userID }: { gameID: number; userID: number }) =>
-      removeFromWishlist(gameID, userID),
+    mutationFn: (wishlistItemID: number) => removeFromWishlist(wishlistItemID),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["game", gameSlug],
@@ -32,9 +28,6 @@ export const useRemoveFromWishlist = (gameSlug: string) => {
       queryClient.invalidateQueries({
         queryKey: ["authUser"],
       });
-    },
-    onError: (error: any) => {
-      console.log(error);
     },
   });
 };

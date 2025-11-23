@@ -18,9 +18,6 @@ export const useCreateRating = (gameSlug: string) => {
         queryKey: ["authUser"],
       });
     },
-    onError: (error: any) => {
-      console.log(error);
-    },
   });
 };
 
@@ -49,17 +46,13 @@ export const useCreateReview = (gameSlug: string) => {
         queryKey: ["reviews"],
       });
     },
-    onError: (error: any) => {
-      console.log(error);
-    },
   });
 };
 
 export const useDeleteReview = (gameSlug: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ gameID, userID }: { gameID: number; userID: number }) =>
-      deleteReview(gameID, userID),
+    mutationFn: (reviewID: number) => deleteReview(reviewID),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["game", gameSlug],
@@ -70,9 +63,6 @@ export const useDeleteReview = (gameSlug: string) => {
       queryClient.invalidateQueries({
         queryKey: ["reviews"],
       });
-    },
-    onError: (error: any) => {
-      console.log(error);
     },
   });
 };

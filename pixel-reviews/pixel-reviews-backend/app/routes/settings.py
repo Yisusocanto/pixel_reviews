@@ -8,7 +8,7 @@ from app.services.cloudinary_handler import CloudinaryHandler
 settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
 
 
-@settings_bp.route("/update_profile", methods=["POST"])
+@settings_bp.route("/update_profile", methods=["PATCH"])
 @token_required
 def update_profile():
     # New data of the user
@@ -39,7 +39,7 @@ def update_profile():
     return jsonify({"user": user}), 200
 
 
-@settings_bp.route("/change_password", methods=["POST"])
+@settings_bp.route("/change_password", methods=["PATCH"])
 @token_required
 def change_password():
     # Old and new password of the user
@@ -64,7 +64,7 @@ def change_password():
     return jsonify({"success": "password changed successfully"}), 200
 
 
-@settings_bp.route("/upload_avatar", methods=["POST"])
+@settings_bp.route("/upload_avatar", methods=["PATCH"])
 @token_required
 def upload_avatar():
     file_storage = request.files.get("file")
@@ -105,7 +105,7 @@ def upload_avatar():
     return jsonify({"user": user}), 200
 
 
-@settings_bp.route("delete_avatar")
+@settings_bp.route("delete_avatar", methods=["DELETE"])
 @token_required
 def delete_avatar():
     # Extraction of the user_id
@@ -125,4 +125,4 @@ def delete_avatar():
     if not user:
         return jsonify({"error": "Unknown error."}), 500
 
-    return jsonify({"user": user})
+    return jsonify({"user": user}), 200

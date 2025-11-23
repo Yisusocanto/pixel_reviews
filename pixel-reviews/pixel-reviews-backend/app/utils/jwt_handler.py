@@ -28,8 +28,7 @@ class JwtHandler:
         try:
             payload = jwt.decode(token, SECRECT_KEY, algorithms=ALGORITHM)
             return payload
-        except Exception as e:
-            print(f"error {e}")
+        except Exception:
             return False
 
 

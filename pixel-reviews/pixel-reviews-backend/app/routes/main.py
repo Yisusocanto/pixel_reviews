@@ -8,7 +8,7 @@ rawg_api = RawgApi()
 main_bp = Blueprint("main", __name__, url_prefix="/main")
 
 
-@main_bp.route("/", methods=["GET", "OPTIONS"])
+@main_bp.route("/", methods=["GET"])
 def index():
     page = request.args.get("page")
     limit = request.args.get("limit")
@@ -18,7 +18,7 @@ def index():
             page_number = int(page)
             limit_number = int(limit)
         except Exception as e:
-            print(f"❌ Error on route '/main': {e}")
+            print(f"Error on route '/main': {e}")
             return jsonify(
                 {"error": "Type error on page or limit param. It should be Integer"}
             ), 400
@@ -39,13 +39,11 @@ def index():
             }
         ), 200
     except Exception as e:
-        print(f"❌ ERROR en ReviewManager: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"ERROR on ReviewManager: {e}")
         return jsonify({"error": "Internal server error", "message": str(e)}), 500
 
 
-@main_bp.route("/search/<game_title>", methods=["GET", "OPTIONS"])
+@main_bp.route("/search/<game_title>", methods=["GET"])
 @token_required
 def search(game_title):
     game_list = rawg_api.search_games(game_title)
@@ -55,7 +53,7 @@ def search(game_title):
     return jsonify({"game_list": game_list}), 200
 
 
-@main_bp.route("/games/<slug>", methods=["GET", "OPTIONS"])
+@main_bp.route("/games/<slug>", methods=["GET"])
 @token_required
 def game_details(slug):
     payload = g.user_payload

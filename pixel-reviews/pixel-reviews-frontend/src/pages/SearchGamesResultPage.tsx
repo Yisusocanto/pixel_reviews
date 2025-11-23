@@ -4,7 +4,7 @@ import { GameCard } from "@/components/gameComponents/GameCard";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import NotResultsPage from "./NotResultsPage";
 // Services
-import { useSearchGames } from "@/hooks/fetching/useGetGames";
+import { useSearchGames } from "@/hooks/fetching/games/useGetGames";
 // Types
 import type { SearchedGame } from "@/types/gameTypes";
 

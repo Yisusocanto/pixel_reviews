@@ -12,8 +12,5 @@ export const useLogOut = () => {
       navigate("/auth/login");
       queryClient.setQueryData(["authUser"], null);
     },
-    onError: (error: any) => {
-      console.log(error);
-    },
   });
 };

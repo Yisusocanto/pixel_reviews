@@ -67,11 +67,11 @@ class ReviewManager(DatabaseBase):
             return ReviewSchema().dump(review)
 
     @classmethod
-    def delete_review(cls, game_id: int, user_id: int) -> Optional[bool]:
+    def delete_review(cls, review_id: int) -> Optional[bool]:
         """Delete a review if it exits."""
         try:
             with cls.get_session() as session:
-                review = session.query(Review).filter(Review.game_id == game_id, Review.user_id == user_id).first()
+                review = session.query(Review).filter(Review.review_id == review_id).first()
                 if not review:
                     return None
 

@@ -14,13 +14,13 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
 @auth_bp.route("/sign_up", methods=["POST"])
 def sign_up():
     # User data sent from the frontend is collected
-    response = request.get_json()
-    email = response["email"]
-    username = response["username"]
-    password = response["password"]
-    name = response["name"]
-    lastname = response["lastname"]
-    age = response["birthday"]
+    data = request.get_json()
+    email = data.get("email", "")
+    username = data.get("username", "")
+    password = data.get("password", "")
+    name = data.get("name", "")
+    lastname = data.get("lastname", "")
+    age = data.get("age", "")
 
     # the data is validated and errors and a 400 code are returned to the frontend if there are errors
     error = execute_validations(email, username, password, name, lastname, age)
@@ -72,9 +72,10 @@ def sign_up():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     # User data sent from the frontend is collected
-    response_data = request.get_json()
-    username = response_data["username"]
-    password = response_data["password"]
+    data = request.get_json()
+    username = data.get("username", "")
+    password = data.get("password", "")
+
 
     # user validation
     hashed_password = AuthManager.get_hashed_password(username=username)
@@ -139,8 +140,8 @@ def verify():
 
 @auth_bp.route("/password_recovery", methods=["POST"])
 def password_recovery():
-    response = request.get_json()
-    email = response["email"]
+    data = request.get_json()
+    email = data.get("email", "")
 
     # check if the user exits
     user = UserManager.get_user_by_email(email=email)
@@ -159,16 +160,15 @@ def password_recovery():
         return jsonify({"success": "reset token created and sent"}), 200
 
     except Exception as e:
-        print("error en reset token route", e)
+        print("error on reset token route", e)
         return jsonify({"error": "Unknown error."}), 500
 
 
-@auth_bp.route("/password_reset", methods=["POST"])
-def password_reset():
-    response = request.get_json()
+@auth_bp.route("/password_reset/<reset_token>", methods=["PATCH"])
+def password_reset(reset_token):
+    data = request.get_json()
     # The reset token and new password is collected
-    reset_token = response["reset_token"]
-    new_password = response["new_password"]
+    new_password = data.get("new_password", "")
 
     # The token is verified
     user_id = AuthManager.check_reset_token(reset_token=reset_token)

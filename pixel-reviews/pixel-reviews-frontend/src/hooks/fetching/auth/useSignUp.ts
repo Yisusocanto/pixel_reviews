@@ -12,8 +12,5 @@ export const useSignUp = () => {
       queryClient.setQueryData(["authUser"], data.user);
       navigate("/");
     },
-    onError: (error: any) => {
-      console.log("Sign Up error: ", error);
-    },
   });
 };

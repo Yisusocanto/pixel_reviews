@@ -33,7 +33,6 @@ export const useProfileSettings = () => {
       displaySuccessToast();
     },
     onError: (error: any) => {
-      console.log(error);
       displayErrorToast(error.response.data.error);
     },
   });

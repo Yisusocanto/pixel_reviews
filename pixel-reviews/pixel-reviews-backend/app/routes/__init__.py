@@ -25,7 +25,7 @@ def create_app():
 
     ma.init_app(app)
 
-    CORS(app, origins=[frontend_url], supports_credentials=True, methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    CORS(app, origins=[frontend_url], supports_credentials=True, methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
          allow_headers=["Content-Type", "Authorization"])
 
 
