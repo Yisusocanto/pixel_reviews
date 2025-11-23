@@ -89,7 +89,7 @@ function LoginForm() {
         </div>
       </form>
       <p className="mt-2 text-destructive-secondary">
-        {isError ? error.response.data.error : null}
+        {isError ? (error as any).response.data.error : null}
       </p>
       <span className="flex justify-center gap-2 mt-4 ">
         Don't have an account?

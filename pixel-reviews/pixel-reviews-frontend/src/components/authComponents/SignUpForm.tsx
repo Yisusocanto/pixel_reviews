@@ -227,7 +227,7 @@ function SignUpForm() {
         </div>
       </form>
       <span className="text-destructive-secondary mt-2">
-        {isError ? error.response.data.error : null}
+        {isError ? (error as any).response.data.error : null}
       </span>
       <span className="text-center mt-4">
         Already have an account?

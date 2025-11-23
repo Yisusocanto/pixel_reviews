@@ -32,14 +32,13 @@ function WishlistItemCard({ wishlistItem, ownProfile }: WishlistItemCardProps) {
 
   const handleRemoveFromWishlist = async () => {
     if (user) {
-      removeFromWishlist(
-        { gameID: wishlistItem.game.game_id, userID: user?.user_id },
-        {
-          onError: (error) => {
-            displayErrorToast(error.response.data.error ?? "Unknown error");
-          },
-        }
-      );
+      removeFromWishlist(wishlistItem.wishlistItemId, {
+        onError: (error) => {
+          displayErrorToast(
+            (error as any).response.data.error ?? "Unknown error"
+          );
+        },
+      });
     }
   };
   return (
