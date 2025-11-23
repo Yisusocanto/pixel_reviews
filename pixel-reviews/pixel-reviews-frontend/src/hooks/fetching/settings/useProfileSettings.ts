@@ -28,8 +28,8 @@ export const useProfileSettings = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (profileData: ProfileData) => updateProfile(profileData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+    onSuccess: (data: any) => {
+      queryClient.setQueryData(["authUser"], data.user);
       displaySuccessToast();
     },
     onError: (error: any) => {

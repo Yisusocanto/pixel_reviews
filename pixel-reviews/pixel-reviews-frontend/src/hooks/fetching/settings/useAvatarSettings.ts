@@ -5,10 +5,8 @@ export const useUploadAvatar = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (formData: any) => uploadAvatar(formData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["authUser"],
-      });
+    onSuccess: (data: any) => {
+      queryClient.setQueryData(["authUser"], data.user);
     },
   });
 };
@@ -17,10 +15,8 @@ export const useDeleteAvatar = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => deleteAvatar(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["authUser"],
-      });
+    onSuccess: (data: any) => {
+      queryClient.setQueryData(["authUser"], data.user);
     },
   });
 };
