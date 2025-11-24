@@ -91,7 +91,11 @@ function UserProfilePage() {
               }
 
               return displayUser?.reviews.map((review) => (
-                <ProfileReviewCard key={review.review_id} review={review} />
+                <ProfileReviewCard
+                  key={review.review_id}
+                  review={review}
+                  ownReview={username == user?.username}
+                />
               ));
             })()}
           </div>
