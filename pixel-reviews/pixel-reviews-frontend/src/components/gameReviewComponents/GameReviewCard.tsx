@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import * as React from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 // Components
 import { Calendar, User } from "lucide-react";
@@ -17,6 +18,12 @@ export interface GameReviewCardProps {
 
 const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
   ({ review, className }, ref) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const MAX_LENGTH = 150;
+
+    const toggleReadMore = () => {
+      setIsExpanded(!isExpanded);
+    };
     const fadeUpVariants = {
       hidden: { opacity: 0, y: 30 },
       visible: (i: number) => ({
@@ -103,8 +110,20 @@ const GameReviewCard = React.forwardRef<HTMLDivElement, GameReviewCardProps>(
                 className="mb-8"
               >
                 <p className="text-base md:text-lg text-white/60 leading-relaxed">
-                  {review.content}
+                  {isExpanded
+                    ? review.content
+                    : `${review.content.slice(0, MAX_LENGTH)}${
+                        review.content.length > MAX_LENGTH ? "..." : ""
+                      }`}
                 </p>
+                {review.content.length > MAX_LENGTH && (
+                  <button
+                    onClick={toggleReadMore}
+                    className="text-blue-600 hover:text-blue-500 text-sm font-bold mt-2 hover:underline cursor-pointer relative z-10"
+                  >
+                    {isExpanded ? "Read Less" : "Read More"}
+                  </button>
+                )}
               </motion.div>
 
               <motion.div

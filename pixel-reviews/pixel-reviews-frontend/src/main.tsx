@@ -21,6 +21,7 @@ const queryClient = new QueryClient({
         const axiosError = error as AxiosError;
         const status = axiosError?.response?.status;
 
+        // Do not retry on client errors (4xx)
         if (status && status >= 400 && status < 500) {
           return false;
         }

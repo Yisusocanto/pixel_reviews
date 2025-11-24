@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils"; // Assuming 'cn' utility from shadcn setup
@@ -8,12 +9,18 @@ import type { Review } from "@/types/gameTypes";
 
 // Interface for component props for type-safety and reusability
 export interface ReviewCardProps {
-  review: Review
+  review: Review;
   className?: string;
 }
 
 const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
   ({ review, className }, ref) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const MAX_LENGTH = 150;
+
+    const toggleReadMore = () => {
+      setIsExpanded(!isExpanded);
+    };
     // Animation variants for framer-motion
     const cardVariants = {
       hidden: { opacity: 0, y: 20 },
@@ -60,7 +67,9 @@ const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
                 {review.title}
               </h3>
               <p className="text-sm text-muted-foreground hover:text-foreground">
-                <Link to={`/users/${review.author?.user_id}`}>{review.author?.username}</Link>
+                <Link to={`/users/${review.author?.user_id}`}>
+                  {review.author?.username}
+                </Link>
               </p>
             </div>
           </div>
@@ -72,9 +81,23 @@ const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
         </div>
 
         {/* Card Body */}
-        <p id="review-content" className="mt-4 text-sm text-muted-foreground">
-          {review.content}
-        </p>
+        <div id="review-content" className="mt-4 text-sm text-muted-foreground">
+          <p>
+            {isExpanded
+              ? review.content
+              : `${review.content.slice(0, MAX_LENGTH)}${
+                  review.content.length > MAX_LENGTH ? "..." : ""
+                }`}
+          </p>
+          {review.content.length > MAX_LENGTH && (
+            <button
+              onClick={toggleReadMore}
+              className="text-blue-600 hover:text-blue-500 text-xs font-bold mt-1 hover:underline cursor-pointer relative z-10"
+            >
+              {isExpanded ? "Read Less" : "Read More"}
+            </button>
+          )}
+        </div>
       </motion.div>
     );
   }

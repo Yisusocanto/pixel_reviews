@@ -12,7 +12,10 @@ function StatsCards({ user }: StatisticsProps) {
   return (
     <div className="flex flex-col">
       <div className="flex flex-col md:flex-row gap-6 justify-between">
-        <Card variant="default" className="flex justify-between gap-4 p-7">
+        <Card
+          variant="default"
+          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
+        >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Total Reviews</h3>
             <span className="text-primary font-bold text-4xl">
@@ -26,7 +29,10 @@ function StatsCards({ user }: StatisticsProps) {
             </div>
           </div>
         </Card>
-        <Card variant="default" className="flex justify-between gap-4 p-7">
+        <Card
+          variant="default"
+          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
+        >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Average Ratings</h3>
             <span className="text-primary font-bold text-4xl">
@@ -42,7 +48,10 @@ function StatsCards({ user }: StatisticsProps) {
             </div>
           </div>
         </Card>
-        <Card variant="default" className="flex justify-between gap-4 p-7">
+        <Card
+          variant="default"
+          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
+        >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Total Ratings</h3>
             <span className="text-primary font-bold text-4xl">
@@ -58,7 +67,7 @@ function StatsCards({ user }: StatisticsProps) {
         </Card>
         {/* {<Card
           variant="default"
-          className="flex justify-between gap-4 p-7"
+          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
         >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Played Hours</h3>

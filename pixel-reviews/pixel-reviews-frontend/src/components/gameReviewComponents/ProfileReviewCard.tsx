@@ -1,4 +1,5 @@
 // Components
+import { useState } from "react";
 import { Star, Calendar } from "lucide-react";
 import { Card } from "../luxe/card";
 // import { Badge } from "../ui/badge";
@@ -13,15 +14,22 @@ interface ProfileReviewCardProps {
 }
 
 function ProfileReviewCard({ review }: ProfileReviewCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const MAX_LENGTH = 150;
+
+  const toggleReadMore = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
     <div>
-      <Card className="flex flex-col md:flex-row gap-4">
+      <Card className="flex flex-col md:flex-row gap-4 bg-(--accent-color)">
         {/* Cover Image*/}
-        <div className="flex-1">
+        <div className="shrink-0">
           <img
             src={review.game?.imageURL}
             alt="Game cover"
-            className="rounded-lg shadow-2xl object-cover h-full "
+            className="rounded-lg shadow-2xl object-cover w-full h-48 md:w-72 md:h-48"
           />
         </div>
         <div className="flex-4 flex flex-col gap-4">
@@ -50,13 +58,29 @@ function ProfileReviewCard({ review }: ProfileReviewCardProps) {
             </div>
             <div className="flex items-center gap-1">
               <Calendar size={16} />
-              <span className="text-base">{dateFormatter(review.createdAt)}</span>
+              <span className="text-base">
+                {dateFormatter(review.createdAt)}
+              </span>
             </div>
           </div>
           {/* title and content review */}
           <div>
             <h4 className="text-primary text-lg font-bold">{review.title}</h4>
-            <p className="text-base">{review.content}</p>
+            <p className="text-base">
+              {isExpanded
+                ? review.content
+                : `${review.content.slice(0, MAX_LENGTH)}${
+                    review.content.length > MAX_LENGTH ? "..." : ""
+                  }`}
+            </p>
+            {review.content.length > MAX_LENGTH && (
+              <button
+                onClick={toggleReadMore}
+                className="text-blue-600 hover:text-blue-500 text-sm font-bold mt-1 hover:underline cursor-pointer"
+              >
+                {isExpanded ? "Read Less" : "Read More"}
+              </button>
+            )}
           </div>
           {/* Social interaction */}
           {/* {<div className="flex gap-4 text-base">

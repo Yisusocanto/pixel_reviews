@@ -21,28 +21,17 @@ import { useGameDetails } from "@/hooks/fetching/games/useGetGames";
 import { useCreateRating } from "@/hooks/fetching/reviews/useReview";
 // Utils
 import { dateFormatter } from "@/utils/dateFormatter";
-import { Button } from "@/components/ui/button";
 
 function GameDetailsPage() {
-  const [isOpen, setIsOpen] = useState(false);
   const { slug } = useParams();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const MAX_LENGTH = 150;
+
+  const toggleReadMore = () => setIsExpanded(!isExpanded);
 
   const { data, isLoading, isError, error } = useGameDetails(slug ?? "");
 
   const { mutate: createRating } = useCreateRating(slug ?? "");
-
-  // Preview helpers
-  const PREVIEW_WORDS = 40;
-  const getPreview = (text?: string) => {
-    if (!text) return "";
-    const words = text.trim().split(/\s+/);
-    return words.length <= PREVIEW_WORDS
-      ? text
-      : words.slice(0, PREVIEW_WORDS).join(" ") + "…";
-  };
-  const isLongDescription =
-    !!data?.game?.description &&
-    data.game.description.split(/\s+/).length > PREVIEW_WORDS;
 
   const displaySuccessToast = () => {
     toast.success("Rating created", {
@@ -71,8 +60,7 @@ function GameDetailsPage() {
     }
   };
 
-  //@ts-ignore
-  if (isError && error?.status == 404) {
+  if (isError && (error as any)?.response?.status == 404) {
     return <NotFoundPage />;
   }
 
@@ -101,43 +89,22 @@ function GameDetailsPage() {
                 <div className="max-w-sm md:max-w-2xl m-auto md:m-0">
                   <h3 className="text-2xl text-bold">About the game</h3>
 
-                  {/* If description is short, show it all */}
-                  {!isLongDescription ? (
-                    <p>{data?.game?.description}</p>
-                  ) : (
-                    <div className="relative">
-                      {/* Preview or full text with smooth max-height transition */}
-                      <p
-                        className={`transition-all duration-300 overflow-hidden`}
-                        style={{
-                          maxHeight: isOpen ? 1000 : 120, // ajusta valores según tu diseño
-                        }}
-                        aria-expanded={isOpen}
-                      >
-                        {isOpen
-                          ? data?.game?.description
-                          : getPreview(data?.game?.description)}
-                      </p>
-
-                      {/* Gradient overlay when collapsed */}
-                      {!isOpen && (
-                        <div
-                          aria-hidden="true"
-                          className="pointer-events-none absolute left-0 right-0 bottom-0 h-10"
-                        />
-                      )}
-
-                      <div className="mt-2">
-                        <Button
-                          variant="ghost"
-                          className="text-blue-600 hover:text-blue-500"
-                          size="sm"
-                          onClick={() => setIsOpen((v) => !v)}
-                        >
-                          {isOpen ? "Read less" : "Read more"}
-                        </Button>
-                      </div>
-                    </div>
+                  <p className="text-base">
+                    {isExpanded
+                      ? data?.game?.description
+                      : `${data?.game?.description.slice(0, MAX_LENGTH)}${
+                          data?.game?.description.length > MAX_LENGTH
+                            ? "..."
+                            : ""
+                        }`}
+                  </p>
+                  {data?.game?.description.length > MAX_LENGTH && (
+                    <button
+                      onClick={toggleReadMore}
+                      className="text-blue-600 hover:text-blue-500 text-sm font-bold mt-1 hover:underline cursor-pointer"
+                    >
+                      {isExpanded ? "Read Less" : "Read More"}
+                    </button>
                   )}
                 </div>
 

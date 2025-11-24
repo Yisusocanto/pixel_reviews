@@ -1,9 +1,6 @@
 from flask import request, jsonify, Blueprint
 from app.utils.jwt_handler import token_required
 from app.database.wishlist_manager import WishlistManager
-from app.database.user_manager import UserManager
-from app.database.game_manager import GameManager
-from app.schemas.wishlist_item_schema import WishlistItemSchema
 
 
 wishlist_bp = Blueprint("wishlist", __name__, url_prefix="/wishlist")

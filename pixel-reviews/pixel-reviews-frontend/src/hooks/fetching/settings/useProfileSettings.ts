@@ -13,14 +13,14 @@ interface ProfileData {
 // Success toast
 const displaySuccessToast = () =>
   toast.success("Profile updated", {
-    description: "The Profile has been edited successfully",
+    description: "The Profile has been updated successfully",
     duration: 5000,
   });
 
-// Success toast
+// Error toast
 const displayErrorToast = (error: string) =>
   toast.error("Error", {
-    description: `Error updating the review: ${error}`,
+    description: `Error updating the profile: ${error}`,
     duration: 5000,
   });
 
