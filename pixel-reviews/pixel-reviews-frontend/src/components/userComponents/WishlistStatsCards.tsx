@@ -13,7 +13,7 @@ function WishlistStatsCards({ wishlist }: WishlistStatsCardsProps) {
       <div className="flex gap-6 justify-center">
         <Card
           variant="default"
-          className="flex flex-col w-sm items-center gap-2 p-4 bg-(--accent-color)"
+          className="flex flex-col w-sm items-center gap-2 p-4 bg-card"
         >
           <Heart className="text-pink-500" size={36} />
           <span className="text-primary font-bold text-4xl">

@@ -14,7 +14,7 @@ function StatsCards({ user }: StatisticsProps) {
       <div className="flex flex-col md:flex-row gap-6 justify-between">
         <Card
           variant="default"
-          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
+          className="flex justify-between gap-4 p-7 bg-card"
         >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Total Reviews</h3>
@@ -31,7 +31,7 @@ function StatsCards({ user }: StatisticsProps) {
         </Card>
         <Card
           variant="default"
-          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
+          className="flex justify-between gap-4 p-7 bg-card"
         >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Average Ratings</h3>
@@ -50,7 +50,7 @@ function StatsCards({ user }: StatisticsProps) {
         </Card>
         <Card
           variant="default"
-          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
+          className="flex justify-between gap-4 p-7 bg-card"
         >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Total Ratings</h3>
@@ -67,7 +67,7 @@ function StatsCards({ user }: StatisticsProps) {
         </Card>
         {/* {<Card
           variant="default"
-          className="flex justify-between gap-4 p-7 bg-(--accent-color)"
+          className="flex justify-between gap-4 p-7 bg-card"
         >
           <div className="flex flex-col items-start gap-2">
             <h3 className="text-lg">Played Hours</h3>

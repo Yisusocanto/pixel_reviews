@@ -216,7 +216,7 @@ function GameDetailsPage() {
           <div className="w-full max-w-sm">
             <Card
               variant="default"
-              className="flex flex-col items-center gap-4"
+              className="flex flex-col items-center gap-4 bg-card"
             >
               <h3 className="text-lg">Rate this game</h3>
               <div className="flex gap-2 items-center">
@@ -248,7 +248,7 @@ function GameDetailsPage() {
           </div>
           {/* Information Card */}
           <div className="w-full max-w-sm">
-            <Card className="flex flex-col gap-4">
+            <Card className="flex flex-col gap-4 bg-card">
               <h3 className="text-lg text-bold">Information</h3>
               <div>
                 <h4 className="text-lg text-primary-muted">Developers</h4>
@@ -295,7 +295,7 @@ function GameDetailsPage() {
           {/* Community Card */}
           {
             <div className="w-full max-w-sm">
-              <Card className="flex flex-col gap-4">
+              <Card className="flex flex-col gap-4 bg-card">
                 <h3 className="text-lg">Community</h3>
                 <div className="flex justify-between">
                   <div className="flex gap-2 items-center">
@@ -310,7 +310,7 @@ function GameDetailsPage() {
             </div>
           }
           {/* {<div className="w-sm m-auto">
-            <Card className="flex flex-col gap-4">
+            <Card className="flex flex-col gap-4 bg-card">
               <h3 className="text-lg">Community</h3>
               <div className="flex justify-between">
                 <div className="flex gap-2 items-center">

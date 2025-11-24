@@ -23,7 +23,7 @@ function ProfileReviewCard({ review }: ProfileReviewCardProps) {
 
   return (
     <div>
-      <Card className="flex flex-col md:flex-row gap-4 bg-(--accent-color)">
+      <Card className="flex flex-col md:flex-row gap-4 bg-card">
         {/* Cover Image*/}
         <div className="shrink-0">
           <img

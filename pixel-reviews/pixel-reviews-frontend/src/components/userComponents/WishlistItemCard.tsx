@@ -44,7 +44,7 @@ function WishlistItemCard({ wishlistItem, ownProfile }: WishlistItemCardProps) {
   return (
     <div>
       <Toaster theme="dark" richColors={true} />
-      <Card className="flex flex-col md:flex-row gap-4 bg-(--accent-color)">
+      <Card className="flex flex-col md:flex-row gap-4 bg-card">
         <div className="shrink-0">
           <img
             src={wishlistItem.game.imageURL}

@@ -106,7 +106,11 @@ export default function NavBar() {
                             onClick={(e) => handleClickNavigation(e, link.href)}
                             href={link.href}
                             className="py-1.5"
-                            active={link.active}
+                            active={
+                              window.location.pathname === link.href
+                                ? true
+                                : false
+                            }
                           >
                             {link.label}
                           </NavigationMenuLink>
@@ -118,7 +122,11 @@ export default function NavBar() {
                             onClick={(e) => handleClickNavigation(e, link.href)}
                             href={link.href}
                             className="py-1.5"
-                            active={link.active}
+                            active={
+                              window.location.pathname === link.href
+                                ? true
+                                : false
+                            }
                           >
                             {link.label}
                           </NavigationMenuLink>
@@ -185,7 +193,9 @@ export default function NavBar() {
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
                       onClick={(e) => handleClickNavigation(e, link.href)}
-                      active={link.active}
+                      active={
+                        window.location.pathname === link.href ? true : false
+                      }
                       href={link.href}
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"
                     >
@@ -197,7 +207,9 @@ export default function NavBar() {
                   <NavigationMenuItem key={index}>
                     <NavigationMenuLink
                       onClick={(e) => handleClickNavigation(e, link.href)}
-                      active={link.active}
+                      active={
+                        window.location.pathname === link.href ? true : false
+                      }
                       href={link.href}
                       className="text-muted-foreground hover:text-primary py-1.5 font-medium"
                     >
