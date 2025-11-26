@@ -10,7 +10,7 @@ export const useSignUp = () => {
     mutationFn: (formData: object) => signUp(formData),
     onSuccess: (data) => {
       queryClient.setQueryData(["authUser"], data.user);
-      navigate("/");
+      navigate("/feed");
     },
   });
 };

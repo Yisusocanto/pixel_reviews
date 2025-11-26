@@ -13,6 +13,7 @@ import SettingsPage from "./pages/SettingsPage";
 import PasswordRecovery from "./pages/PasswordRecovery";
 import PasswordReset from "./pages/PasswordReset";
 import NotFoundPage from "./pages/NotFoundPage";
+import LandingPage from "./pages/LandingPage";
 //components
 import Background from "./components/commonsComponents/Background";
 import NavBar from "./components/commonsComponents/NavBar";
@@ -46,7 +47,8 @@ function App() {
         <NavBar />
         <main className="flex-grow">
           <Routes>
-            <Route path="/" element={<Feed />} />
+            <Route index element={<LandingPage />} />
+            <Route path="/feed" element={<Feed />} />
             <Route path="/auth/signup" element={<SignUpPage />} />
             <Route path="/auth/login" element={<LoginPage />} />
             <Route path="/auth/logout" element={<LogOutPage />} />

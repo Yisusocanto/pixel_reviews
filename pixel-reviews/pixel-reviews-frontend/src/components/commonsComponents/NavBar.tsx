@@ -29,12 +29,12 @@ export default function NavBar() {
 
   // Navigation links array to be used in both desktop and mobile menus
   const loggedInNavigationLinks = [
-    { href: "/", label: "Home", active: true },
+    { href: "/feed", label: "Feed", active: true },
     { href: `/users/${user?.username}/wishlist`, label: "Wishlist" },
   ];
 
   const loggedOutNavigationLinks = [
-    { href: "/", label: "Home", active: true },
+    { href: "/feed", label: "Feed", active: true },
     { href: "/auth/login", label: "Login" },
     { href: "/auth/signup", label: "Sign Up" },
   ];
@@ -138,7 +138,7 @@ export default function NavBar() {
           </Popover>
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="text-primary hover:text-primary/90">
+            <Link to="/feed" className="text-primary hover:text-primary/90">
               <img
                 src={logo}
                 alt="website's logo"

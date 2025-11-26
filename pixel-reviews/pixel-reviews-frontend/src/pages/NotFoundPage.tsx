@@ -18,7 +18,7 @@ function NotFoundPage() {
         but don't worry, we'll get you back on track.
       </p>
       <Button variant="glitch-brightness">
-        <Link to="/">Return to home</Link>
+        <Link to="/feed">Return to home</Link>
       </Button>
     </div>
   );

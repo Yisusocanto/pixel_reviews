@@ -15,7 +15,7 @@ export const useLogin = () => {
     mutationFn: (data: LoginData) => login(data),
     onSuccess: (data) => {
       queryClient.setQueryData(["authUser"], data.user);
-      navigate("/");
+      navigate("/feed");
     },
   });
 };

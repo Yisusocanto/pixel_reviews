@@ -1,25 +1,25 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 
 interface FooterUiProps {
-  logo: React.ReactNode
-  brandName: string
+  logo: React.ReactNode;
+  brandName: string;
   socialLinks: Array<{
-    icon: React.ReactNode
-    href: string
-    label: string
-  }>
+    icon: React.ReactNode;
+    href: string;
+    label: string;
+  }>;
   mainLinks: Array<{
-    href: string
-    label: string
-  }>
+    href: string;
+    label: string;
+  }>;
   legalLinks: Array<{
-    href: string
-    label: string
-  }>
+    href: string;
+    label: string;
+  }>;
   copyright: {
-    text: string
-    license?: string
-  }
+    text: string;
+    license?: string;
+  };
 }
 
 export function FooterUi({
@@ -35,7 +35,7 @@ export function FooterUi({
       <div className="px-4 lg:px-8">
         <div className="md:flex md:items-start md:justify-between">
           <a
-            href="/"
+            href="/feed"
             className="flex items-center gap-x-2"
             aria-label={brandName}
           >
@@ -95,5 +95,5 @@ export function FooterUi({
         </div>
       </div>
     </footer>
-  )
+  );
 }

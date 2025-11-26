@@ -12,7 +12,7 @@ function useAlreadyAuth() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      navigate("/feed");
     }
   }, [isAuthenticated, navigate]);
 }

@@ -21,7 +21,7 @@ function NotResultsPage({ gameTitle }: NotResultsPageProps) {
         There are no games that match what you searched for
       </p>
       <Button variant="glitch-brightness">
-        <Link to="/">Return to home</Link>
+        <Link to="/feed">Return to home</Link>
       </Button>
     </div>
   );
