@@ -13,6 +13,7 @@ import GameHero from "@/components/gameComponents/GameHero";
 import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import DialogReviewComponent from "@/components/gameReviewComponents/DialogReviewComponent";
 import RatingStatistics from "@/components/gameReviewComponents/RatingStatistics";
+import ExpandableGallery from "@/components/shadcn/gallery-animation";
 import NotFoundPage from "./NotFoundPage";
 // Types
 import type { Developer, Publisher, Review } from "@/types/gameTypes";
@@ -25,7 +26,7 @@ import { dateFormatter } from "@/utils/dateFormatter";
 function GameDetailsPage() {
   const { slug } = useParams();
   const [isExpanded, setIsExpanded] = useState(false);
-  const MAX_LENGTH = 150;
+  const MAX_LENGTH = 250;
 
   const toggleReadMore = () => setIsExpanded(!isExpanded);
 
@@ -87,7 +88,7 @@ function GameDetailsPage() {
             <TabsContent value="overview">
               <div className="flex flex-col gap-4 items-start mt-8">
                 <div className="max-w-sm md:max-w-2xl m-auto md:m-0">
-                  <h3 className="text-2xl text-bold">About the game</h3>
+                  <h3 className="text-2xl font-bold">About the game</h3>
 
                   <p className="text-base">
                     {isExpanded
@@ -107,6 +108,18 @@ function GameDetailsPage() {
                     </button>
                   )}
                 </div>
+
+                {data.game.screenshots && (
+                  <div className="w-full items-center">
+                    <h3 className="text-xl  font-bold mb-2 m-auto w-xs sm:w-sm md:w-full">
+                      Screenshots
+                    </h3>
+                    <ExpandableGallery
+                      images={data?.game?.screenshots || []}
+                      className="w-xs sm:w-sm md:w-full m-auto"
+                    />
+                  </div>
+                )}
 
                 <div className="w-full items-center">
                   <RatingStatistics

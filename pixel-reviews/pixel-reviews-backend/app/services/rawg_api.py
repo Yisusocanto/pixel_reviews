@@ -47,12 +47,14 @@ class RawgApi:
             return None
 
         game_json = response.json()
+        screenshots_list = self._get_game_screenshots(slug)
         game_data = {
             "rawg_id": game_json["id"],
             "title": game_json["name"],
             "slug": game_json["slug"],
             "release_date": game_json["released"],
             "image_url": game_json["background_image"],
+            "screenshots": screenshots_list,
             "description": game_json["description_raw"],
             "developers": [
                 {
@@ -72,3 +74,20 @@ class RawgApi:
             ],
         }
         return game_data
+
+    def _get_game_screenshots(self, game_slug):
+        response = requests.get(f"{self.BASE_URL}/games/{game_slug}/screenshots?key={self.api_key}")
+
+        if response.status_code != 200:
+            print(f"Error on get_game_screenshots: {response.status_code}")
+            return None
+
+        data = response.json()
+
+        if data["count"] == 0:
+            return None
+
+        screenshots_list = [screenshot_url["image"] for screenshot_url in data["results"]]
+        return screenshots_list
+
+

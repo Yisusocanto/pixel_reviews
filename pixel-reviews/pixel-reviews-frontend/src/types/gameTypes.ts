@@ -10,12 +10,13 @@ export interface Game {
   slug: string;
   releaseDate: string;
   imageURL: string;
+  screenshots?: Array<string>;
   description: string;
   developers?: Array<Developer>;
   publishers?: Array<Publisher>;
   ratings?: Array<Rating>;
   reviews?: Array<Review>;
-  wishlist?: Array<WishlistItem>
+  wishlist?: Array<WishlistItem>;
 }
 
 export interface SearchedGame {

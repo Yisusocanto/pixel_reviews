@@ -52,6 +52,7 @@ class GameManager(DatabaseBase):
                     slug=game_data["slug"],
                     release_date=date.fromisoformat(game_data["release_date"]),
                     image_url=game_data["image_url"],
+                    screenshots=game_data["screenshots"],
                     description=game_data["description"],
                 )
                 session.add(new_game)

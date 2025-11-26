@@ -1,4 +1,5 @@
-from sqlalchemy import String
+from sqlalchemy import String, ARRAY
+from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import date
 from .base import Base
@@ -25,6 +26,7 @@ class Game(Base):
     slug: Mapped[str] = mapped_column(nullable=False, index=True)
     release_date: Mapped[Optional[date]] = mapped_column(nullable=True)
     image_url: Mapped[Optional[str]] = mapped_column(nullable=True)
+    screenshots: Mapped[list] = mapped_column(ARRAY(String), nullable=True)
     description: Mapped[str] = mapped_column(nullable=False)
 
     # Relationships

@@ -12,6 +12,7 @@ class GameSchema(SQLAlchemySchema):
     slug = auto_field()
     release_date = auto_field(data_key="releaseDate")
     image_url = auto_field(data_key="imageURL")
+    screenshots = auto_field()
     description = auto_field()
 
     # Relationships
