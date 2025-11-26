@@ -3,10 +3,10 @@ import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
 import { useLogOut } from "@/hooks/fetching/auth/useLogOut";
 
 function LogOutPage() {
-  const { mutate: loggOutUser } = useLogOut();
+  const { mutate: logOutUser } = useLogOut();
 
   useEffect(() => {
-    loggOutUser();
+    logOutUser();
   }, []);
 
   return <SpinnerComponent />;

@@ -11,8 +11,8 @@ export const login = async (formData: object) => {
 };
 
 export const logOut = async () => {
-  const { data } = await axiosInstance.get("/auth/logout");
-  return data;
+  const response = await axiosInstance.get("/auth/logout");
+  return response;
 };
 
 export const passwordRecovery = async (email: string) => {
