@@ -117,6 +117,7 @@ def logout():
         "jwt_pixel_reviews",
         "",
         max_age=0,
+        samesite='None',
         httponly=True,
         secure=True,
     )
