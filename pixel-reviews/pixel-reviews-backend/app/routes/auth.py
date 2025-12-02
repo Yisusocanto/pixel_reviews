@@ -20,7 +20,7 @@ def sign_up():
     password = data.get("password", "")
     name = data.get("name", "")
     lastname = data.get("lastname", "")
-    age = data.get("age", "")
+    age = data.get("birthday", "")
 
     # the data is validated and errors and a 400 code are returned to the frontend if there are errors
     error = execute_validations(email, username, password, name, lastname, age)
@@ -31,7 +31,7 @@ def sign_up():
                     "error": error,
                 }
             ),
-            401,
+            400,
         )
 
     # Password is encrypted.

@@ -34,7 +34,8 @@ export const setupAxiosInterceptors = (onAuthError: () => void) => {
         error.response?.status === 401 &&
         !error.config?.url?.includes("/settings/change_password") &&
         !error.config?.url?.includes("/auth/verify") &&
-        !error.config?.url?.includes("/auth/password_reset")
+        !error.config?.url?.includes("/auth/password_reset") &&
+        !error.config?.url?.includes("/auth/login")
       ) {
         onAuthError();
       }
