@@ -1,7 +1,8 @@
-from flask import Blueprint, g, jsonify, request
+from flask import Blueprint, g, jsonify, request, make_response
 from app.database import GameManager, ReviewManager
 from app.utils.jwt_handler import token_required
 from app.services.rawg_api import RawgApi
+from app.utils.jwt_handler import JwtHandler
 
 rawg_api = RawgApi()
 
@@ -44,7 +45,6 @@ def index():
 
 
 @main_bp.route("/search/<game_title>", methods=["GET"])
-@token_required
 def search(game_title):
     game_list = rawg_api.search_games(game_title)
     if not game_list:
@@ -54,21 +54,38 @@ def search(game_title):
 
 
 @main_bp.route("/games/<slug>", methods=["GET"])
-@token_required
 def game_details(slug):
-    payload = g.user_payload
-    user_id = int(payload["sub"])
-
     game = GameManager.find_or_create_game(slug=slug)
     if not game:
         return jsonify({"message": "game not exits or an error occurred"}), 404
 
-    user_rating = ReviewManager.get_user_rating(
-        game_id=game["game_id"], user_id=user_id
-    )
-    user_review = ReviewManager.get_user_review(
-        game_id=game["game_id"], user_id=user_id
-    )
+    user_rating = None
+    user_review = None
+
+    token = request.cookies.get("jwt_pixel_reviews")
+
+    if token:
+        payload = JwtHandler.check_jwt(token)
+        if not payload:
+            response = make_response(jsonify({"message": "Token invalid"}))
+            response.set_cookie(
+                "jwt_pixel_reviews",
+                "",
+                max_age=0,
+                samesite='None',
+                httponly=True,
+                secure=True,
+            )
+            return response, 401
+
+        user_id = int(payload["sub"])
+
+        user_rating = ReviewManager.get_user_rating(
+            game_id=game["game_id"], user_id=user_id
+        )
+        user_review = ReviewManager.get_user_review(
+            game_id=game["game_id"], user_id=user_id
+        )
 
     return jsonify(
         {

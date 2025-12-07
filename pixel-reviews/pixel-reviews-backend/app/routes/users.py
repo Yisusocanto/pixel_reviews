@@ -7,7 +7,6 @@ users_bp = Blueprint("users", __name__, url_prefix="/users")
 
 
 @users_bp.route("/<username>")
-@token_required
 def profile(username):
     user = UserManager.get_user_by_username(username=username)
     if not user:

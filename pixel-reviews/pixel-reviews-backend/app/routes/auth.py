@@ -16,11 +16,14 @@ def sign_up():
     # User data sent from the frontend is collected
     data = request.get_json()
     email = data.get("email", "")
-    username = data.get("username", "")
+    username_from_data: str = data.get("username", "")
+    username = username_from_data.lower()
     password = data.get("password", "")
     name = data.get("name", "")
     lastname = data.get("lastname", "")
     age = data.get("birthday", "")
+
+
 
     # the data is validated and errors and a 400 code are returned to the frontend if there are errors
     error = execute_validations(email, username, password, name, lastname, age)
@@ -73,7 +76,8 @@ def sign_up():
 def login():
     # User data sent from the frontend is collected
     data = request.get_json()
-    username = data.get("username", "")
+    username_from_data: str = data.get("username", "")
+    username = username_from_data.lower()
     password = data.get("password", "")
 
 

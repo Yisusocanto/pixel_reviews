@@ -2,6 +2,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContextProvider";
+import { useNavigate } from "react-router-dom";
 import { useCharacterLimit } from "@/hooks/useCharacterLimit";
 // Components
 import {
@@ -60,6 +62,8 @@ function DialogReviewComponent({
   const [score, setScore] = useState<number>(0);
   const [ratingError, setRatingError] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false); // Dialog controller
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { mutate: createReview, error: createReviewError } = useCreateReview(
     gameData?.slug || ""
@@ -138,8 +142,14 @@ function DialogReviewComponent({
       {/* Dialog Window */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         {/* Dialog Button */}
-        <DialogTrigger asChild className="w-full">
-          <AccentButton className="cursor-pointer">Write a review</AccentButton>
+        <DialogTrigger
+          asChild
+          className="w-full"
+          onClick={() => (user ? setIsOpen(true) : navigate("/auth/login"))}
+        >
+          <AccentButton className="cursor-pointer">
+            {user ? "Write a review of this game" : "Log in to write a review"}
+          </AccentButton>
         </DialogTrigger>
         {/* Dialog Content */}
         <DialogContent>

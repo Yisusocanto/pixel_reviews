@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContextProvider";
+import { useNavigate } from "react-router-dom";
 // Components
 import { Star, MessageCircle, Heart } from "lucide-react";
 // import { Badge } from "../ui/badge";
@@ -23,6 +24,7 @@ const GameHero = ({ gameData }: GameHeroProps) => {
   const [inWishlist, setInWishlist] = useState<boolean>(false);
   const [wishlistItemId, setWishlistItemId] = useState<number | null>(null);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const {
     mutate: addToWishlist,
@@ -68,7 +70,7 @@ const GameHero = ({ gameData }: GameHeroProps) => {
           },
         }
       );
-    }
+    } else navigate("/auth/login");
   };
 
   const handleRemoveToWishlist = async () => {
@@ -171,7 +173,11 @@ const GameHero = ({ gameData }: GameHeroProps) => {
                   : "text-destructive"
               }`}
             />
-            {inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+            {!user
+              ? "Log in to add to wishlist"
+              : inWishlist
+              ? "Remove from Wishlist"
+              : "Add to Wishlist"}
           </Button>
         </div>
         {/* Buttons */}
