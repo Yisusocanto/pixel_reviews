@@ -1,42 +1,37 @@
-import "./App.css";
+import "@/App.css";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 //pages
-import GameDetailsPage from "./pages/GameDetailsPage";
-import Feed from "./pages/Feed";
-import LoginPage from "./pages/LoginPage";
-import SignUpPage from "./pages/SignUpPage";
-import SearchGamesResultPage from "./pages/SearchGamesResultPage";
-import UserProfilePage from "./pages/UserProfilePage";
-import LogOutPage from "./pages/LogOutPage";
-import SettingsPage from "./pages/SettingsPage";
-import PasswordRecovery from "./pages/PasswordRecovery";
-import PasswordReset from "./pages/PasswordReset";
-import NotFoundPage from "./pages/NotFoundPage";
-import LandingPage from "./pages/LandingPage";
+import GameDetailsPage from "@/pages/GameDetailsPage";
+import Feed from "@/pages/Feed";
+import LoginPage from "@/pages/LoginPage";
+import SignUpPage from "@/pages/SignUpPage";
+import SearchGamesResultPage from "@/pages/SearchGamesResultPage";
+import UserProfilePage from "@/pages/UserProfilePage";
+import LogOutPage from "@/pages/LogOutPage";
+import SettingsPage from "@/pages/SettingsPage";
+import PasswordRecovery from "@/pages/PasswordRecovery";
+import PasswordReset from "@/pages/PasswordReset";
+import NotFoundPage from "@/pages/NotFoundPage";
+import LandingPage from "@/pages/LandingPage";
 //components
-import Background from "./components/commonsComponents/Background";
-import NavBar from "./components/commonsComponents/NavBar";
-import { Footer } from "./components/commonsComponents/Footer";
-import SpinnerComponent from "./components/commonsComponents/SpinnerComponent";
+import Background from "@/components/commonsComponents/Background";
+import NavBar from "@/components/commonsComponents/NavBar";
+import { Footer } from "@/components/commonsComponents/Footer";
 //Context and Config
-import { useAuth } from "./context/AuthContextProvider";
-import { setupAxiosInterceptors } from "./config/axiosConfig";
+import { useAuth } from "@/context/AuthContextProvider";
+import { setupAxiosInterceptors } from "@/config/axiosConfig";
 // Analytics
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function App() {
-  const { logout, isLoading } = useAuth();
+  const { logout } = useAuth();
 
   //The interceptor is inicializated
   useEffect(() => {
     setupAxiosInterceptors(logout);
   }, []);
-
-  if (isLoading) {
-    return <SpinnerComponent />;
-  }
 
   return (
     <div className="min-h-screen flex flex-col font-exo">

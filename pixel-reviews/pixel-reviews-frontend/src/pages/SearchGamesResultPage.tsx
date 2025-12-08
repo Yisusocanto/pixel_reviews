@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 // Components
 import { GameCard } from "@/components/gameComponents/GameCard";
-import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
+import { Skeleton } from "@/components/ui/skeleton";
 import NotResultsPage from "./NotResultsPage";
 // Services
 import { useSearchGames } from "@/hooks/fetching/games/useGetGames";
@@ -14,7 +14,20 @@ function SearchGamesResultPage() {
   const { data, isLoading, isError, error } = useSearchGames(gameTitle || "");
 
   if (isLoading) {
-    return <SpinnerComponent />;
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-12">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <div
+            key={index}
+            className="flex flex-col gap-4 w-xs md:w-sm h-80 m-auto bg-main rounded-2xl p-2"
+          >
+            <Skeleton className="w-full h-2/3 rounded-2xl" />
+            <Skeleton className="w-2/3 h-5" />
+            <Skeleton className="w-1/2 h-4" />
+          </div>
+        ))}
+      </div>
+    );
   }
 
   //@ts-ignore
@@ -28,15 +41,15 @@ function SearchGamesResultPage() {
     // - Desktop (lg+): row with results left and filter right
     <div className="flex flex-col lg:flex-row lg:items-start gap-6 px-4">
       {/* Filter placeholder: aparece primero en el DOM para que en móvil esté arriba.
-          En pantallas lg+ lo movemos a la derecha con lg:order-last */}
+            En pantallas lg+ lo movemos a la derecha con lg:order-last */}
       {/* {<aside className="w-full lg:w-80 lg:order-last">
-        <div className="sticky top-20">
-          <div className="p-4 bg-card rounded-lg shadow">
-            
-            hola
+          <div className="sticky top-20">
+            <div className="p-4 bg-card rounded-lg shadow">
+
+              hola
+            </div>
           </div>
-        </div>
-      </aside>} */}
+        </aside>} */}
 
       {/* Resultados: ocupan el espacio restante y muestran una grilla de 2 columnas */}
       <main className="flex-1">

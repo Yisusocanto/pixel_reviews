@@ -3,7 +3,7 @@ import { useAuth } from "@/context/AuthContextProvider";
 // Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserRound, PencilLine, Gift } from "lucide-react";
-import SpinnerComponent from "@/components/commonsComponents/SpinnerComponent";
+import { Skeleton } from "@/components/ui/skeleton";
 import NotFoundPage from "./NotFoundPage";
 import UserProfile from "@/components/userComponents/UserProfile";
 import ProfileReviewCard from "@/components/gameReviewComponents/ProfileReviewCard";
@@ -30,7 +30,30 @@ function UserProfilePage() {
   };
 
   if (isLoading) {
-    return <SpinnerComponent />;
+    return (
+      <div className="p-8 mt-6 space-y-4">
+        <div className="flex flex-col md:flex-row w-full h-100 md:h-65 bg-main rounded-2xl p-10 gap-4">
+          <div className="flex-1 flex flex-col items-center gap-4">
+            <Skeleton className="rounded-full w-40 h-40 m-auto" />
+          </div>
+          <div className="flex-4 flex flex-col gap-10 justify-center">
+            <div className="md:w-1/2">
+              <Skeleton className="w-2/3 md:w-2/2 h-8 m-auto" />
+            </div>
+            <div className="md:w-1/3 flex flex-col gap-4 items-center">
+              <Skeleton className="w-2/3 md:w-1/1 h-5" />
+              <Skeleton className="w-2/3 md:w-1/1 h-5" />
+            </div>
+          </div>
+        </div>
+        <Skeleton className="w-full h-10 rounded-4xl" />
+        <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-4 ">
+          <Skeleton className="w-full h-40 rounded-2xl" />
+          <Skeleton className="w-full h-40 rounded-2xl" />
+          <Skeleton className="w-full h-40 rounded-2xl" />
+        </div>
+      </div>
+    );
   }
 
   if (error && isError) {
