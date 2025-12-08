@@ -67,7 +67,7 @@ const ReviewCard = React.forwardRef<HTMLDivElement, ReviewCardProps>(
                 {review.title}
               </h3>
               <p className="text-sm text-muted-foreground hover:text-foreground">
-                <Link to={`/users/${review.author?.user_id}`}>
+                <Link to={`/users/${review.author?.username}`}>
                   {review.author?.username}
                 </Link>
               </p>

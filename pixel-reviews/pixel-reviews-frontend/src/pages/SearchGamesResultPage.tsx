@@ -55,7 +55,7 @@ function SearchGamesResultPage() {
       <main className="flex-1">
         <div className="mt-4">
           <h1 className="text-4xl text-center font-bold font-orbitron mb-4">
-            Results for {gameTitle}
+            Results for <span className="text-blue-500">{gameTitle}</span>
           </h1>
           {data && data.game_list.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
