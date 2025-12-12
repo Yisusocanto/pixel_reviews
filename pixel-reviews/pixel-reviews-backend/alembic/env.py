@@ -30,7 +30,7 @@ from app.models.developer import Developer
 from app.models.publisher import Publisher
 from app.models.password_reset_token import PasswordResetToken
 
-db_url = f"postgresql://{os.getenv("DB_USER")}:{os.getenv("DB_PASS")}@{os.getenv("DB_HOST")}/{os.getenv("DB_NAME")}"
+db_url = os.environ.get("DATABASE_URL")
 
 if db_url:
     # actualizar la opción en el config para que engine_from_config la use
