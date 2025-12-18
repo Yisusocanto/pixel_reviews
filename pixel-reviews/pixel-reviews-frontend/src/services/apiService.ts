@@ -1,4 +1,4 @@
-import axiosInstance from "@/config/axiosConfig";
+import axiosInstance from "@/lib/axiosConfig";
 
 export const createRating = async (gameID: number, score: number) => {
   const { data } = await axiosInstance.post("/api/create_rating", {

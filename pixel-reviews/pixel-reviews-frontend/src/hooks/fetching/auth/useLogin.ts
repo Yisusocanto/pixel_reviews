@@ -1,6 +1,8 @@
+"use client";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { login } from "@/services/authService";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 
 interface LoginData {
   username: string;
@@ -8,14 +10,14 @@ interface LoginData {
 }
 
 export const useLogin = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (data: LoginData) => login(data),
     onSuccess: (data) => {
       queryClient.setQueryData(["authUser"], data.user);
-      navigate("/feed");
+      router.push("/feed");
     },
   });
 };

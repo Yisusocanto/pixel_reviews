@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { uploadAvatar, deleteAvatar } from "@/services/settingService";
 

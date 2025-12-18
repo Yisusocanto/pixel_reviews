@@ -1,8 +1,6 @@
-import axiosInstance from "@/config/axiosConfig";
+import axiosInstance from "@/lib/axiosConfig";
 
 interface ProfileData {
-  name: string;
-  lastname: string;
   location: string;
   bio: string;
   website: string;
@@ -10,8 +8,6 @@ interface ProfileData {
 
 export const updateProfile = async (profileData: ProfileData) => {
   const { data } = await axiosInstance.patch("/settings/update_profile", {
-    name: profileData.name,
-    lastname: profileData.lastname,
     location: profileData.location,
     bio: profileData.bio,
     website: profileData.website,

@@ -5,7 +5,7 @@ export interface Game {
   averageRating: number;
   totalRatings: number;
   totalReviews: number;
-  game_id: number;
+  gameID: number;
   title: string;
   slug: string;
   releaseDate: string;
@@ -27,21 +27,21 @@ export interface SearchedGame {
 }
 
 export interface Developer {
-  developer_id: number;
+  developerID: number;
   name: string;
   slug: string;
   games?: Array<Game>;
 }
 
 export interface Publisher {
-  publisher_id: number;
+  publisherID: number;
   name: string;
   slug: string;
   games?: Array<Game>;
 }
 
 export interface Rating {
-  rating_id: number;
+  ratingID: number;
   score: number;
   createdAt: string;
   game?: Game;
@@ -50,7 +50,7 @@ export interface Rating {
 }
 
 export interface Review {
-  review_id: number;
+  reviewID: number;
   title: string;
   content: string;
   createdAt: string;

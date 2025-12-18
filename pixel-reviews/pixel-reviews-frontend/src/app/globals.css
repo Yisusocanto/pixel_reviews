@@ -1,0 +1,124 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sh-background: var(--sh-background);
+  --color-sh-foreground: var(--sh-foreground);
+  --color-sh-card: var(--sh-card);
+  --color-sh-card-foreground: var(--sh-card-foreground);
+  --color-sh-popover: var(--sh-popover);
+  --color-sh-popover-foreground: var(--sh-popover-foreground);
+  --color-sh-primary: var(--sh-primary);
+  --color-sh-primary-foreground: var(--sh-primary-foreground);
+  --color-sh-secondary: var(--sh-secondary);
+  --color-sh-secondary-foreground: var(--sh-secondary-foreground);
+  --color-sh-muted: var(--sh-muted);
+  --color-sh-muted-foreground: var(--sh-muted-foreground);
+  --color-sh-accent: var(--sh-accent);
+  --color-sh-accent-foreground: var(--sh-accent-foreground);
+  --color-sh-destructive: var(--sh-destructive);
+  --color-border: var(--sh-border);
+  --color-input: var(--sh-input);
+  --color-ring: var(--sh-ring);
+  --color-sh-border: var(--sh-border);
+  --color-sh-input: var(--sh-input);
+  --color-sh-ring: var(--sh-ring);
+  --color-sh-chart-1: var(--sh-chart-1);
+  --color-sh-chart-2: var(--sh-chart-2);
+  --color-sh-chart-3: var(--sh-chart-3);
+  --color-sh-chart-4: var(--sh-chart-4);
+  --color-sh-chart-5: var(--sh-chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 0.625rem;
+  --sh-background: oklch(1 0 0);
+  --sh-foreground: oklch(0.145 0 0);
+  --sh-card: oklch(1 0 0);
+  --sh-card-foreground: oklch(0.145 0 0);
+  --sh-popover: oklch(1 0 0);
+  --sh-popover-foreground: oklch(0.145 0 0);
+  --sh-primary: oklch(0.205 0 0);
+  --sh-primary-foreground: oklch(0.985 0 0);
+  --sh-secondary: oklch(0.97 0 0);
+  --sh-secondary-foreground: oklch(0.205 0 0);
+  --sh-muted: oklch(0.97 0 0);
+  --sh-muted-foreground: oklch(0.556 0 0);
+  --sh-accent: oklch(0.97 0 0);
+  --sh-accent-foreground: oklch(0.205 0 0);
+  --sh-destructive: oklch(0.577 0.245 27.325);
+  --sh-border: oklch(0.922 0 0);
+  --sh-input: oklch(0.922 0 0);
+  --sh-ring: oklch(0.708 0 0);
+  --sh-chart-1: oklch(0.646 0.222 41.116);
+  --sh-chart-2: oklch(0.6 0.118 184.704);
+  --sh-chart-3: oklch(0.398 0.07 227.392);
+  --sh-chart-4: oklch(0.828 0.189 84.429);
+  --sh-chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --sh-background: oklch(0.145 0 0);
+  --sh-foreground: oklch(0.985 0 0);
+  --sh-card: oklch(0.205 0 0);
+  --sh-card-foreground: oklch(0.985 0 0);
+  --sh-popover: oklch(0.205 0 0);
+  --sh-popover-foreground: oklch(0.985 0 0);
+  --sh-primary: oklch(0.922 0 0);
+  --sh-primary-foreground: oklch(0.205 0 0);
+  --sh-secondary: oklch(0.269 0 0);
+  --sh-secondary-foreground: oklch(0.985 0 0);
+  --sh-muted: oklch(0.269 0 0);
+  --sh-muted-foreground: oklch(0.708 0 0);
+  --sh-accent: oklch(0.269 0 0);
+  --sh-accent-foreground: oklch(0.985 0 0);
+  --sh-destructive: oklch(0.704 0.191 22.216);
+  --sh-border: oklch(1 0 0 / 10%);
+  --sh-input: oklch(1 0 0 / 15%);
+  --sh-ring: oklch(0.556 0 0);
+  --sh-chart-1: oklch(0.488 0.243 264.376);
+  --sh-chart-2: oklch(0.696 0.17 162.48);
+  --sh-chart-3: oklch(0.769 0.188 70.08);
+  --sh-chart-4: oklch(0.627 0.265 303.9);
+  --sh-chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-sh-border outline-sh-ring/50;
+  }
+  body {
+    @apply bg-sh-background text-sh-foreground;
+  }
+}

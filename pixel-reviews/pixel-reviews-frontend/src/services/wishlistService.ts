@@ -1,4 +1,4 @@
-import axiosInstance from "@/config/axiosConfig";
+import axiosInstance from "@/lib/axiosConfig";
 
 export const addToWishlist = async (gameID: number, userID: number) => {
   const { data } = await axiosInstance.post("/wishlist/add_to_wishlist", {

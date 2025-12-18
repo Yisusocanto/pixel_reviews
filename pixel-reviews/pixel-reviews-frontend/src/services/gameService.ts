@@ -1,10 +1,8 @@
-import axiosInstance from "@/config/axiosConfig";
+import axiosInstance from "@/lib/axiosConfig";
 import type { Game, Review, Rating } from "@/types/gameTypes";
 
 interface GameDetails {
   game: Game | null;
-  userRating: Rating | null;
-  userReview: Review | null;
 }
 
 export const getGameDetails = async (slug: string): Promise<GameDetails> => {
