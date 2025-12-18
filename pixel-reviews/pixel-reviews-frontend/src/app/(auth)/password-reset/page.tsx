@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -38,7 +39,7 @@ const Schema = z
     path: ["confirmPassword"],
   });
 
-function page() {
+function PasswordResetContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const {
@@ -115,4 +116,16 @@ function page() {
   );
 }
 
-export default page;
+export default function PasswordResetPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center mt-10">
+          <Spinner size="lg" />
+        </div>
+      }
+    >
+      <PasswordResetContent />
+    </Suspense>
+  );
+}
