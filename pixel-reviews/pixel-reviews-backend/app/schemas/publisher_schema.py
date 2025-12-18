@@ -7,7 +7,7 @@ class PublisherSchema(SQLAlchemySchema):
     class Meta:
         model = Publisher
 
-    publisher_id = auto_field()
+    publisher_id = auto_field(data_key="publisherID")
     name = auto_field()
     slug = auto_field()
 

@@ -10,8 +10,6 @@ class SettingManager(DatabaseBase):
     def update_profile(
         cls,
         user_id: int,
-        name: str,
-        lastname: str,
         location: str,
         bio: str,
         website: str,
@@ -25,8 +23,6 @@ class SettingManager(DatabaseBase):
                 if not user:
                     return None
 
-                user.name = name
-                user.lastname = lastname
                 user.location = location
                 user.bio = bio
                 user.website = website

@@ -13,8 +13,6 @@ settings_bp = Blueprint("settings", __name__, url_prefix="/settings")
 def update_profile():
     # New data of the user
     data = request.get_json()
-    name = data.get("name", "")
-    lastname = data.get("lastname", "")
     location = data.get("location", "")
     bio = data.get("bio", "")
     website = data.get("website", "")
@@ -26,8 +24,6 @@ def update_profile():
     # User data update
     user = SettingManager.update_profile(
         user_id=user_id,
-        name=name,
-        lastname=lastname,
         location=location,
         bio=bio,
         website=website,

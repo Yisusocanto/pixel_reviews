@@ -8,12 +8,9 @@ class UserSchema(SQLAlchemySchema):
     class Meta:
         model = User
 
-    user_id = auto_field()
+    user_id = auto_field(data_key="userID")
     email = auto_field()
     username = auto_field()
-    name = auto_field()
-    lastname = auto_field()
-    age = auto_field(data_key="birthday")
     bio = auto_field()
     location = auto_field()
     website = auto_field()

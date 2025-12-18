@@ -59,38 +59,23 @@ def game_details(slug):
     if not game:
         return jsonify({"message": "game not exits or an error occurred"}), 404
 
-    user_rating = None
-    user_review = None
-
-    token = request.cookies.get("jwt_pixel_reviews")
-
-    if token:
-        payload = JwtHandler.check_jwt(token)
-        if not payload:
-            response = make_response(jsonify({"message": "Token invalid"}))
-            response.set_cookie(
-                "jwt_pixel_reviews",
-                "",
-                max_age=0,
-                samesite='None',
-                httponly=True,
-                secure=True,
-            )
-            return response, 401
-
-        user_id = int(payload["sub"])
-
-        user_rating = ReviewManager.get_user_rating(
-            game_id=game["game_id"], user_id=user_id
-        )
-        user_review = ReviewManager.get_user_review(
-            game_id=game["game_id"], user_id=user_id
-        )
-
     return jsonify(
         {
-            "game": game,
-            "userRating": user_rating,
-            "userReview": user_review,
+            "game": game
         }
     ), 200
+
+@main_bp.route("/user_review/<game_id>", methods=["GET"])
+@token_required
+def user_review(game_id):
+    payload = g.user_payload
+    user_id = int(payload["sub"])
+
+    review = ReviewManager.get_user_review(game_id, user_id)
+    rating = ReviewManager.get_user_rating(game_id, user_id)
+
+    if not review and not rating:
+        return jsonify({"error": "The user does not have a review or rating."}), 404
+
+    return jsonify({"review": review, "rating": rating}), 200
+

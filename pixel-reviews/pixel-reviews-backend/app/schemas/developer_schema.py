@@ -7,7 +7,7 @@ class DeveloperSchema(SQLAlchemySchema):
     class Meta:
         model = Developer
 
-    developer_id = auto_field()
+    developer_id = auto_field(data_key="developerID")
     name = auto_field()
     slug = auto_field()
 

@@ -8,7 +8,7 @@ class RatingSchema(SQLAlchemySchema):
     class Meta:
         model = Rating
 
-    rating_id = auto_field()
+    rating_id = auto_field(data_key="ratingID")
     score = auto_field()
     created_at = auto_field(data_key="createdAt")
 

@@ -14,22 +14,15 @@ class UserManager(DatabaseBase):
         cls,
         email: str,
         password: str,
-        username: str,
-        name: str,
-        lastname: str,
-        age: str,
+        username: str
     ) -> int | dict:
         """Create a new user in the database"""
         try:
             with cls.get_session() as session:
-                birth_date = datetime.strptime(age, "%Y-%m-%d")
                 user = User(
                     email=email,
                     password=password,
-                    username=username,
-                    name=name,
-                    lastname=lastname,
-                    age=birth_date,
+                    username=username
                 )
                 session.add(user)
                 session.flush()  # To get the user_id before the commit

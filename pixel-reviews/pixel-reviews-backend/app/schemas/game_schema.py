@@ -7,7 +7,7 @@ class GameSchema(SQLAlchemySchema):
     class Meta:
         model = Game
 
-    game_id = auto_field()
+    game_id = auto_field(data_key="gameID")
     title = auto_field()
     slug = auto_field()
     release_date = auto_field(data_key="releaseDate")

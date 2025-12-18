@@ -37,9 +37,7 @@ class RawgApi:
         return games_list
 
     def get_game_details(self, slug) -> dict | None:
-
         response = requests.get(f"{self.BASE_URL}/games/{slug}?key={self.api_key}")
-
         if response.status_code != 200:
             print(
                 f"Error en get_game_details de Rawg API. status code {response.status_code}."

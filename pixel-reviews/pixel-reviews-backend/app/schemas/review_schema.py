@@ -7,7 +7,7 @@ class ReviewSchema(SQLAlchemySchema):
     class Meta:
         model = Review
 
-    review_id = auto_field()
+    review_id = auto_field(data_key="reviewID")
     title = auto_field()
     content = auto_field()
     created_at = auto_field(data_key="createdAt")

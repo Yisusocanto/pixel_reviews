@@ -16,17 +16,15 @@ def sign_up():
     # User data sent from the frontend is collected
     data = request.get_json()
     email = data.get("email", "")
+    password = data.get("password", "")
     username_from_data: str = data.get("username", "")
     username = username_from_data.lower()
-    password = data.get("password", "")
-    name = data.get("name", "")
-    lastname = data.get("lastname", "")
-    age = data.get("birthday", "")
+
 
 
 
     # the data is validated and errors and a 400 code are returned to the frontend if there are errors
-    error = execute_validations(email, username, password, name, lastname, age)
+    error = execute_validations(email, username, password)
     if error:
         return (
             jsonify(
@@ -44,10 +42,7 @@ def sign_up():
     user_id = UserManager.create_user(
         email=email,
         password=hashed_pw,
-        username=username,
-        name=name,
-        lastname=lastname,
-        age=age,
+        username=username
     )
     if isinstance(user_id, dict) and "error" in user_id:
         return jsonify({"error": user_id["error"]}), 409
