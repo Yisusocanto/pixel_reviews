@@ -51,7 +51,7 @@ function WishlistButton({ game }: WishlistButtonProps) {
           onSuccess: () => setInWishlist(true),
         }
       );
-    } else router.push("/auth/login");
+    } else router.push("/login");
   };
 
   const handleRemoveToWishlist = async () => {
