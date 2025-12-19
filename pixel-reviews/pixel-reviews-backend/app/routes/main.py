@@ -55,7 +55,7 @@ def search(game_title):
 
 @main_bp.route("/games/<slug>", methods=["GET"])
 def game_details(slug):
-    user_id = ""
+    user_id = None
     token = request.cookies.get("jwt_pixel_reviews")
     if token:
         payload = JwtHandler.check_jwt(token)
