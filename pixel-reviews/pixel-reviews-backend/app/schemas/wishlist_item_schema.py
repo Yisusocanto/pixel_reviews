@@ -10,7 +10,6 @@ class WishlistItemSchema(SQLAlchemySchema):
     # Relationships
     game = fields.Nested(
         "GameSchema", exclude=(
-            "wishlist",
             "reviews",
             "ratings",
             "developers",

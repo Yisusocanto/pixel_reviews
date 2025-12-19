@@ -10,6 +10,7 @@ import ReviewRatingCard from "@/components/review/ReviewRatingCard";
 import axios from "axios";
 import GameInformationCard from "@/components/game/GameInformationCard";
 import CommunityCard from "@/components/game/CommunityCard";
+import { cookies } from "next/headers";
 import type { Review } from "@/types/gameTypes";
 
 interface pageProps {
@@ -20,10 +21,12 @@ interface pageProps {
 
 async function page({ params }: pageProps) {
   const { slug } = await params;
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
   let data;
 
   try {
-    data = await getGameDetails(slug);
+    data = await getGameDetails(slug, cookieHeader);
   } catch (error) {
     if (axios.isAxiosError(error) && error.status === 404) notFound();
     throw error;
@@ -111,7 +114,7 @@ async function page({ params }: pageProps) {
           {game && <GameInformationCard game={game} />}
           {/* Community Card */}
 
-          <CommunityCard wishlistCount={game?.wishlist?.length || 0} />
+          <CommunityCard wishlistCount={game?.totalWishlist || 0} />
         </div>
       </div>
     </div>

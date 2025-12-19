@@ -1,75 +1,44 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Spinner } from "@heroui/react";
-import { Game } from "@/types/gameTypes";
 import { useAuth } from "@/providers/AuthProvider";
-import { WishlistItem } from "@/types/wishlistType";
 import { Heart } from "lucide-react";
-import {
-  useAddToWishlist,
-  useRemoveFromWishlist,
-} from "@/hooks/fetching/wishlist/useWishlist";
+import { useToggleWishlistItem } from "@/hooks/fetching/wishlist/useWishlist";
+import { toast } from "sonner";
 
 interface WishlistButtonProps {
-  game?: Game;
+  inUserWishlist: boolean;
+  gameID: number;
 }
 
-function WishlistButton({ game }: WishlistButtonProps) {
-  const { user, isAuthenticated } = useAuth();
-  const [inWishlist, setInWishlist] = useState<boolean>(false);
-  const [wishlistItemId, setWishlistItemId] = useState<number | null>(null);
+function WishlistButton({ gameID, inUserWishlist }: WishlistButtonProps) {
+  const { isAuthenticated } = useAuth();
+  const [inWishlist, setInWishlist] = useState<boolean>(inUserWishlist);
   const router = useRouter();
 
-  useEffect(() => {
-    if (isAuthenticated && user && game) {
-      const foundGame = user.wishlist?.find((wishlistItem: WishlistItem) => {
-        return wishlistItem.game.gameID == game.gameID;
-      });
+  const { mutate: toggleWishlistItem, isPending } = useToggleWishlistItem();
 
-      if (foundGame) {
-        setInWishlist(true);
-        setWishlistItemId(foundGame.wishlistItemId);
-      } else {
-        setInWishlist(false);
-        setWishlistItemId(null);
-      }
-    }
-  }, [user, game]);
+  const handleToggleWishlistItem = async () => {
+    if (!isAuthenticated) router.push("/login");
 
-  const { mutate: addToWishlist, isPending: isAddToWishlistPending } =
-    useAddToWishlist(game?.slug ?? "");
-  const { mutate: removeFromWishlist, isPending: isRemoveFromWishlistPending } =
-    useRemoveFromWishlist(game?.slug ?? "");
-
-  const handleAddToWishlist = async () => {
-    if (game && user) {
-      addToWishlist(
-        { gameID: game.gameID, userID: user.userID },
-        {
-          onSuccess: () => setInWishlist(true),
-        }
-      );
-    } else router.push("/login");
-  };
-
-  const handleRemoveToWishlist = async () => {
-    if (game && user && wishlistItemId) {
-      removeFromWishlist(wishlistItemId, {
-        onSuccess: () => {
-          setInWishlist(false);
-          setWishlistItemId(null);
-        },
-      });
-    }
+    toggleWishlistItem(gameID, {
+      onSuccess: () => {
+        setInWishlist(!inWishlist);
+        toast.success(
+          `Game ${inWishlist ? "removed from the" : "added to the"} wishlist.`,
+          { duration: 5000 }
+        );
+      },
+    });
   };
 
   return (
     <Button
       variant="secondary"
-      isPending={isAddToWishlistPending || isRemoveFromWishlistPending}
-      onPress={inWishlist ? handleRemoveToWishlist : handleAddToWishlist}
+      isPending={isPending}
+      onPress={handleToggleWishlistItem}
       className={"text-danger text-lg"}
     >
       {({ isPending }) => (

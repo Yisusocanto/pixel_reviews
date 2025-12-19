@@ -8,8 +8,9 @@ import { orbitron } from "@/fonts/fonts";
 import Link from "next/link";
 import Image from "next/image";
 import { dateFormatter } from "@/lib/dateFormatter";
-import { useRemoveFromWishlist } from "@/hooks/fetching/wishlist/useWishlist";
+import { useToggleWishlistItem } from "@/hooks/fetching/wishlist/useWishlist";
 import { WishlistItem } from "@/types/wishlistType";
+import { toast } from "sonner";
 
 interface WishlistItemCardProps {
   wishlistItem: WishlistItem;
@@ -20,13 +21,16 @@ function WishlistItemCard({ username, wishlistItem }: WishlistItemCardProps) {
   const { user } = useAuth();
   const ownWishlist = user?.username === username;
 
-  const { mutate: removeFromWishlist } = useRemoveFromWishlist(
-    wishlistItem.game.slug
-  );
+  const { mutate: toggleWishlistItem } = useToggleWishlistItem();
 
-  const handleRemoveFromWishlist = async () => {
+  const handleToggleWishlistItem = async () => {
     if (user) {
-      removeFromWishlist(wishlistItem.wishlistItemId);
+      toggleWishlistItem(wishlistItem.game.gameID, {
+        onSuccess: () =>
+          toast.success("Game removed from the wishlist", {
+            duration: 3000,
+          }),
+      });
     }
   };
 
@@ -90,7 +94,7 @@ function WishlistItemCard({ username, wishlistItem }: WishlistItemCardProps) {
                 <Dropdown.Popover className={"border"}>
                   <Dropdown.Menu>
                     <Dropdown.Item
-                      onClick={handleRemoveFromWishlist}
+                      onClick={handleToggleWishlistItem}
                       className="text-danger hover:bg-default-hover"
                     >
                       <Trash size={16} />

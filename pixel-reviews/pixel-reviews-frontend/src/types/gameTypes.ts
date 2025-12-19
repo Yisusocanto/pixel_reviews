@@ -5,6 +5,7 @@ export interface Game {
   averageRating: number;
   totalRatings: number;
   totalReviews: number;
+  totalWishlist: number;
   gameID: number;
   title: string;
   slug: string;
@@ -12,11 +13,11 @@ export interface Game {
   imageURL: string;
   screenshots?: Array<string>;
   description: string;
+  inUserWishlist: boolean;
   developers?: Array<Developer>;
   publishers?: Array<Publisher>;
   ratings?: Array<Rating>;
   reviews?: Array<Review>;
-  wishlist?: Array<WishlistItem>;
 }
 
 export interface SearchedGame {

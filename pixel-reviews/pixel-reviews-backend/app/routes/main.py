@@ -55,7 +55,15 @@ def search(game_title):
 
 @main_bp.route("/games/<slug>", methods=["GET"])
 def game_details(slug):
-    game = GameManager.find_or_create_game(slug=slug)
+    user_id = ""
+    token = request.cookies.get("jwt_pixel_reviews")
+    if token:
+        payload = JwtHandler.check_jwt(token)
+        if payload:
+            user_id = int(payload["sub"])
+
+
+    game = GameManager.find_or_create_game(slug=slug, user_id=user_id)
     if not game:
         return jsonify({"message": "game not exits or an error occurred"}), 404
 

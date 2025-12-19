@@ -5,8 +5,13 @@ interface GameDetails {
   game: Game | null;
 }
 
-export const getGameDetails = async (slug: string): Promise<GameDetails> => {
-  const { data } = await axiosInstance.get(`/main/games/${slug}`);
+export const getGameDetails = async (
+  slug: string,
+  cookieHeader?: string
+): Promise<GameDetails> => {
+  const { data } = await axiosInstance.get(`/main/games/${slug}`, {
+    headers: cookieHeader ? { Cookie: cookieHeader } : {},
+  });
   return data;
 };
 

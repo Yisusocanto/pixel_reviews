@@ -8,32 +8,20 @@ class WishlistManager(DatabaseBase):
     """Class that handles wishlist items"""
 
     @classmethod
-    def add_to_wishlist(cls, user_id: int, game_id: int) -> Optional[dict]:
-        """Adds a new wishlist item to the database"""
+    def toggle_wishlist_item(cls, game_id: int, user_id: int):
         try:
             with cls.get_session() as session:
+                wishlist_item = session.query(WishlistItem).filter(WishlistItem.game_id == game_id, WishlistItem.user_id == user_id).first()
+                if wishlist_item:
+                    session.delete(wishlist_item)
+                    return True
+
                 new_wishlist_item = WishlistItem(user_id=user_id, game_id=game_id)
                 session.add(new_wishlist_item)
-                session.flush()
-                return WishlistItemSchema().dump(new_wishlist_item)
+                return True
         except IntegrityError as i:
-            print("Error on add integrity:", i)
+            print("Error on toggle_wishlist integrity:", i)
             return {"error": "Game already in wishlist."}
         except Exception as e:
-            print("Error on add_to_wishlist:", e)
-            return None
-
-    @classmethod
-    def remove_from_wishlist(cls, wishlist_item_id: int) -> dict | bool:
-        """Removes a wishlist item from the database"""
-        try:
-            with cls.get_session() as session:
-                wishlist_item = session.query(WishlistItem).filter(WishlistItem.wishlist_item_id == wishlist_item_id).first()
-                if not wishlist_item:
-                    return {"error": "WishlistItem not found."}
-
-                session.delete(wishlist_item)
-                return True
-        except Exception as e:
-            print("Error on remove_from_wishlist:", e)
-            return {"Error": "Unknown error."}
+            print("Error on toggle_wishlist:", e)
+            return {"error": "Unknown error."}
