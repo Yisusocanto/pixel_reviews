@@ -40,13 +40,18 @@ class ReviewManager(DatabaseBase):
                         return ReviewSchema().dump(reviews, many=True)
                     return []
 
-                reviews = (
-                    session.query(Review, is_liked)
+                reviews_tuple = (
+                    session.query(Review)
                     .order_by(desc(Review.created_at))
                     .offset(offset)
                     .limit(limit)
                     .all()
                 )
+                reviews = []
+                for review in reviews_tuple:
+                    review.is_liked = False
+                    reviews.append(review)
+
                 return ReviewSchema().dump(reviews, many=True)
             
         except Exception as e:

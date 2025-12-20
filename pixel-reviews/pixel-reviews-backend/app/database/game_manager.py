@@ -39,12 +39,17 @@ class GameManager(DatabaseBase):
             with cls.get_session() as session:
                 # Check if the game is on the user's wishlist
                 if user_id:
-                    in_user_wishlist = cls._in_user_wishlist_query(user_id, slug)
-                    game_tuple = session.query(Game, in_user_wishlist).filter(Game.slug == slug).first() # (Game(), true or false) or None
+                    in_wishlist = cls._in_user_wishlist_query(user_id, slug)
+                    game_tuple = session.query(Game, in_wishlist).filter(Game.slug == slug).first() # (Game(), true or false) or None
 
                     if game_tuple:
                         game = game_tuple[0]
-                        game.in_wishlist = game_tuple[1]
+                        game.in_user_wishlist = game_tuple[1]
+                        return GameSchema().dump(game)
+                else:
+                    game = session.query(Game).filter(Game.slug == slug).first()
+                    if game:
+                        game.in_user_wishlist = False
                         return GameSchema().dump(game)
 
                 # Fetch from API
