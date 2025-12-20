@@ -12,6 +12,7 @@ export interface User {
   website: string;
   avatarUrl: string;
   createdAt: string;
+  totalLikes: number;
   reviews?: Array<Review>;
   ratings?: Array<Rating>;
   wishlist?: Array<WishlistItem>;

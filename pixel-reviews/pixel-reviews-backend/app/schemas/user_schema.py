@@ -26,6 +26,7 @@ class UserSchema(SQLAlchemySchema):
     average_rating = fields.Method("get_average_rating", data_key="averageRating")
     total_ratings = fields.Method("get_total_ratings", data_key="totalRatings")
     total_reviews = fields.Method("get_total_reviews", data_key="totalReviews")
+    total_likes = fields.Method("get_total_likes", data_key="totalLikes")
 
     def get_average_rating(self, obj):
         return obj.average_rating
@@ -38,3 +39,6 @@ class UserSchema(SQLAlchemySchema):
 
     def get_total_wishlist(self, obj):
         return obj.total_wishlist
+
+    def get_total_likes(self, obj):
+        return obj.total_likes

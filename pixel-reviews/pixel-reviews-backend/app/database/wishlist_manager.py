@@ -1,6 +1,5 @@
 from .base import DatabaseBase
 from app.models.wishlist_item import WishlistItem
-from app.schemas.wishlist_item_schema import WishlistItemSchema
 from sqlalchemy.exc import IntegrityError
 from typing import Optional
 

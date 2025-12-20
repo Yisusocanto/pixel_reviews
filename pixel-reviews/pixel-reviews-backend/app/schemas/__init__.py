@@ -5,3 +5,4 @@ from .user_schema import UserSchema
 from .rating_schema import RatingSchema
 from .review_schema import ReviewSchema
 from .wishlist_item_schema import WishlistItemSchema
+from .like_schema import LikeSchema

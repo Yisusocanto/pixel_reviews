@@ -9,8 +9,7 @@ if TYPE_CHECKING:
     from app.models.game import Game
     from app.models.user import User
     from app.models.rating import Rating
-
-
+    from app.models.like import Like
 
 
 class Review(Base):
@@ -35,3 +34,9 @@ class Review(Base):
     game: Mapped["Game"] = relationship(back_populates="reviews")
     author: Mapped["User"] = relationship(back_populates="reviews")
     rating: Mapped["Rating"] = relationship(back_populates="review")
+    likes: Mapped[list["Like"]] = relationship(back_populates="review", cascade="all, delete-orphan", lazy="dynamic")
+
+    # Properties
+    @property
+    def total_likes(self):
+        return self.likes.count()

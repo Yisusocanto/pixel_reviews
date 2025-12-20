@@ -12,8 +12,15 @@ class ReviewSchema(SQLAlchemySchema):
     content = auto_field()
     created_at = auto_field(data_key="createdAt")
     updated_at = auto_field(data_key="updatedAt")
+    is_liked = fields.Bool(data_key="isLiked")
 
     # Relationships
     author = fields.Nested("UserSchema", exclude=("reviews", "ratings"))
     game = fields.Nested("GameSchema", exclude=("reviews", "ratings", "screenshots"))
     rating = fields.Nested("RatingSchema", exclude=("author", "game"))
+
+    # Properties
+    total_likes = fields.Method("get_total_likes", data_key="totalLikes")
+
+    def get_total_likes(self, obj):
+        return obj.total_likes

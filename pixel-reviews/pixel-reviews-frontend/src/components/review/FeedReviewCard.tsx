@@ -11,6 +11,7 @@ import { dateFormatter } from "@/lib/dateFormatter";
 import { orbitron } from "@/fonts/fonts";
 import { Link as LinkHero } from "@heroui/react";
 import type { Review } from "@/types/gameTypes";
+import LikeButton from "../actions/LikeButton";
 
 export interface FeedReviewCard {
   review: Review;
@@ -138,6 +139,19 @@ const FeedReviewCard = React.forwardRef<HTMLDivElement, FeedReviewCard>(
                   </button>
                 )}
               </motion.div>
+              <motion.div
+                custom={4}
+                variants={fadeUpVariants}
+                initial="hidden"
+                animate="visible"
+                className="flex items-center sm:justify-between py-3 border-t"
+              >
+                <LikeButton
+                  hasLike={review.isLiked}
+                  likesCount={review.totalLikes}
+                  reviewID={review.reviewID}
+                />
+              </motion.div>
 
               {/* Author & Date */}
               <motion.div
@@ -145,7 +159,7 @@ const FeedReviewCard = React.forwardRef<HTMLDivElement, FeedReviewCard>(
                 variants={fadeUpVariants}
                 initial="hidden"
                 animate="visible"
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pt-4 sm:pt-6 border-t"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 pt-3 sm:pt-3 border-t"
               >
                 <div className="flex items-center gap-3">
                   <Link href={`/users/${review.author?.username}`}>

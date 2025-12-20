@@ -4,6 +4,7 @@ from app.database.auth_manager import AuthManager
 from app.database.game_manager import GameManager
 from app.database.review_manager import ReviewManager
 from app.database.settings_manager import SettingManager
+from app.database.like_manager import LikeManager
 
 # Initialize database on import
 DatabaseBase.initialize()
@@ -14,5 +15,6 @@ __all__ = [
     'AuthManager',
     'GameManager',
     'ReviewManager',
-    "SettingManager"
+    'SettingManager',
+    'LikeManager'
 ]

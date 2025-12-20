@@ -11,6 +11,13 @@ main_bp = Blueprint("main", __name__, url_prefix="/main")
 
 @main_bp.route("/", methods=["GET"])
 def index():
+    user_id = None
+    token = request.cookies.get("jwt_pixel_reviews")
+    if token:
+        payload = JwtHandler.check_jwt(token)
+        if payload:
+            user_id = int(payload["sub"])
+
     page = request.args.get("page")
     limit = request.args.get("limit")
 
@@ -29,7 +36,7 @@ def index():
     offset = (page_number - 1) * limit_number
 
     try:
-        reviews = ReviewManager.get_reviews(limit=limit_number, offset=offset)
+        reviews = ReviewManager.get_reviews(limit=limit_number, offset=offset, user_id=user_id)
         if reviews == "error":
             return jsonify({"error": "Database error"}), 500
 

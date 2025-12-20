@@ -7,6 +7,7 @@ from .main import main_bp
 from .api import api_bp
 from .settings import settings_bp
 from .wishlist import wishlist_bp
+from .like import like_bp
 from flask_cors import CORS
 from app.extensions.marshmallow import ma
 
@@ -35,5 +36,6 @@ def create_app():
     app.register_blueprint(api_bp)
     app.register_blueprint(settings_bp)
     app.register_blueprint(wishlist_bp)
+    app.register_blueprint(like_bp)
 
     return app

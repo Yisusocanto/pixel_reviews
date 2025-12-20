@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axiosConfig";
-import type { Game, Review, Rating } from "@/types/gameTypes";
+import type { Game } from "@/types/gameTypes";
 
 interface GameDetails {
   game: Game | null;

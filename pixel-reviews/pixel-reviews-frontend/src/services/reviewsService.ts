@@ -3,9 +3,15 @@ import type { AxiosResponse } from "axios";
 
 export const getReviews = async (
   page: number,
-  limit: number = 10
+  limit: number = 10,
+  cookieHeader?: string
 ): Promise<AxiosResponse> => {
-  const response = await axiosInstance.get(`/main?limit=${limit}&page=${page}`);
+  const response = await axiosInstance.get(
+    `/main?limit=${limit}&page=${page}`,
+    {
+      headers: cookieHeader ? { Cookie: cookieHeader } : {},
+    }
+  );
   return response;
 };
 

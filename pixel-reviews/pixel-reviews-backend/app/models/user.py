@@ -9,6 +9,7 @@ if TYPE_CHECKING:
     from app.models.review import Review
     from app.models.rating import Rating
     from app.models.wishlist_item import WishlistItem
+    from app.models.like import Like
 
 
 class User(Base):
@@ -38,6 +39,7 @@ class User(Base):
         back_populates="author", cascade="all, delete-orphan", lazy="dynamic"
     )
     wishlist: Mapped[list["WishlistItem"]] = relationship(back_populates="user", cascade="all, delete-orphan", lazy="dynamic")
+    likes: Mapped[list["Like"]] = relationship(back_populates="user", cascade="all, delete-orphan", lazy="dynamic")
 
     @property
     def average_rating(self):
@@ -56,6 +58,10 @@ class User(Base):
     @property
     def total_wishlist(self):
         return self.wishlist.count()
+
+    @property
+    def total_likes(self):
+        return self.likes.count()
 
     def __str__(self):
         return self.username

@@ -125,6 +125,8 @@ export const useCreateReview = (gameSlug: string) => {
                 reviewID: 0,
                 title: reviewTitle,
                 content: reviewContent,
+                isLiked: false,
+                totalLikes: 0,
                 createdAt: now,
                 updatedAt: now,
               };

@@ -56,6 +56,8 @@ export interface Review {
   content: string;
   createdAt: string;
   updatedAt: string;
+  isLiked: boolean;
+  totalLikes: number;
   game?: Game;
   author?: User;
   rating?: Rating;

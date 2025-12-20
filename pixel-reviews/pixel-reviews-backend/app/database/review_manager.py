@@ -1,8 +1,9 @@
 from app.database.base import DatabaseBase
 from app.models import Review, Rating
+from app.models.like import Like
 from app.schemas.review_schema import ReviewSchema
 from app.schemas.rating_schema import RatingSchema
-from sqlalchemy import desc
+from sqlalchemy import desc, exists
 from typing import List, Optional
 
 
@@ -10,20 +11,32 @@ class ReviewManager(DatabaseBase):
     """Manages review and rating operations"""
 
     @classmethod
-    def get_reviews(cls, limit: int, offset: int):
+    def get_reviews(cls, limit: int, offset: int, user_id):
         """Return a limited number of reviews. ordered in descending order by their creation date."""
         try:
             with cls.get_session() as session:
-                reviews = (
-                    session.query(Review)
+                is_liked = (
+                    exists()
+                    .where(Like.user_id == user_id)
+                    .where(Like.review_id == Review.review_id)
+                    .label("is_liked")
+                )
+
+                reviews_tuple = (
+                    session.query(Review, is_liked)
                     .order_by(desc(Review.created_at))
                     .offset(offset)
                     .limit(limit)
                     .all()
                 )
 
-                if not reviews:
-                    return []
+                reviews = []
+                for review, is_liked in reviews_tuple:
+                    review.is_liked = is_liked
+                    reviews.append(review)
+
+                # if not reviews:
+                #     return []
                 
                 return ReviewSchema().dump(reviews, many=True)
             

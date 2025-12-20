@@ -116,9 +116,9 @@ class GameManager(DatabaseBase):
     @staticmethod
     def _in_user_wishlist_query(user_id: int, slug: str):
         return (
-                    exists()
-                    .where(WishlistItem.user_id == user_id)
-                    .where(WishlistItem.game_id == Game.game_id)
-                    .where(Game.slug == slug)
-                    .label("game_in_wishlist")
-                )
+                exists()
+                .where(WishlistItem.user_id == user_id)
+                .where(WishlistItem.game_id == Game.game_id)
+                .where(Game.slug == slug)
+                .label("game_in_wishlist")
+            )

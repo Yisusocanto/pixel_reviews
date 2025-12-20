@@ -22,13 +22,14 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 sys.path.append(os.getcwd())  # Añade el directorio del proyecto al path
 from app.models.base import Base  # Reemplaza con la ubicación correcta
-from app.models.user import User  # Reemplaza con la ubicación correcta
+from app.models.user import User
 from app.models.game import Game
 from app.models.review import Review
 from app.models.rating import Rating
 from app.models.developer import Developer
 from app.models.publisher import Publisher
 from app.models.password_reset_token import PasswordResetToken
+from app.models.like import Like
 
 db_url = os.environ.get("DATABASE_URL")
 
