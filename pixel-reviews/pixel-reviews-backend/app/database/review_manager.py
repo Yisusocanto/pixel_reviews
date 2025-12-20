@@ -11,33 +11,42 @@ class ReviewManager(DatabaseBase):
     """Manages review and rating operations"""
 
     @classmethod
-    def get_reviews(cls, limit: int, offset: int, user_id):
+    def get_reviews(cls, limit: int, offset: int, user_id: Optional[int] = None):
         """Return a limited number of reviews. ordered in descending order by their creation date."""
         try:
             with cls.get_session() as session:
-                is_liked = (
-                    exists()
-                    .where(Like.user_id == user_id)
-                    .where(Like.review_id == Review.review_id)
-                    .label("is_liked")
-                )
+                if user_id:
+                    is_liked = (
+                        exists()
+                        .where(Like.user_id == user_id)
+                        .where(Like.review_id == Review.review_id)
+                        .label("is_liked")
+                    )
 
-                reviews_tuple = (
+                    reviews_tuple = (
+                        session.query(Review, is_liked)
+                        .order_by(desc(Review.created_at))
+                        .offset(offset)
+                        .limit(limit)
+                        .all()
+                    )
+
+                    if reviews_tuple:
+                        reviews = []
+                        for review, is_liked in reviews_tuple:
+                            review.is_liked = is_liked
+                            reviews.append(review)
+
+                        return ReviewSchema().dump(reviews, many=True)
+                    return []
+
+                reviews = (
                     session.query(Review, is_liked)
                     .order_by(desc(Review.created_at))
                     .offset(offset)
                     .limit(limit)
                     .all()
                 )
-
-                reviews = []
-                for review, is_liked in reviews_tuple:
-                    review.is_liked = is_liked
-                    reviews.append(review)
-
-                # if not reviews:
-                #     return []
-                
                 return ReviewSchema().dump(reviews, many=True)
             
         except Exception as e:

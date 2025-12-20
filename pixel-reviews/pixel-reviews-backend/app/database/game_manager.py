@@ -33,18 +33,19 @@ class GameManager(DatabaseBase):
             return GameSchema().dump(game)
 
     @classmethod
-    def find_or_create_game(cls, slug: str, user_id: int) -> Optional[dict]:
+    def find_or_create_game(cls, slug: str, user_id: Optional[int] = None) -> Optional[dict]:
         """Find existing game or create from RAWG API"""
         try:
             with cls.get_session() as session:
                 # Check if the game is on the user's wishlist
-                in_user_wishlist = cls._in_user_wishlist_query(user_id, slug)
-                game_tuple = session.query(Game, in_user_wishlist).filter(Game.slug == slug).first() # (Game(), true or false)
-                game = game_tuple[0]
-                game.in_wishlist = game_tuple[1]
+                if user_id:
+                    in_user_wishlist = cls._in_user_wishlist_query(user_id, slug)
+                    game_tuple = session.query(Game, in_user_wishlist).filter(Game.slug == slug).first() # (Game(), true or false) or None
 
-                if game:
-                    return GameSchema().dump(game)
+                    if game_tuple:
+                        game = game_tuple[0]
+                        game.in_wishlist = game_tuple[1]
+                        return GameSchema().dump(game)
 
                 # Fetch from API
                 game_data = rawg_api.get_game_details(slug)
