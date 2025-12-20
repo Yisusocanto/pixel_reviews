@@ -22,7 +22,7 @@ class UserSchema(SQLAlchemySchema):
     ratings = fields.Nested("RatingSchema", many=True, exclude=("author",))
     wishlist = fields.Nested("WishlistItemSchema", many=True, exclude=("user",))
 
-    # Property's
+    # Properties
     average_rating = fields.Method("get_average_rating", data_key="averageRating")
     total_ratings = fields.Method("get_total_ratings", data_key="totalRatings")
     total_reviews = fields.Method("get_total_reviews", data_key="totalReviews")

@@ -1,6 +1,6 @@
 import { User } from "@/types/userTypes";
 import { Card } from "@heroui/react";
-import { Gamepad2, MessageSquare, Star } from "lucide-react";
+import { Gamepad2, Heart, MessageSquare, Star } from "lucide-react";
 
 interface StatsCardsProps {
   user: User;
@@ -8,8 +8,8 @@ interface StatsCardsProps {
 
 function StatsCards({ user }: StatsCardsProps) {
   return (
-    <div className="w-full flex flex-col md:flex-row gap-4 md:gap-6 justify-between">
-      <Card className="border flex flex-row justify-between gap-4 p-7 w-full">
+    <div className="w-full flex flex-col lg:flex-row gap-4 xl:gap-6 justify-between">
+      <Card className="border flex flex-row justify-between items-center  gap-4 p-7 w-full">
         <div className="flex flex-col items-start gap-2">
           <h3 className="text-lg">Total Reviews</h3>
           <span className="font-bold text-4xl">{user?.totalReviews}</span>
@@ -20,7 +20,7 @@ function StatsCards({ user }: StatsCardsProps) {
           </div>
         </div>
       </Card>
-      <Card className="border flex flex-row justify-between gap-4 p-7  w-full">
+      <Card className="border flex flex-row justify-between items-center  gap-4 p-7  w-full">
         <div className="flex flex-col items-start gap-2">
           <h3 className="text-lg">Average Ratings</h3>
           <span className="font-bold text-4xl">
@@ -36,7 +36,7 @@ function StatsCards({ user }: StatsCardsProps) {
           </div>
         </div>
       </Card>
-      <Card className="border flex flex-row justify-between gap-4 p-7 w-full">
+      <Card className="border flex flex-row justify-between items-center gap-4 p-7 w-full">
         <div className="flex flex-col items-start gap-2">
           <h3 className="text-lg">Total Ratings</h3>
           <span className="font-bold text-4xl">{user?.totalRatings}</span>
@@ -44,6 +44,17 @@ function StatsCards({ user }: StatsCardsProps) {
         <div className="flex items-center">
           <div className="bg-blue-400/10 p-3 rounded-xl">
             <Gamepad2 size={36} className="text-blue-500" />
+          </div>
+        </div>
+      </Card>
+      <Card className="border flex flex-row justify-between items-center gap-4 p-7 w-full">
+        <div className="flex flex-col items-start gap-2">
+          <h3 className="text-lg">Total Likes</h3>
+          <span className="font-bold text-4xl">{user?.totalLikes}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="bg-danger-soft-hover p-3 rounded-xl">
+            <Heart size={36} className="text-danger" />
           </div>
         </div>
       </Card>
