@@ -178,7 +178,7 @@ const FeedReviewCard = React.forwardRef<HTMLDivElement, FeedReviewCard>(
                     <p className="text-xs sm:text-sm text-muted mb-0.5">
                       Author
                     </p>
-                    <LinkHero asChild>
+                    <LinkHero>
                       <Link href={`/users/${review.author?.username}`}>
                         <p className="text-sm sm:text-base font-medium hover:text-muted">
                           {review.author?.username}

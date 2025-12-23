@@ -171,81 +171,83 @@ function CreateReviewModal({
   return (
     <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
       <Button onPress={handleOpenModal}>{getButtonText()}</Button>
-      <Modal.Container placement="center" variant="blur">
-        <Modal.Dialog className="w-sm h-auto max">
-          {({ close }) => (
-            <>
-              <Modal.CloseTrigger />
-              <Modal.Header>
-                <Modal.Heading>
-                  {isEditing
-                    ? "Edit your review"
-                    : "Write a review for this game"}
-                </Modal.Heading>
-                <h2 className={`${orbitron.className} text-2xl font-bold`}>
-                  {game.title}
-                </h2>
-              </Modal.Header>
-              <Modal.Body className="flex flex-col gap-4">
-                <div>
-                  <Label>Rating</Label>
-                  <RatingComponent
-                    size="lg"
-                    rating={score}
-                    editable
-                    showValue
-                    onRatingChange={setScore}
-                  />
-                  {ratingError && (
-                    <span className="text-danger">{ratingError}</span>
-                  )}
-                </div>
-                <Form onSubmit={onSubmit} id="create-review-form">
-                  <TextField isInvalid={!!errors.title}>
-                    <Label>Title</Label>
-                    <Input
-                      type="text"
-                      value={titleValue}
-                      {...register("title")}
+      <Modal.Backdrop variant="blur">
+        <Modal.Container placement="center">
+          <Modal.Dialog className="w-sm h-auto max">
+            {({ close }) => (
+              <>
+                <Modal.CloseTrigger />
+                <Modal.Header>
+                  <Modal.Heading>
+                    {isEditing
+                      ? "Edit your review"
+                      : "Write a review for this game"}
+                  </Modal.Heading>
+                  <h2 className={`${orbitron.className} text-2xl font-bold`}>
+                    {game.title}
+                  </h2>
+                </Modal.Header>
+                <Modal.Body className="flex flex-col gap-4">
+                  <div>
+                    <Label>Rating</Label>
+                    <RatingComponent
+                      size="lg"
+                      rating={score}
+                      editable
+                      showValue
+                      onRatingChange={setScore}
                     />
-                    <div className="flex justify-between text-tiny text-default-400">
-                      <FieldError>{errors.title?.message}</FieldError>
-                      <span>{titleValue.length}/100</span>
-                    </div>
-                  </TextField>
-                  <TextField isInvalid={!!errors.content}>
-                    <Label>Content</Label>
-                    <TextArea
-                      value={contentValue}
-                      {...register("content")}
-                      className={"h-30"}
-                    />
-                    <div className="flex justify-between text-tiny text-default-400">
-                      <FieldError>{errors.content?.message}</FieldError>
-                      <span>{contentValue.length}/3000</span>
-                    </div>
-                  </TextField>
-                </Form>
-              </Modal.Body>
-              <Modal.Footer className="flex justify-between">
-                <Button variant="secondary" onPress={close}>
-                  Close
-                </Button>
-                <div className="flex gap-2">
-                  {isEditing && (
-                    <Button variant="danger" onPress={handleDeleteReview}>
-                      Delete
-                    </Button>
-                  )}
-                  <Button type="submit" form="create-review-form">
-                    {getSubmitButtonText()}
+                    {ratingError && (
+                      <span className="text-danger">{ratingError}</span>
+                    )}
+                  </div>
+                  <Form onSubmit={onSubmit} id="create-review-form">
+                    <TextField isInvalid={!!errors.title}>
+                      <Label>Title</Label>
+                      <Input
+                        type="text"
+                        value={titleValue}
+                        {...register("title")}
+                      />
+                      <div className="flex justify-between text-tiny text-default-400">
+                        <FieldError>{errors.title?.message}</FieldError>
+                        <span>{titleValue.length}/100</span>
+                      </div>
+                    </TextField>
+                    <TextField isInvalid={!!errors.content}>
+                      <Label>Content</Label>
+                      <TextArea
+                        value={contentValue}
+                        {...register("content")}
+                        className={"h-30"}
+                      />
+                      <div className="flex justify-between text-tiny text-default-400">
+                        <FieldError>{errors.content?.message}</FieldError>
+                        <span>{contentValue.length}/3000</span>
+                      </div>
+                    </TextField>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer className="flex justify-between">
+                  <Button variant="secondary" onPress={close}>
+                    Close
                   </Button>
-                </div>
-              </Modal.Footer>
-            </>
-          )}
-        </Modal.Dialog>
-      </Modal.Container>
+                  <div className="flex gap-2">
+                    {isEditing && (
+                      <Button variant="danger" onPress={handleDeleteReview}>
+                        Delete
+                      </Button>
+                    )}
+                    <Button type="submit" form="create-review-form">
+                      {getSubmitButtonText()}
+                    </Button>
+                  </div>
+                </Modal.Footer>
+              </>
+            )}
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

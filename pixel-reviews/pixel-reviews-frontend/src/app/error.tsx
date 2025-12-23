@@ -52,7 +52,7 @@ export default function GlobalError({ error, reset }: ErrorProps) {
             <RefreshCw className="w-4 h-4" />
             Try Again
           </Button>
-          <Button className="flex items-center gap-2 px-6" asChild>
+          <Button className="flex items-center gap-2 px-6">
             <Link href="/feed">
               <Home className="w-4 h-4" />
               Go Home

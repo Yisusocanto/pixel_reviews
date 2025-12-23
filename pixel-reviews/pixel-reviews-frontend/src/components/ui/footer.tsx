@@ -49,7 +49,6 @@ export function FooterUi({
                   variant="secondary"
                   isIconOnly
                   className="h-10 w-10 rounded-full"
-                  asChild
                 >
                   <a href={link.href} target="_blank" aria-label={link.label}>
                     {link.icon}

@@ -74,6 +74,7 @@ def login():
     username_from_data: str = data.get("username", "")
     username = username_from_data.lower()
     password = data.get("password", "")
+    print(username_from_data, password)
 
 
     # user validation
