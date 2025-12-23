@@ -76,16 +76,20 @@ def search(game_title):
 def game_details(slug):
     user_id = None
     token = request.cookies.get("jwt_pixel_reviews")
+    print(f"=== DEBUG GAME DETAILS ===")
+    print(f"Token exists: {token is not None}")
     if token:
         payload = JwtHandler.check_jwt(token)
         if payload:
             user_id = int(payload["sub"])
 
+    print(f"User ID passed to GameManager: {user_id}")
+
     game = GameManager.find_or_create_game(slug=slug, user_id=user_id)
     if not game:
         return jsonify({"message": "game not exits or an error occurred"}), 404
 
-    print("game ----> ",game)
+    print("game ----> ", game)
     return jsonify({"game": game}), 200
 
 

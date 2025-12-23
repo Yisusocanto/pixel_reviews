@@ -35,20 +35,25 @@ class GameManager(DatabaseBase):
         cls, slug: str, user_id: Optional[int] = None
     ) -> Optional[dict]:
         """Find existing game or create from RAWG API"""
+        print(f"=== DEBUG GameManager ===")
+        print(f"slug: {slug}, user_id: {user_id}")
         try:
             with cls.get_session() as session:
                 # Check if the game is on the user's wishlist
                 if user_id:
-                    in_wishlist = cls._in_user_wishlist_query(user_id, slug)
+                    in_wishlist = cls._in_user_wishlist_query(user_id)
                     game_tuple = (
                         session.query(Game, in_wishlist)
                         .filter(Game.slug == slug)
                         .first()
                     )  # (Game(), true or false) or None
 
+                    print(f"game_tuple: {game_tuple}")
+
                     if game_tuple:
                         game = game_tuple[0]
                         game.in_user_wishlist = game_tuple[1]
+                        print(f"in_wishlist_value from query: {in_wishlist}")
                         return GameSchema().dump(game)
                 else:
                     game = session.query(Game).filter(Game.slug == slug).first()
@@ -122,11 +127,10 @@ class GameManager(DatabaseBase):
         return new_publisher
 
     @staticmethod
-    def _in_user_wishlist_query(user_id: int, slug: str):
+    def _in_user_wishlist_query(user_id: int):
         return (
             exists()
             .where(WishlistItem.user_id == user_id)
             .where(WishlistItem.game_id == Game.game_id)
-            .where(Game.slug == slug)
             .label("game_in_wishlist")
         )
