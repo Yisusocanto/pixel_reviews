@@ -20,8 +20,21 @@ class DatabaseBase:
     def initialize(cls, database_url: str = None):
         """Initialize database connection (call once at app startup)"""
         if cls._engine is None:
-            db_url = DATABASE_URL
-            cls._engine = create_engine(db_url)
+            db_url = database_url or DATABASE_URL
+            cls._engine = create_engine(
+                db_url,
+                pool_pre_ping=True,
+                pool_recycle=120,
+                pool_size=3,
+                max_overflow=5,
+                pool_timeout=30,
+                connect_args={
+                    "keepalives": 1,
+                    "keepalives_idle": 30,
+                    "keepalives_interval": 10,
+                    "keepalives_count": 5,
+                },
+            )
             cls._SessionLocal = sessionmaker(bind=cls._engine)
 
     @classmethod

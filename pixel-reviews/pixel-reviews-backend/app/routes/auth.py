@@ -20,9 +20,6 @@ def sign_up():
     username_from_data: str = data.get("username", "")
     username = username_from_data.lower()
 
-
-
-
     # the data is validated and errors and a 400 code are returned to the frontend if there are errors
     error = execute_validations(email, username, password)
     if error:
@@ -40,9 +37,7 @@ def sign_up():
 
     # The user is created and the token is created from the user_id of the created user
     user_id = UserManager.create_user(
-        email=email,
-        password=hashed_pw,
-        username=username
+        email=email, password=hashed_pw, username=username
     )
     if isinstance(user_id, dict) and "error" in user_id:
         return jsonify({"error": user_id["error"]}), 409
@@ -53,16 +48,14 @@ def sign_up():
     email_sender.welcome_email(email, username)
 
     # The response is created and the cookie is set with the token inside
-    response = make_response(
-        jsonify({"user": user})
-    )
+    response = make_response(jsonify({"user": user}))
     response.set_cookie(
         "jwt_pixel_reviews",
         token,
         max_age=86400,
         httponly=True,
         secure=True,
-        samesite='None',
+        samesite="None",
     )
     return response, 200
 
@@ -74,8 +67,6 @@ def login():
     username_from_data: str = data.get("username", "")
     username = username_from_data.lower()
     password = data.get("password", "")
-    print(username_from_data, password)
-
 
     # user validation
     hashed_password = AuthManager.get_hashed_password(username=username)
@@ -94,9 +85,7 @@ def login():
     user = UserManager.get_user_by_username(username=username)
 
     # The response is created and the cookie is set with the token inside
-    response = make_response(
-        jsonify({"user": user})
-    )
+    response = make_response(jsonify({"user": user}))
 
     response.set_cookie(
         "jwt_pixel_reviews",
@@ -104,7 +93,7 @@ def login():
         max_age=86400,
         httponly=True,
         secure=True,
-        samesite='None',
+        samesite="None",
     )
     return response, 200
 
@@ -117,7 +106,7 @@ def logout():
         "jwt_pixel_reviews",
         "",
         max_age=0,
-        samesite='None',
+        samesite="None",
         httponly=True,
         secure=True,
     )
@@ -180,9 +169,7 @@ def password_reset(reset_token):
     hashed_password = password_handler.hash_password(new_password)
 
     # The password is updated in the database
-    message = AuthManager.update_password(
-        user_id=user_id, new_password=hashed_password
-    )
+    message = AuthManager.update_password(user_id=user_id, new_password=hashed_password)
     if not message:
         return jsonify({"error": "error updating the password"}), 500
 
