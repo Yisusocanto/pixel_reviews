@@ -85,6 +85,7 @@ def game_details(slug):
     if not game:
         return jsonify({"message": "game not exits or an error occurred"}), 404
 
+    print("game ----> ",game)
     return jsonify({"game": game}), 200
 
 
