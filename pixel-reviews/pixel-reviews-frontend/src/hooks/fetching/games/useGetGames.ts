@@ -1,7 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getGameDetails, searchGames } from "@/services/gameService";
+import {
+  getGameDetails,
+  inUserWishlist,
+  searchGames,
+} from "@/services/gameService";
 
 export const useGameDetails = (slug: string) => {
   return useQuery({
@@ -20,5 +24,13 @@ export const useSearchGames = (gameTitle: string) => {
     enabled: !!gameTitle,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const useInUserWishlist = (gameID: number, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ["inUserWishlist", gameID],
+    queryFn: () => inUserWishlist(gameID),
+    enabled,
   });
 };

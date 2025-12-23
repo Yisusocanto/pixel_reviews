@@ -14,7 +14,6 @@ class GameSchema(SQLAlchemySchema):
     image_url = auto_field(data_key="imageURL")
     screenshots = auto_field()
     description = auto_field()
-    in_user_wishlist = fields.Bool(data_key="inUserWishlist")
 
     # Relationships
     reviews = fields.Nested(

@@ -19,3 +19,10 @@ export const searchGames = async (gameTitle: string) => {
   const { data } = await axiosInstance.get(`/main/search/${gameTitle}`);
   return data;
 };
+
+export const inUserWishlist = async (gameID: number) => {
+  const { data } = await axiosInstance.get(
+    `/main/games/${gameID}/in_user_wishlist`
+  );
+  return data.inUserWishlist;
+};

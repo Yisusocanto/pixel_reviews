@@ -7,7 +7,6 @@ export interface Game {
   releaseDate: string;
   imageURL: string;
   description: string;
-  inUserWishlist: boolean;
   screenshots?: Array<string>;
   averageRating: number;
   totalRatings: number;

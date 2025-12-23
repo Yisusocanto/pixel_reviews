@@ -29,7 +29,6 @@ async function page({ params }: pageProps) {
 
   try {
     data = await getGameDetails(slug, cookieHeader);
-    console.log("inUserWishlist from backend:", data.game?.inUserWishlist);
   } catch (error) {
     if (axios.isAxiosError(error) && error.status === 404) notFound();
     throw error;
