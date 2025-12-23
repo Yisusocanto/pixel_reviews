@@ -74,23 +74,24 @@ def search(game_title):
 
 @main_bp.route("/games/<slug>", methods=["GET"])
 def game_details(slug):
-    user_id = None
-    token = request.cookies.get("jwt_pixel_reviews")
-    print(f"=== DEBUG GAME DETAILS ===")
-    print(f"Token exists: {token is not None}")
-    if token:
-        payload = JwtHandler.check_jwt(token)
-        if payload:
-            user_id = int(payload["sub"])
-
-    print(f"User ID passed to GameManager: {user_id}")
-
-    game = GameManager.find_or_create_game(slug=slug, user_id=user_id)
+    game = GameManager.find_or_create_game(slug=slug)
     if not game:
         return jsonify({"message": "game not exits or an error occurred"}), 404
 
     print("game ----> ", game)
     return jsonify({"game": game}), 200
+
+
+@main_bp.route("/games/<game_id>/in_user_wishlist", methods=["GET"])
+@token_required
+def in_user_wishlist(game_id):
+    payload = g.user_payload
+    user_id = int(payload["sub"])
+
+    in_user_wishlist_value = GameManager.in_user_wishlist(
+        user_id=user_id, game_id=game_id
+    )
+    return jsonify({"inUserWishlist": in_user_wishlist_value}), 200
 
 
 @main_bp.route("/user_review/<game_id>", methods=["GET"])

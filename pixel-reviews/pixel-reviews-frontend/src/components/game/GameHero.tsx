@@ -43,14 +43,7 @@ const GameHero = ({ game }: GameHeroProps) => {
             </span>
           </div>
         </div>
-        <div>
-          {game && (
-            <WishListButton
-              gameID={game?.gameID}
-              inUserWishlist={game?.inUserWishlist}
-            />
-          )}
-        </div>
+        <div>{game && <WishListButton gameID={game?.gameID} />}</div>
       </div>
     </div>
   );

@@ -7,27 +7,36 @@ import { useAuth } from "@/providers/AuthProvider";
 import { Heart } from "lucide-react";
 import { useToggleWishlistItem } from "@/hooks/fetching/wishlist/useWishlist";
 import { toast } from "sonner";
+import { useInUserWishlist } from "@/hooks/fetching/games/useGetGames";
 
 interface WishlistButtonProps {
-  inUserWishlist: boolean;
   gameID: number;
 }
 
-function WishlistButton({ gameID, inUserWishlist }: WishlistButtonProps) {
+function WishlistButton({ gameID }: WishlistButtonProps) {
   const { user, isAuthenticated } = useAuth();
-  const [inWishlist, setInWishlist] = useState<boolean>(inUserWishlist);
+  const [inWishlist, setInWishlist] = useState<boolean>(false);
   const router = useRouter();
 
+  const { data: inWishlistFromServer } = useInUserWishlist(
+    gameID,
+    isAuthenticated
+  );
+
   useEffect(() => {
-    setInWishlist(inUserWishlist);
-  }, [inUserWishlist]);
+    if (inWishlistFromServer !== undefined) {
+      setInWishlist(inWishlistFromServer);
+    }
+  }, [inWishlistFromServer]);
 
   const { mutate: toggleWishlistItem, isPending } = useToggleWishlistItem(
     user?.username ?? ""
   );
 
   const handleToggleWishlistItem = async () => {
-    if (!isAuthenticated) router.push("/login");
+    if (!isAuthenticated) {
+      return router.push("/login");
+    }
 
     toggleWishlistItem(gameID, {
       onSuccess: () => {

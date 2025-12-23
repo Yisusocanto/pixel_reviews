@@ -39,27 +39,9 @@ class GameManager(DatabaseBase):
         print(f"slug: {slug}, user_id: {user_id}")
         try:
             with cls.get_session() as session:
-                # Check if the game is on the user's wishlist
-                if user_id:
-                    in_wishlist = cls._in_user_wishlist_query(user_id)
-                    game_tuple = (
-                        session.query(Game, in_wishlist)
-                        .filter(Game.slug == slug)
-                        .first()
-                    )  # (Game(), true or false) or None
-
-                    print(f"game_tuple: {game_tuple}")
-
-                    if game_tuple:
-                        game = game_tuple[0]
-                        game.in_user_wishlist = game_tuple[1]
-                        print(f"in_wishlist_value from query: {in_wishlist}")
-                        return GameSchema().dump(game)
-                else:
-                    game = session.query(Game).filter(Game.slug == slug).first()
-                    if game:
-                        game.in_user_wishlist = False
-                        return GameSchema().dump(game)
+                game = session.query(Game).filter(Game.slug == slug).first()
+                if game:
+                    return GameSchema().dump(game)
 
                 # Fetch from API if the game does not exit
                 game_data = rawg_api.get_game_details(slug)
@@ -76,7 +58,6 @@ class GameManager(DatabaseBase):
                     screenshots=game_data["screenshots"],
                     description=game_data["description"],
                 )
-                new_game.in_user_wishlist = False
                 session.add(new_game)
 
                 # Add developers
@@ -126,11 +107,17 @@ class GameManager(DatabaseBase):
         session.add(new_publisher)
         return new_publisher
 
-    @staticmethod
-    def _in_user_wishlist_query(user_id: int):
-        return (
-            exists()
-            .where(WishlistItem.user_id == user_id)
-            .where(WishlistItem.game_id == Game.game_id)
-            .label("game_in_wishlist")
-        )
+    @classmethod
+    def in_user_wishlist(cls, user_id: int, game_id: int):
+        with cls.get_session() as session:
+            wishlist_item = (
+                session.query(WishlistItem)
+                .filter(
+                    WishlistItem.user_id == user_id, WishlistItem.game_id == game_id
+                )
+                .first()
+            )
+            if not wishlist_item:
+                return False
+
+            return True
