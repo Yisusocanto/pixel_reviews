@@ -1,19 +1,17 @@
 from sqlalchemy import exists
-
 from app.database.base import DatabaseBase
 from app.models import Game, Developer, Publisher, WishlistItem
 from app.schemas.game_schema import GameSchema
-from app.schemas.developer_schema import DeveloperSchema
-from app.schemas.publisher_schema import PublisherSchema
 from app.services.rawg_api import RawgApi
 from datetime import date
 from typing import Optional
 
 rawg_api = RawgApi()
 
+
 class GameManager(DatabaseBase):
-    """Manages game operations""" 
-    
+    """Manages game operations"""
+
     @classmethod
     def get_game_by_slug(cls, game_slug: str) -> Optional[dict]:
         """Get game by slug"""
@@ -33,14 +31,20 @@ class GameManager(DatabaseBase):
             return GameSchema().dump(game)
 
     @classmethod
-    def find_or_create_game(cls, slug: str, user_id: Optional[int] = None) -> Optional[dict]:
+    def find_or_create_game(
+        cls, slug: str, user_id: Optional[int] = None
+    ) -> Optional[dict]:
         """Find existing game or create from RAWG API"""
         try:
             with cls.get_session() as session:
                 # Check if the game is on the user's wishlist
                 if user_id:
                     in_wishlist = cls._in_user_wishlist_query(user_id, slug)
-                    game_tuple = session.query(Game, in_wishlist).filter(Game.slug == slug).first() # (Game(), true or false) or None
+                    game_tuple = (
+                        session.query(Game, in_wishlist)
+                        .filter(Game.slug == slug)
+                        .first()
+                    )  # (Game(), true or false) or None
 
                     if game_tuple:
                         game = game_tuple[0]
@@ -52,7 +56,7 @@ class GameManager(DatabaseBase):
                         game.in_user_wishlist = False
                         return GameSchema().dump(game)
 
-                # Fetch from API
+                # Fetch from API if the game does not exit
                 game_data = rawg_api.get_game_details(slug)
                 if not game_data:
                     return None
@@ -67,26 +71,20 @@ class GameManager(DatabaseBase):
                     screenshots=game_data["screenshots"],
                     description=game_data["description"],
                 )
-                new_game.in_wishlist = False
+                new_game.in_user_wishlist = False
                 session.add(new_game)
 
                 # Add developers
                 for dev_data in game_data["developers"]:
                     developer = cls._find_or_create_developer(
-                        session, 
-                        dev_data["rawg_id"], 
-                        dev_data["name"], 
-                        dev_data["slug"]
+                        session, dev_data["rawg_id"], dev_data["name"], dev_data["slug"]
                     )
                     new_game.developers.append(developer)
 
                 # Add publishers
                 for pub_data in game_data["publishers"]:
                     publisher = cls._find_or_create_publisher(
-                        session,
-                        pub_data["rawg_id"], 
-                        pub_data["name"], 
-                        pub_data["slug"]
+                        session, pub_data["rawg_id"], pub_data["name"], pub_data["slug"]
                     )
                     new_game.publishers.append(publisher)
 
@@ -98,7 +96,9 @@ class GameManager(DatabaseBase):
             return None
 
     @staticmethod
-    def _find_or_create_developer(session, rawg_id: int, name: str, slug: str) -> Developer:
+    def _find_or_create_developer(
+        session, rawg_id: int, name: str, slug: str
+    ) -> Developer:
         """Internal helper to find or create developer"""
         developer = session.query(Developer).filter(Developer.slug == slug).first()
         if developer:
@@ -109,7 +109,9 @@ class GameManager(DatabaseBase):
         return new_developer
 
     @staticmethod
-    def _find_or_create_publisher(session, rawg_id: int, name: str, slug: str) -> Publisher:
+    def _find_or_create_publisher(
+        session, rawg_id: int, name: str, slug: str
+    ) -> Publisher:
         """Internal helper to find or create publisher"""
         publisher = session.query(Publisher).filter(Publisher.slug == slug).first()
         if publisher:
@@ -122,9 +124,9 @@ class GameManager(DatabaseBase):
     @staticmethod
     def _in_user_wishlist_query(user_id: int, slug: str):
         return (
-                exists()
-                .where(WishlistItem.user_id == user_id)
-                .where(WishlistItem.game_id == Game.game_id)
-                .where(Game.slug == slug)
-                .label("game_in_wishlist")
-            )
+            exists()
+            .where(WishlistItem.user_id == user_id)
+            .where(WishlistItem.game_id == Game.game_id)
+            .where(Game.slug == slug)
+            .label("game_in_wishlist")
+        )

@@ -1,6 +1,5 @@
 from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
 from marshmallow import fields
-from app.models import WishlistItem
 from app.models.game import Game
 
 
@@ -18,8 +17,9 @@ class GameSchema(SQLAlchemySchema):
     in_user_wishlist = fields.Bool(data_key="inUserWishlist")
 
     # Relationships
-    reviews = fields.Nested("ReviewSchema", many=True, exclude=("game",))
-    ratings = fields.Nested("RatingSchema", many=True, exclude=("game",))
+    reviews = fields.Nested(
+        "ReviewSchema", many=True, exclude=("game",)
+    )  # Removing in the future
     developers = fields.Nested("DeveloperSchema", many=True, exclude=("games",))
     publishers = fields.Nested("PublisherSchema", many=True, exclude=("games",))
 

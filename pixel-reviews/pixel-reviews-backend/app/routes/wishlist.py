@@ -18,7 +18,9 @@ def add_to_wishlist():
     if not game_id:
         return jsonify({"error": "game_id was not provided."}), 400
 
-    wishlist_item = WishlistManager.toggle_wishlist_item(game_id=game_id, user_id=user_id)
+    wishlist_item = WishlistManager.toggle_wishlist_item(
+        game_id=game_id, user_id=user_id
+    )
 
     if isinstance(wishlist_item, dict) and "error" in wishlist_item:
         return jsonify(wishlist_item), 500
@@ -27,5 +29,3 @@ def add_to_wishlist():
         return jsonify({"error": "Unknown error."}), 500
 
     return jsonify({"success": "Game has been added/removed to/from the wishlist"}), 200
-
-

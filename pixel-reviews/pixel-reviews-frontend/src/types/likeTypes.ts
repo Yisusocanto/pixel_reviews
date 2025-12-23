@@ -1,7 +1,7 @@
-import { Review } from "./gameTypes";
-import { User } from "./userTypes";
+import { Review } from "@/types/reviewTypes";
+import { User } from "@/types/userTypes";
 
-interface Like {
+export interface Like {
   likeID: number;
   userID: number;
   reviewID: number;

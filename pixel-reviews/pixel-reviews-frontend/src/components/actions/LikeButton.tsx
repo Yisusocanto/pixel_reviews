@@ -2,7 +2,7 @@
 
 import { useLikes } from "@/hooks/fetching/likes/useLikes";
 import { Heart } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import { useAuth } from "@/providers/AuthProvider";
 import { useRouter } from "next/navigation";
@@ -11,12 +11,18 @@ interface LikeButtonProps {
   hasLike: boolean;
   likesCount: number;
   reviewID: number;
+  authorUsername: string;
 }
 
-function LikeButton({ hasLike, likesCount, reviewID }: LikeButtonProps) {
+function LikeButton({
+  hasLike,
+  likesCount,
+  reviewID,
+  authorUsername,
+}: LikeButtonProps) {
   const { isAuthenticated } = useAuth();
   const [isLiked, setIsLiked] = useState(hasLike);
-  const { mutate: toggleLike } = useLikes();
+  const { mutate: toggleLike } = useLikes(authorUsername);
   const router = useRouter();
 
   const handleToggleLike = () => {

@@ -4,14 +4,14 @@ import { getGameDetails } from "@/services/gameService";
 import GameHero from "@/components/game/GameHero";
 import AboutGameCard from "@/components/game/AboutGameCard";
 import { notFound } from "next/navigation";
-import RatingStatistics from "@/components/review/RatingStatistics";
+// import RatingStatistics from "@/components/review/RatingStatistics";
 import ExpandableGallery from "@/components/ui/gallery-animation";
 import ReviewRatingCard from "@/components/review/ReviewRatingCard";
 import axios from "axios";
 import GameInformationCard from "@/components/game/GameInformationCard";
 import CommunityCard from "@/components/game/CommunityCard";
 import { cookies } from "next/headers";
-import type { Review } from "@/types/gameTypes";
+import type { Review } from "@/types/reviewTypes";
 
 interface pageProps {
   params: Promise<{
@@ -71,7 +71,7 @@ async function page({ params }: pageProps) {
                   </div>
                 )}
 
-                <div className="w-full items-center">
+                {/* <div className="w-full items-center">
                   <h3 className="text-2xl font-bold mb-2 m-auto w-xs sm:w-sm md:w-full">
                     Statistics
                   </h3>
@@ -79,7 +79,7 @@ async function page({ params }: pageProps) {
                     classname="m-auto md:m-0"
                     gameData={data?.game || undefined}
                   />
-                </div>
+                </div> */}
               </div>
             </Tabs.Panel>
             {/* reviews of the videogame */}

@@ -14,11 +14,13 @@ interface WishlistButtonProps {
 }
 
 function WishlistButton({ gameID, inUserWishlist }: WishlistButtonProps) {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [inWishlist, setInWishlist] = useState<boolean>(inUserWishlist);
   const router = useRouter();
 
-  const { mutate: toggleWishlistItem, isPending } = useToggleWishlistItem();
+  const { mutate: toggleWishlistItem, isPending } = useToggleWishlistItem(
+    user?.username ?? ""
+  );
 
   const handleToggleWishlistItem = async () => {
     if (!isAuthenticated) router.push("/login");

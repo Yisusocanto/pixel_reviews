@@ -5,12 +5,12 @@ import { toggleWishlistItem } from "@/services/wishlistService";
 import { toast } from "sonner";
 import axios from "axios";
 
-export const useToggleWishlistItem = () => {
+export const useToggleWishlistItem = (username: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (gameID: number) => toggleWishlistItem(gameID),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      queryClient.invalidateQueries({ queryKey: ["userWishlist", username] });
     },
     onError: (error) => {
       const errorMsj = axios.isAxiosError(error)

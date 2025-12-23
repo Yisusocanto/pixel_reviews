@@ -1,13 +1,19 @@
 "use client";
 
-import { useRef } from "react";
-import FeedReviewCard from "@/components/review/FeedReviewCard";
-import FeedReviewCardSkeleton from "@/components/review/FeedReviewCardSkeleton";
+import WishlistItemCard from "@/components/user/WishlistItemCard";
+import { useInfiniteWishlist } from "@/hooks/fetching/wishlist/useInfiniteWishlist";
+import { WishlistItem } from "@/types/wishlistType";
 import { Spinner } from "@heroui/react";
-import { useInfiniteReviews } from "@/hooks/fetching/reviews/useInfiniteReviews";
-import type { Review } from "@/types/reviewTypes";
+import { use, useRef } from "react";
 
-function Feed() {
+interface WishlistPageProps {
+  params: Promise<{
+    username: string;
+  }>;
+}
+
+export default function WishlistPage({ params }: WishlistPageProps) {
+  const { username } = use(params);
   const {
     data,
     error,
@@ -15,7 +21,7 @@ function Feed() {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteReviews();
+  } = useInfiniteWishlist(username);
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = (node: HTMLDivElement | null) => {
@@ -29,29 +35,19 @@ function Feed() {
     if (node) observer.current.observe(node);
   };
 
-  if (status === "pending") {
-    return (
-      <div className="flex flex-col items-center gap-2">
-        {[...Array(3)].map((_, i) => (
-          <FeedReviewCardSkeleton key={i} className="w-xs sm:w-sm md:w-xl" />
-        ))}
-      </div>
-    );
-  }
-
   if (status === "error") {
     return <span>Error: {(error as any).message}</span>;
   }
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="w- full max-w-3/4 mx-auto flex flex-col gap-2">
       {data?.pages.map((page, i) => (
-        <div key={i}>
-          {page.data.results.map((review: Review) => (
-            <FeedReviewCard
-              review={review}
-              className="w-xs sm:w-sm md:w-xl"
-              key={review.reviewID}
+        <div key={i} className="flex flex-col gap-4">
+          {page.data.results.map((wishlistItem: WishlistItem) => (
+            <WishlistItemCard
+              username={username}
+              wishlistItem={wishlistItem}
+              key={wishlistItem.wishlistItemID}
             />
           ))}
         </div>
@@ -64,12 +60,10 @@ function Feed() {
         {isFetchingNextPage && <Spinner />}
         {!hasNextPage && data && (
           <span className="text-gray-500 text-sm mt-4">
-            No more reviews to load
+            No more wishlist's items to load
           </span>
         )}
       </div>
     </div>
   );
 }
-
-export default Feed;

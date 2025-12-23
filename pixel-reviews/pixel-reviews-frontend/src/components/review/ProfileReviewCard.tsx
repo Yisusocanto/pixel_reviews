@@ -10,7 +10,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { dateFormatter } from "@/lib/dateFormatter";
 import { useDeleteReview } from "@/hooks/fetching/reviews/useReview";
-import type { Review } from "@/types/gameTypes";
+import type { Review } from "@/types/reviewTypes";
+import LikeButton from "../actions/LikeButton";
 
 interface ProfileReviewCardProps {
   review: Review;
@@ -23,7 +24,10 @@ function ProfileReviewCard({ review, username }: ProfileReviewCardProps) {
   const MAX_LENGTH = 150;
   const ownReview = user?.username === username;
 
-  const { mutate: deleteReview } = useDeleteReview(review.game?.slug || "");
+  const { mutate: deleteReview } = useDeleteReview(
+    review.game?.slug ?? "",
+    user?.username ?? ""
+  );
 
   const toggleReadMore = () => {
     setIsExpanded(!isExpanded);
@@ -101,6 +105,14 @@ function ProfileReviewCard({ review, username }: ProfileReviewCardProps) {
                   {isExpanded ? "Read Less" : "Read More"}
                 </button>
               )}
+            </div>
+            <div>
+              <LikeButton
+                hasLike={review.isLiked}
+                likesCount={review.totalLikes}
+                reviewID={review.reviewID}
+                authorUsername={review.author?.username ?? ""}
+              />
             </div>
           </div>
           {ownReview && (

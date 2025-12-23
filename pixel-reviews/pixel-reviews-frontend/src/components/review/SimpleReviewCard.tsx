@@ -7,7 +7,7 @@ import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { Avatar, Card } from "@heroui/react";
 import Link from "next/link";
-import type { Review } from "@/types/gameTypes";
+import type { Review } from "@/types/reviewTypes";
 
 export interface SimpleReviewCardProps {
   review: Review;

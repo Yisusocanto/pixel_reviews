@@ -7,9 +7,9 @@ import {
   deleteReview,
 } from "@/services/apiService";
 import { getUserReview } from "@/services/reviewsService";
-import type { Rating, Review } from "@/types/gameTypes";
 import { toast } from "sonner";
 import axios from "axios";
+import type { Rating, Review } from "@/types/reviewTypes";
 
 type UserReviewData = {
   review: Review | null;
@@ -85,7 +85,7 @@ export const useCreateRating = (gameSlug: string) => {
   });
 };
 
-export const useCreateReview = (gameSlug: string) => {
+export const useCreateReview = (gameSlug: string, username: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -158,11 +158,12 @@ export const useCreateReview = (gameSlug: string) => {
       queryClient.invalidateQueries({ queryKey: ["userReview", gameSlug] });
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
+      queryClient.invalidateQueries({ queryKey: ["userReviews", username] });
     },
   });
 };
 
-export const useDeleteReview = (gameSlug: string) => {
+export const useDeleteReview = (gameSlug: string, username: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -206,6 +207,7 @@ export const useDeleteReview = (gameSlug: string) => {
       queryClient.invalidateQueries({ queryKey: ["userReview", gameSlug] });
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
       queryClient.invalidateQueries({ queryKey: ["reviews"] });
+      queryClient.invalidateQueries({ queryKey: ["userReviews", username] });
     },
   });
 };

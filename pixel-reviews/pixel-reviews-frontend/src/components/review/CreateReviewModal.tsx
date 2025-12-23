@@ -3,7 +3,8 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Game, Rating, Review } from "@/types/gameTypes";
+import { Game } from "@/types/gameTypes";
+import { Review, Rating } from "@/types/reviewTypes";
 import {
   Modal,
   Label,
@@ -65,7 +66,7 @@ function CreateReviewModal({
   const [isOpen, setIsOpen] = useState(false);
   const [score, setScore] = useState(0);
   const [ratingError, setRatingError] = useState("");
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const router = useRouter();
 
   const isEditing = !!userReview;
@@ -95,8 +96,14 @@ function CreateReviewModal({
   const titleValue = watch("title") || "";
   const contentValue = watch("content") || "";
 
-  const { mutate: createReview } = useCreateReview(game.slug);
-  const { mutate: deleteReview } = useDeleteReview(game.slug);
+  const { mutate: createReview } = useCreateReview(
+    game.slug,
+    user?.username ?? ""
+  );
+  const { mutate: deleteReview } = useDeleteReview(
+    game.slug,
+    user?.username ?? ""
+  );
 
   const getErrorMessage = (error: unknown): string => {
     if (axios.isAxiosError(error)) {

@@ -1,13 +1,20 @@
 "use client";
 
-import { useRef } from "react";
-import FeedReviewCard from "@/components/review/FeedReviewCard";
-import FeedReviewCardSkeleton from "@/components/review/FeedReviewCardSkeleton";
+import ProfileReviewCard from "@/components/review/ProfileReviewCard";
+import { useInfinityUserReviews } from "@/hooks/fetching/reviews/useInfiniteReviews";
+import { Review } from "@/types/reviewTypes";
 import { Spinner } from "@heroui/react";
-import { useInfiniteReviews } from "@/hooks/fetching/reviews/useInfiniteReviews";
-import type { Review } from "@/types/reviewTypes";
+import { useRef, use } from "react";
 
-function Feed() {
+interface ReviewsPageProps {
+  params: Promise<{
+    username: string;
+  }>;
+}
+
+export default function ReviewsPage({ params }: ReviewsPageProps) {
+  const { username } = use(params);
+
   const {
     data,
     error,
@@ -15,7 +22,7 @@ function Feed() {
     hasNextPage,
     isFetchingNextPage,
     status,
-  } = useInfiniteReviews();
+  } = useInfinityUserReviews(username);
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastElementRef = (node: HTMLDivElement | null) => {
@@ -29,28 +36,18 @@ function Feed() {
     if (node) observer.current.observe(node);
   };
 
-  if (status === "pending") {
-    return (
-      <div className="flex flex-col items-center gap-2">
-        {[...Array(3)].map((_, i) => (
-          <FeedReviewCardSkeleton key={i} className="w-xs sm:w-sm md:w-xl" />
-        ))}
-      </div>
-    );
-  }
-
   if (status === "error") {
     return <span>Error: {(error as any).message}</span>;
   }
 
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="w- full max-w-3/4 mx-auto flex flex-col gap-2">
       {data?.pages.map((page, i) => (
-        <div key={i}>
+        <div key={i} className="flex flex-col gap-4">
           {page.data.results.map((review: Review) => (
-            <FeedReviewCard
+            <ProfileReviewCard
+              username={username}
               review={review}
-              className="w-xs sm:w-sm md:w-xl"
               key={review.reviewID}
             />
           ))}
@@ -71,5 +68,3 @@ function Feed() {
     </div>
   );
 }
-
-export default Feed;

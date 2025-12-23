@@ -1,14 +1,14 @@
 "use client";
 
-import { toggleLike } from "@/services/likeService";
-import type { Review } from "@/types/gameTypes";
 import {
   type InfiniteData,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toggleLike } from "@/services/likeService";
 import axios from "axios";
 import { toast } from "sonner";
+import type { Review } from "@/types/reviewTypes";
 
 type ReviewsInfiniteData = InfiniteData<{
   data: {
@@ -16,7 +16,7 @@ type ReviewsInfiniteData = InfiniteData<{
   };
 }>;
 
-export const useLikes = () => {
+export const useLikes = (username: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (reviewID: number) => toggleLike(reviewID),
@@ -65,6 +65,9 @@ export const useLikes = () => {
         ? error.response?.data.error
         : "Unknown error";
       toast.error("Error", { description: errorMsj, duration: 5000 });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["userReviews", username] });
     },
   });
 };

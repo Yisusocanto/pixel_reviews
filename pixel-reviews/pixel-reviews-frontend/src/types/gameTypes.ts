@@ -1,22 +1,20 @@
-import type { User } from "@/types/userTypes";
-import type { WishlistItem } from "./wishlistType";
+import { Review } from "@/types/reviewTypes";
 
 export interface Game {
-  averageRating: number;
-  totalRatings: number;
-  totalReviews: number;
-  totalWishlist: number;
   gameID: number;
   title: string;
   slug: string;
   releaseDate: string;
   imageURL: string;
-  screenshots?: Array<string>;
   description: string;
   inUserWishlist: boolean;
+  screenshots?: Array<string>;
+  averageRating: number;
+  totalRatings: number;
+  totalReviews: number;
+  totalWishlist: number;
   developers?: Array<Developer>;
   publishers?: Array<Publisher>;
-  ratings?: Array<Rating>;
   reviews?: Array<Review>;
 }
 
@@ -39,26 +37,4 @@ export interface Publisher {
   name: string;
   slug: string;
   games?: Array<Game>;
-}
-
-export interface Rating {
-  ratingID: number;
-  score: number;
-  createdAt: string;
-  game?: Game;
-  author?: User;
-  review?: Review;
-}
-
-export interface Review {
-  reviewID: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  isLiked: boolean;
-  totalLikes: number;
-  game?: Game;
-  author?: User;
-  rating?: Rating;
 }

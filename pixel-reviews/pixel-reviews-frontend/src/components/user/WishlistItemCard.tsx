@@ -21,7 +21,9 @@ function WishlistItemCard({ username, wishlistItem }: WishlistItemCardProps) {
   const { user } = useAuth();
   const ownWishlist = user?.username === username;
 
-  const { mutate: toggleWishlistItem } = useToggleWishlistItem();
+  const { mutate: toggleWishlistItem } = useToggleWishlistItem(
+    user?.username ?? ""
+  );
 
   const handleToggleWishlistItem = async () => {
     if (user) {

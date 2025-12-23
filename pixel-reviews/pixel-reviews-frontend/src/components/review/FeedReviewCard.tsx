@@ -10,7 +10,7 @@ import { Avatar } from "@heroui/react";
 import { dateFormatter } from "@/lib/dateFormatter";
 import { orbitron } from "@/fonts/fonts";
 import { Link as LinkHero } from "@heroui/react";
-import type { Review } from "@/types/gameTypes";
+import type { Review } from "@/types/reviewTypes";
 import LikeButton from "../actions/LikeButton";
 
 export interface FeedReviewCard {
@@ -150,6 +150,7 @@ const FeedReviewCard = React.forwardRef<HTMLDivElement, FeedReviewCard>(
                   hasLike={review.isLiked}
                   likesCount={review.totalLikes}
                   reviewID={review.reviewID}
+                  authorUsername={review.author?.username ?? ""}
                 />
               </motion.div>
 

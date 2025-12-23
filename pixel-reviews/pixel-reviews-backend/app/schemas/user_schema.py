@@ -1,7 +1,6 @@
 from marshmallow_sqlalchemy import SQLAlchemySchema, auto_field
 from marshmallow import fields
 from app.models.user import User
-from .wishlist_item_schema import WishlistItemSchema
 
 
 class UserSchema(SQLAlchemySchema):
@@ -16,11 +15,6 @@ class UserSchema(SQLAlchemySchema):
     website = auto_field()
     avatar_url = auto_field(data_key="avatarUrl")
     created_at = auto_field(data_key="createdAt")
-
-    # Relationships
-    reviews = fields.Nested("ReviewSchema", many=True, exclude=("author",))
-    ratings = fields.Nested("RatingSchema", many=True, exclude=("author",))
-    wishlist = fields.Nested("WishlistItemSchema", many=True, exclude=("user",))
 
     # Properties
     average_rating = fields.Method("get_average_rating", data_key="averageRating")

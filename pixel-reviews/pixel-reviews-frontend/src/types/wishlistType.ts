@@ -1,9 +1,9 @@
-import type { User } from "./userTypes"
-import type { Game } from "./gameTypes"
+import type { User } from "@/types/userTypes";
+import type { Game } from "@/types/gameTypes";
 
 export interface WishlistItem {
-    wishlistItemId: number
-    addedAt: string
-    user: User
-    game: Game
+  wishlistItemID: number;
+  addedAt: string;
+  user: User;
+  game: Game;
 }

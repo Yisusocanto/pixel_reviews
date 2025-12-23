@@ -15,8 +15,10 @@ class ReviewSchema(SQLAlchemySchema):
     is_liked = fields.Bool(data_key="isLiked")
 
     # Relationships
-    author = fields.Nested("UserSchema", exclude=("reviews", "ratings"))
-    game = fields.Nested("GameSchema", exclude=("reviews", "ratings", "screenshots"))
+    author = fields.Nested("UserSchema")
+    game = fields.Nested(
+        "GameSchema", exclude=("reviews", "screenshots", "developers", "publishers")
+    )
     rating = fields.Nested("RatingSchema", exclude=("author", "game"))
 
     # Properties
