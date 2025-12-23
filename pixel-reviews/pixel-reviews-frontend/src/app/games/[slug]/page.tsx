@@ -13,6 +13,8 @@ import CommunityCard from "@/components/game/CommunityCard";
 import { cookies } from "next/headers";
 import type { Review } from "@/types/reviewTypes";
 
+export const dynamic = "force-dynamic";
+
 interface pageProps {
   params: Promise<{
     slug: string;
@@ -27,6 +29,7 @@ async function page({ params }: pageProps) {
 
   try {
     data = await getGameDetails(slug, cookieHeader);
+    console.log("inUserWishlist from backend:", data.game?.inUserWishlist);
   } catch (error) {
     if (axios.isAxiosError(error) && error.status === 404) notFound();
     throw error;

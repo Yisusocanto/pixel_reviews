@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Spinner } from "@heroui/react";
 import { useAuth } from "@/providers/AuthProvider";
@@ -17,6 +17,10 @@ function WishlistButton({ gameID, inUserWishlist }: WishlistButtonProps) {
   const { user, isAuthenticated } = useAuth();
   const [inWishlist, setInWishlist] = useState<boolean>(inUserWishlist);
   const router = useRouter();
+
+  useEffect(() => {
+    setInWishlist(inUserWishlist);
+  }, [inUserWishlist]);
 
   const { mutate: toggleWishlistItem, isPending } = useToggleWishlistItem(
     user?.username ?? ""
