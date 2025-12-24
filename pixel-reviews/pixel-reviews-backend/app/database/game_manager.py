@@ -30,8 +30,6 @@ class GameManager(DatabaseBase):
     @classmethod
     def find_or_create_game(cls, slug: str) -> Optional[dict]:
         """Find existing game or create from RAWG API"""
-        print(f"=== DEBUG GameManager ===")
-        print(f"slug: {slug}, user_id: {user_id}")
         try:
             with cls.get_session() as session:
                 game = session.query(Game).filter(Game.slug == slug).first()
