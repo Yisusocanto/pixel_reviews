@@ -8,7 +8,7 @@ wishlist_bp = Blueprint("wishlist", __name__, url_prefix="/wishlist")
 
 @wishlist_bp.route("/toggle", methods=["POST"])
 @token_required
-def add_to_wishlist():
+def toggle_wishlist_item():
     payload = g.user_payload
 
     data = request.get_json()

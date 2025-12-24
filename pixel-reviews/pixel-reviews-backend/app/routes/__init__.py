@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask
 import os
 from dotenv import load_dotenv
 from .auth import auth_bp
@@ -26,9 +26,13 @@ def create_app():
 
     ma.init_app(app)
 
-    CORS(app, origins=[frontend_url], supports_credentials=True, methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-         allow_headers=["Content-Type", "Authorization"])
-
+    CORS(
+        app,
+        origins=[frontend_url],
+        supports_credentials=True,
+        methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        allow_headers=["Content-Type", "Authorization"],
+    )
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)

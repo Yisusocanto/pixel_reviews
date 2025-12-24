@@ -28,15 +28,13 @@ def create_or_update_rating():
     user_id = int(payload["sub"])
 
     # Creation or updating of the rating
-    ReviewManager._create_or_update_rating(
-        game_id=game_id, user_id=user_id, score=score
-    )
+    ReviewManager.create_or_update_rating(game_id=game_id, user_id=user_id, score=score)
     # Get of the new rating and review (if exits)
     rating = ReviewManager.get_user_rating(game_id=game_id, user_id=user_id)
     review = ReviewManager.get_user_review(game_id=game_id, user_id=user_id)
 
     if not rating:
-        return jsonify({"error": "An error occurred creating the rating"})
+        return jsonify({"error": "An error occurred creating the rating"}), 500
 
     return jsonify({"rating": rating, "review": review}), 200
 
@@ -80,6 +78,7 @@ def create_or_update_review():
         return jsonify({"error", "An error occurred creating the review"}), 500
 
     return jsonify({"review": review, "rating": rating}), 200
+
 
 @api_bp.route("/delete_review/<int:review_id>", methods=["DELETE"])
 @token_required

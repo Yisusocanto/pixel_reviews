@@ -57,7 +57,7 @@ def recent_user_reviews(target_username):
 
     offset = (page_number - 1) * limit_number
 
-    reviews = ReviewManager.recent_user_reviews(
+    reviews = ReviewManager.get_user_reviews(
         target_user_id=target_user_id,
         limit=limit_number,
         offset=offset,
@@ -111,7 +111,7 @@ def wishlist(username):
 
     offset = (page_number - 1) * limit_number
 
-    wishlist_items = WishlistManager.get_recent_wishlist_items(
+    wishlist_items = WishlistManager.get_user_wishlist(
         user_id=user_id, offset=offset, limit=limit_number
     )
     if isinstance(wishlist_items, dict):

@@ -1,5 +1,5 @@
-from sqlalchemy import String, ARRAY
-from sqlalchemy.dialects.postgresql import JSONB, ARRAY
+from sqlalchemy import String
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import date
 from .base import Base
@@ -42,7 +42,9 @@ class Game(Base):
     publishers: Mapped[list["Publisher"]] = relationship(
         secondary=publishers_association, back_populates="games", lazy="dynamic"
     )
-    wishlist: Mapped[list["WishlistItem"]] = relationship(back_populates="game", cascade="all, delete-orphan", lazy="dynamic")
+    wishlist: Mapped[list["WishlistItem"]] = relationship(
+        back_populates="game", cascade="all, delete-orphan", lazy="dynamic"
+    )
 
     @property
     def average_rating(self):

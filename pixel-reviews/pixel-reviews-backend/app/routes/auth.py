@@ -40,7 +40,7 @@ def sign_up():
         email=email, password=hashed_pw, username=username
     )
     if isinstance(user_id, dict) and "error" in user_id:
-        return jsonify({"error": user_id["error"]}), 409
+        return jsonify(user_id), 409
 
     token = JwtHandler.create_jwt(user_id)
     user = UserManager.get_user_by_username(username=username)
@@ -140,7 +140,7 @@ def password_recovery():
 
     try:
         # The reset token is created
-        reset_token = reset_token_handler.generate_reset_tooken()
+        reset_token = reset_token_handler.generate_reset_token()
         # The reset token is saved in the database
         AuthManager.create_password_reset_token(
             user_id=user["user_id"], reset_token=reset_token

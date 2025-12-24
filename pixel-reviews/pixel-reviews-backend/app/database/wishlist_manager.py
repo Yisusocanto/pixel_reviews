@@ -34,7 +34,7 @@ class WishlistManager(DatabaseBase):
             return {"error": "Unknown error."}
 
     @classmethod
-    def get_recent_wishlist_items(
+    def get_user_wishlist(
         cls, user_id: int, offset: int = 0, limit: int = 10
     ) -> list | dict:
         schema = WishlistItemSchema()

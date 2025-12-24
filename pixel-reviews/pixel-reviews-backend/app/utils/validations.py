@@ -1,14 +1,16 @@
 import re
 
+
 def validate_username(username):
     """
     Validates that the username is alphanumeric and between 3 and 20 characters.
     """
     if not username:
         return "Username cannot be empty."
-    if not re.match(r'^[a-zA-Z0-9_]{3,20}$', username):
+    if not re.match(r"^[a-zA-Z0-9_]{3,20}$", username):
         return "Username must be alphanumeric and between 3 to 20 characters."
     return None
+
 
 def validate_email(email):
     """
@@ -16,9 +18,10 @@ def validate_email(email):
     """
     if not email:
         return "Email cannot be empty."
-    if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+    if not re.match(r"^[\w\.-]+@[\w\.-]+\.\w+$", email):
         return "Invalid email format."
     return None
+
 
 def validate_password(password):
     """
