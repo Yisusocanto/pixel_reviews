@@ -1,12 +1,82 @@
-from flask import Blueprint, request, g, jsonify
+from flask import Blueprint, g, jsonify, request
 from app.database import ReviewManager
 from app.utils.jwt_handler import token_required
-
-# Blueprint that handles API functionalities
-api_bp = Blueprint("api", __name__, url_prefix="/api")
+from app.utils.jwt_handler import JwtHandler
 
 
-@api_bp.route("/create_rating", methods=["POST"])
+reviews_bp = Blueprint("reviews", __name__, url_prefix="/reviews")
+
+
+@reviews_bp.route("/", methods=["GET"])
+def index():
+    # Auth user's user_id to verify if the review has like or not
+    user_id = None
+    token = request.cookies.get("jwt_pixel_reviews")
+    if token:
+        payload = JwtHandler.check_jwt(token)
+        if payload:
+            user_id = int(payload["sub"])
+
+    page = request.args.get("page")
+    limit = request.args.get("limit")
+
+    if page and limit:
+        try:
+            page_number = int(page)
+            limit_number = int(limit)
+        except Exception as e:
+            print(f"Error on route '/main': {e}")
+            return (
+                jsonify(
+                    {"error": "Type error on page or limit param. It should be Integer"}
+                ),
+                400,
+            )
+    else:
+        return (
+            jsonify({"error": "The query params 'page' and 'limit' are obligatory"}),
+            400,
+        )
+
+    offset = (page_number - 1) * limit_number
+
+    reviews = ReviewManager.get_reviews(
+        limit=limit_number, offset=offset, user_id=user_id
+    )
+    if isinstance(reviews, dict):
+        return jsonify(reviews), 500
+
+    return (
+        jsonify(
+            {
+                "results": reviews,
+                "info": {
+                    "page": page_number,
+                    "limit": limit_number,
+                    "results": len(reviews),
+                },
+            }
+        ),
+        200,
+    )
+
+
+@reviews_bp.route("/user_review/<game_id>", methods=["GET"])
+@token_required
+def user_review(game_id):
+    payload = g.user_payload
+    user_id = int(payload["sub"])
+
+    review = ReviewManager.get_user_review(game_id, user_id)
+    rating = ReviewManager.get_user_rating(game_id, user_id)
+
+    if not review and not rating:
+        return jsonify({"error": "The user does not have a review or rating."}), 404
+
+    return jsonify({"review": review, "rating": rating}), 200
+
+
+@reviews_bp.route("/create_rating", methods=["POST"])
 @token_required
 def create_or_update_rating():
     data = request.get_json()
@@ -39,7 +109,7 @@ def create_or_update_rating():
     return jsonify({"rating": rating, "review": review}), 200
 
 
-@api_bp.route("/create_review", methods=["POST"])
+@reviews_bp.route("/create_review", methods=["POST"])
 @token_required
 def create_or_update_review():
     data = request.get_json()
@@ -80,7 +150,7 @@ def create_or_update_review():
     return jsonify({"review": review, "rating": rating}), 200
 
 
-@api_bp.route("/delete_review/<int:review_id>", methods=["DELETE"])
+@reviews_bp.route("/<int:review_id>", methods=["DELETE"])
 @token_required
 def delete_review(review_id):
     success = ReviewManager.delete_review(review_id)

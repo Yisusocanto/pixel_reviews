@@ -2,11 +2,11 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  getUserReview,
   createRating,
   createReview,
   deleteReview,
-} from "@/services/apiService";
-import { getUserReview } from "@/services/reviewsService";
+} from "@/services/reviewsService";
 import { toast } from "sonner";
 import axios from "axios";
 import type { Rating, Review } from "@/types/reviewTypes";

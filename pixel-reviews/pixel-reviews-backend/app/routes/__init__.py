@@ -3,8 +3,8 @@ import os
 from dotenv import load_dotenv
 from .auth import auth_bp
 from .users import users_bp
-from .main import main_bp
-from .api import api_bp
+from .games import games_bp
+from .reviews import reviews_bp
 from .settings import settings_bp
 from .wishlist import wishlist_bp
 from .like import like_bp
@@ -36,8 +36,8 @@ def create_app():
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
-    app.register_blueprint(main_bp)
-    app.register_blueprint(api_bp)
+    app.register_blueprint(games_bp)
+    app.register_blueprint(reviews_bp)
     app.register_blueprint(settings_bp)
     app.register_blueprint(wishlist_bp)
     app.register_blueprint(like_bp)

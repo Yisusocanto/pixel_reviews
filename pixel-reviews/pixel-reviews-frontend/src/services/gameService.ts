@@ -9,20 +9,18 @@ export const getGameDetails = async (
   slug: string,
   cookieHeader?: string
 ): Promise<GameDetails> => {
-  const { data } = await axiosInstance.get(`/main/games/${slug}`, {
+  const { data } = await axiosInstance.get(`/games/${slug}`, {
     headers: cookieHeader ? { Cookie: cookieHeader } : {},
   });
   return data;
 };
 
 export const searchGames = async (gameTitle: string) => {
-  const { data } = await axiosInstance.get(`/main/search/${gameTitle}`);
+  const { data } = await axiosInstance.get(`/games/search/${gameTitle}`);
   return data;
 };
 
 export const inUserWishlist = async (gameID: number) => {
-  const { data } = await axiosInstance.get(
-    `/main/games/${gameID}/in_user_wishlist`
-  );
+  const { data } = await axiosInstance.get(`/games/${gameID}/in_user_wishlist`);
   return data.inUserWishlist;
 };
