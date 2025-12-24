@@ -4,7 +4,7 @@ from app.models.like import Like
 from app.schemas.review_schema import ReviewSchema
 from app.schemas.rating_schema import RatingSchema
 from sqlalchemy import desc, exists
-from typing import List, Optional
+from typing import Optional
 
 
 class ReviewManager(DatabaseBase):
@@ -39,6 +39,7 @@ class ReviewManager(DatabaseBase):
 
                     return ReviewSchema().dump(reviews, many=True)
 
+                # If there is not authenticated user, a normal query is performed
                 else:
                     reviews_tuple = (
                         session.query(Review)
@@ -61,7 +62,7 @@ class ReviewManager(DatabaseBase):
     @classmethod
     def create_or_update_review(
         cls, game_id: int, user_id: int, title: str, content: str, rating_score: int
-    ) -> dict:
+    ) -> Optional[dict]:
         """Create or update a review"""
         with cls.get_session() as session:
             # Find existing review
@@ -72,7 +73,9 @@ class ReviewManager(DatabaseBase):
             )
 
             # Create or update rating first
-            rating = cls._create_or_update_rating(user_id, game_id, rating_score)
+            rating = cls.create_or_update_rating(user_id, game_id, rating_score)
+            if not rating:
+                return None
 
             if review:
                 # Update existing review
@@ -127,7 +130,9 @@ class ReviewManager(DatabaseBase):
             return ReviewSchema().dump(review)
 
     @classmethod
-    def _create_or_update_rating(cls, user_id: int, game_id: int, score: int) -> Rating:
+    def create_or_update_rating(
+        cls, user_id: int, game_id: int, score: int
+    ) -> Optional[Rating]:
         """Internal helper to create or update rating"""
         try:
             with cls.get_session() as session:
@@ -146,6 +151,7 @@ class ReviewManager(DatabaseBase):
                 return rating
         except Exception as e:
             print(f"Error on _create_or_update_rating: {e}")
+            return None
 
     @classmethod
     def get_user_rating(cls, game_id: int, user_id: int) -> Optional[dict]:
@@ -162,7 +168,7 @@ class ReviewManager(DatabaseBase):
             return RatingSchema().dump(rating)
 
     @classmethod
-    def recent_user_reviews(
+    def get_user_reviews(
         cls,
         target_user_id: int,
         limit: int = 10,

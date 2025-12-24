@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
 from .base import Base
@@ -38,8 +38,12 @@ class User(Base):
     ratings: Mapped[list["Rating"]] = relationship(
         back_populates="author", cascade="all, delete-orphan", lazy="dynamic"
     )
-    wishlist: Mapped[list["WishlistItem"]] = relationship(back_populates="user", cascade="all, delete-orphan", lazy="dynamic")
-    likes: Mapped[list["Like"]] = relationship(back_populates="user", cascade="all, delete-orphan", lazy="dynamic")
+    wishlist: Mapped[list["WishlistItem"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan", lazy="dynamic"
+    )
+    likes: Mapped[list["Like"]] = relationship(
+        back_populates="user", cascade="all, delete-orphan", lazy="dynamic"
+    )
 
     @property
     def average_rating(self):

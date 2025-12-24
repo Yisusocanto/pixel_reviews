@@ -1,12 +1,9 @@
-from sqlalchemy import exists
 from app.database.base import DatabaseBase
 from app.models import Game, Developer, Publisher, WishlistItem
 from app.schemas.game_schema import GameSchema
 from app.services.rawg_api import RawgApi
 from datetime import date
 from typing import Optional
-
-rawg_api = RawgApi()
 
 
 class GameManager(DatabaseBase):
@@ -31,9 +28,7 @@ class GameManager(DatabaseBase):
             return GameSchema().dump(game)
 
     @classmethod
-    def find_or_create_game(
-        cls, slug: str, user_id: Optional[int] = None
-    ) -> Optional[dict]:
+    def find_or_create_game(cls, slug: str) -> Optional[dict]:
         """Find existing game or create from RAWG API"""
         print(f"=== DEBUG GameManager ===")
         print(f"slug: {slug}, user_id: {user_id}")
@@ -44,7 +39,7 @@ class GameManager(DatabaseBase):
                     return GameSchema().dump(game)
 
                 # Fetch from API if the game does not exit
-                game_data = rawg_api.get_game_details(slug)
+                game_data = RawgApi().get_game_details(slug)
                 if not game_data:
                     return None
 
@@ -109,6 +104,7 @@ class GameManager(DatabaseBase):
 
     @classmethod
     def in_user_wishlist(cls, user_id: int, game_id: int):
+        """Check if a game is on the user's wishlist"""
         with cls.get_session() as session:
             wishlist_item = (
                 session.query(WishlistItem)

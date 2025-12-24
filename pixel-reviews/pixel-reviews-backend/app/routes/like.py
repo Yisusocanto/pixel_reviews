@@ -4,6 +4,7 @@ from app.database.like_manager import LikeManager
 
 like_bp = Blueprint("likes", __name__, url_prefix="/likes")
 
+
 @like_bp.route("/toggle", methods=["POST"])
 @token_required
 def toggle_like():

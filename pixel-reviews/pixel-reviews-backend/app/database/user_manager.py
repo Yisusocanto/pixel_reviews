@@ -2,7 +2,6 @@ from app.database.base import DatabaseBase
 from app.models import User
 from app.schemas import UserSchema
 from sqlalchemy import exc
-from datetime import datetime
 from typing import Optional
 
 
@@ -10,24 +9,14 @@ class UserManager(DatabaseBase):
     """Manages user CRUD operations"""
 
     @classmethod
-    def create_user(
-        cls,
-        email: str,
-        password: str,
-        username: str
-    ) -> int | dict:
+    def create_user(cls, email: str, password: str, username: str) -> int | dict:
         """Create a new user in the database"""
         try:
             with cls.get_session() as session:
-                user = User(
-                    email=email,
-                    password=password,
-                    username=username
-                )
+                user = User(email=email, password=password, username=username)
                 session.add(user)
                 session.flush()  # To get the user_id before the commit
-                user_id = user.user_id
-                return user_id
+                return user.user_id
 
         except exc.IntegrityError as i:
             error_msg = str(i.orig)
@@ -64,16 +53,11 @@ class UserManager(DatabaseBase):
     @classmethod
     def get_user_by_email(cls, email: str) -> Optional[dict]:
         """Get user by email"""
-        try:
-            with cls.get_session() as session:
-                user = session.query(User).filter(User.email == email).first()
-                if not user:
-                    return None
-
-                return UserSchema().dump(user)
-        except Exception as e:
-            print(f"Error on get_user_by_email: {e}")
-            return None
+        with cls.get_session() as session:
+            user = session.query(User).filter(User.email == email).first()
+            if not user:
+                return None
+            return UserSchema().dump(user)
 
     @classmethod
     def get_user_id(cls, username: str) -> Optional[int]:

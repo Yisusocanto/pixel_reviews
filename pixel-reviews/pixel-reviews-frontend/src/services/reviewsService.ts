@@ -7,7 +7,7 @@ export const getReviews = async (
   cookieHeader?: string
 ): Promise<AxiosResponse> => {
   const response = await axiosInstance.get(
-    `/main?limit=${limit}&page=${page}`,
+    `/reviews?limit=${limit}&page=${page}`,
     {
       headers: cookieHeader ? { Cookie: cookieHeader } : {},
     }
@@ -16,6 +16,36 @@ export const getReviews = async (
 };
 
 export const getUserReview = async (gameID: number) => {
-  const { data } = await axiosInstance.get(`/main/user_review/${gameID}`);
+  const { data } = await axiosInstance.get(`/reviews/user_review/${gameID}`);
+  return data;
+};
+
+export const createRating = async (gameID: number, score: number) => {
+  const { data } = await axiosInstance.post("/reviews/create_rating", {
+    game_id: gameID,
+    score: score,
+  });
+
+  return data;
+};
+
+export const createReview = async (
+  gameID: number,
+  reviewTitle: string,
+  reviewContent: string,
+  score: number
+) => {
+  const { data } = await axiosInstance.post("/reviews/create_review", {
+    game_id: gameID,
+    review_title: reviewTitle,
+    review_content: reviewContent,
+    score: score,
+  });
+
+  return data;
+};
+
+export const deleteReview = async (reviewID: number) => {
+  const { data } = await axiosInstance.delete(`/reviews/${reviewID}`);
   return data;
 };

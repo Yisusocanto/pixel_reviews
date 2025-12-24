@@ -35,7 +35,8 @@ class JwtHandler:
 # --- Decorador para verificar el token y exponer el payload ---
 def token_required(f):
     """
-    Decorator to protect routes that require a JWT token. It checks for the presence and validity of the 'jwt_pixel_reviews' token in the cookies. If the token is valid, the payload is stored in `g.user_payload`.
+    Decorator to protect routes that require a JWT token. It checks for the presence and validity of the 'jwt_pixel_reviews'
+    token in the cookies. If the token is valid, the payload is stored in `g.user_payload`.
     """
 
     @wraps(f)

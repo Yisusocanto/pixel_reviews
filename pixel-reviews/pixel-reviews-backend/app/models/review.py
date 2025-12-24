@@ -34,7 +34,9 @@ class Review(Base):
     game: Mapped["Game"] = relationship(back_populates="reviews")
     author: Mapped["User"] = relationship(back_populates="reviews")
     rating: Mapped["Rating"] = relationship(back_populates="review")
-    likes: Mapped[list["Like"]] = relationship(back_populates="review", cascade="all, delete-orphan", lazy="dynamic")
+    likes: Mapped[list["Like"]] = relationship(
+        back_populates="review", cascade="all, delete-orphan", lazy="dynamic"
+    )
 
     # Properties
     @property

@@ -10,11 +10,11 @@ from app.database.like_manager import LikeManager
 DatabaseBase.initialize()
 
 __all__ = [
-    'DatabaseBase',
-    'UserManager',
-    'AuthManager',
-    'GameManager',
-    'ReviewManager',
-    'SettingManager',
-    'LikeManager'
+    "DatabaseBase",
+    "UserManager",
+    "AuthManager",
+    "GameManager",
+    "ReviewManager",
+    "SettingManager",
+    "LikeManager",
 ]
