@@ -1,5 +1,12 @@
 import { User } from "@/types/userTypes";
-import { UserPenIcon, BoltIcon, Instagram, Github } from "lucide-react";
+import {
+  UserPenIcon,
+  BoltIcon,
+  Instagram,
+  Github,
+  TextAlignStart,
+  Gift,
+} from "lucide-react";
 
 export const loggedInNavigationLinks = [{ href: "/feed", label: "Feed" }];
 
@@ -14,6 +21,16 @@ export const getUserMenuMainLinks = (user: User) => [
     label: "Profile",
     href: `/users/${user.username}`,
     icon: <UserPenIcon size={18} />,
+  },
+  {
+    label: "Reviews",
+    href: `/users/${user.username}/reviews`,
+    icon: <TextAlignStart size={18} />,
+  },
+  {
+    label: "Wishlist",
+    href: `/users/${user.username}/wishlist`,
+    icon: <Gift size={18} />,
   },
 ];
 

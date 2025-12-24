@@ -2,6 +2,7 @@
 
 import { Tabs } from "@heroui/react";
 import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface UserTabsProps {
   username: string;
@@ -10,6 +11,12 @@ interface UserTabsProps {
 export default function UserTabs({ username }: UserTabsProps) {
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    router.prefetch(`/users/${username}`);
+    router.prefetch(`/users/${username}/reviews`);
+    router.prefetch(`/users/${username}/wishlist`);
+  }, [username, router]);
 
   // Determine current tab based on pathname
   let currentTab = "overview";
@@ -22,9 +29,9 @@ export default function UserTabs({ username }: UserTabsProps) {
   const handleSelectionChange = (key: React.Key) => {
     const keyString = key as string;
     if (keyString === "overview") {
-      router.push(`/users/${username}`);
+      router.replace(`/users/${username}`);
     } else {
-      router.push(`/users/${username}/${keyString}`);
+      router.replace(`/users/${username}/${keyString}`);
     }
   };
 
