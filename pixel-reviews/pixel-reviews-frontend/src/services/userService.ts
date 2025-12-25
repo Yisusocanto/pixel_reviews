@@ -1,9 +1,11 @@
 import axiosInstance from "@/lib/axiosConfig";
+import { cache } from "react";
 
-export const getUserData = async (username: string) => {
+// Cached version for server components - avoids duplicate fetches in generateMetadata + page/layout
+export const getUserData = cache(async (username: string) => {
   const { data } = await axiosInstance.get(`/users/${username}`);
   return data;
-};
+});
 
 export const getUserWishlist = async (
   username: string,

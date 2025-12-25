@@ -36,10 +36,17 @@ class GameManager(DatabaseBase):
                 if game:
                     return GameSchema().dump(game)
 
-                # Fetch from API if the game does not exit
+                # Fetch from API if the game does not exist
                 game_data = RawgApi().get_game_details(slug)
                 if not game_data:
                     return None
+
+                # Check if game already exists by rawg_id (handles slug redirects/aliases)
+                existing_game = session.query(Game).filter(
+                    Game.rawg_id == game_data["rawg_id"]
+                ).first()
+                if existing_game:
+                    return GameSchema().dump(existing_game)
 
                 # Create new game
                 new_game = Game(

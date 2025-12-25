@@ -12,6 +12,7 @@ import GameInformationCard from "@/components/game/GameInformationCard";
 import CommunityCard from "@/components/game/CommunityCard";
 import { cookies } from "next/headers";
 import type { Review } from "@/types/reviewTypes";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +20,45 @@ interface pageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+export async function generateMetadata({
+  params,
+}: pageProps): Promise<Metadata> {
+  const { slug } = await params;
+  try {
+    const data = await getGameDetails(slug);
+    const game = data.game;
+
+    if (!game) {
+      return {
+        title: "Game Not Found",
+        description: "The requested game could not be found.",
+      };
+    }
+
+    return {
+      title: game.title,
+      description: game.description.slice(0, 160) + "...",
+      openGraph: {
+        title: game.title,
+        description: game.description.slice(0, 200),
+        images: [
+          {
+            url: game.imageURL,
+            width: 800,
+            height: 600,
+            alt: game.title,
+          },
+        ],
+      },
+    };
+  } catch {
+    return {
+      title: "Game Not Found",
+      description: "The requested game could not be found.",
+    };
+  }
 }
 
 async function page({ params }: pageProps) {
@@ -36,8 +76,27 @@ async function page({ params }: pageProps) {
 
   const game = data.game;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    name: game?.title,
+    description: game?.description,
+    image: game?.imageURL,
+    datePublished: game?.releaseDate,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: game?.averageRating,
+      reviewCount: game?.totalRatings,
+    },
+    genre: game?.description ? "Game" : undefined, // Placeholder as genre isn't in Game type explicitly yet or I missed it
+  };
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Game Hero */}
       <GameHero game={game || undefined} />
       <div className="flex flex-col md:flex-row gap-4 md:gap-0 w-full md:w-3/4 mx-auto px-4 md:px-0">

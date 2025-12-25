@@ -24,8 +24,23 @@ export default async function UserProfilePage({
   }
   const user: User = data.user;
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    mainEntity: {
+      "@type": "Person",
+      name: user.username,
+      image: user.avatarUrl,
+      description: user.bio,
+    },
+  };
+
   return (
     <div className="max-w-3/4 mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <StatsCards user={user} />
     </div>
   );

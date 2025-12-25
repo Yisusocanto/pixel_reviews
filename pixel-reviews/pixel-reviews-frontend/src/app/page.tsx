@@ -247,7 +247,7 @@ const FeatureCard = ({
   delay: number;
 }) => {
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -261,7 +261,7 @@ const FeatureCard = ({
         {title}
       </h3>
       <p className="text-muted-foreground leading-relaxed">{description}</p>
-    </motion.div>
+    </motion.article>
   );
 };
 

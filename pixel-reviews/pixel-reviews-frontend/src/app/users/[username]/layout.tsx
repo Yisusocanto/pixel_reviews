@@ -6,12 +6,55 @@ import axios from "axios";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import StatsCardsSkeleton from "@/components/user/StatsCardsSkeleton";
+import type { Metadata } from "next";
 
 interface UserProfileLayoutProps {
   children: React.ReactNode;
   params: Promise<{
     username: string;
   }>;
+}
+
+export async function generateMetadata({
+  params,
+}: UserProfileLayoutProps): Promise<Metadata> {
+  const { username } = await params;
+  try {
+    const data = await getUserData(username);
+    const user = data.user;
+
+    if (!user) {
+      return {
+        title: "User Not Found",
+        description: "The requested user profile could not be found.",
+      };
+    }
+
+    return {
+      title: `${user.username}'s Profile`,
+      description:
+        user.bio ||
+        `Check out ${user.username}'s gaming profile on Pixel Reviews.`,
+      openGraph: {
+        title: `${user.username}'s Profile on Pixel Reviews`,
+        description: user.bio || `Check out ${user.username}'s gaming profile.`,
+        images: [
+          {
+            url: user.avatarUrl || "/default-avatar.png",
+            width: 500,
+            height: 500,
+            alt: user.username,
+          },
+        ],
+        type: "profile",
+      },
+    };
+  } catch {
+    return {
+      title: "User Not Found",
+      description: "The requested user profile could not be found.",
+    };
+  }
 }
 
 export default async function UserProfileLayout({
