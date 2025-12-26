@@ -10,6 +10,8 @@ from .wishlist import wishlist_bp
 from .like import like_bp
 from flask_cors import CORS
 from app.extensions.marshmallow import ma
+from authlib.integrations.flask_client import OAuth
+
 
 load_dotenv()
 
@@ -23,6 +25,18 @@ def create_app():
     frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
     print(f"🔥 FRONTEND_URL: {frontend_url}")
+
+    oauth = OAuth(app)
+    google = oauth.register(
+        "google",
+        client_id=os.getenv("GOOGLE_ID_CLIENT"),
+        client_secret=os.getenv("GOOGLE_SECRET"),
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_kwargs={"scope": "openid email profile"},
+    )
+
+    app.config["OAUTH_GOOGLE"] = google
+    app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
     ma.init_app(app)
 

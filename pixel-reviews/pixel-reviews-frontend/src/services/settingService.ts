@@ -15,6 +15,13 @@ export const updateProfile = async (profileData: ProfileData) => {
   return data;
 };
 
+export const changeUsername = async (username: string) => {
+  const { data } = await axiosInstance.patch("/settings/change_username", {
+    username: username,
+  });
+  return data;
+};
+
 export const changePassword = async (
   currentPassword: string,
   newPassword: string

@@ -35,6 +35,22 @@ def update_profile():
     return jsonify({"user": user}), 200
 
 
+@settings_bp.route("/change_username", methods=["PATCH"])
+@token_required
+def change_username():
+    data = request.get_json()
+    new_username = data.get("username")
+
+    payload = g.user_payload
+    user_id = int(payload["sub"])
+
+    user = SettingManager.change_username(user_id=user_id, new_username=new_username)
+    if isinstance(user, dict) and "error" in user:
+        return jsonify(user), 500
+
+    return jsonify({"user": user}), 200
+
+
 @settings_bp.route("/change_password", methods=["PATCH"])
 @token_required
 def change_password():

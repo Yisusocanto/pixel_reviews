@@ -20,7 +20,7 @@ class User(Base):
     )
     email: Mapped[str] = mapped_column(String(), nullable=False, unique=True)
     username: Mapped[str] = mapped_column(String(20), nullable=False, unique=True)
-    password: Mapped[str] = mapped_column(nullable=False)
+    password: Mapped[str] = mapped_column(nullable=True)
     bio: Mapped[str] = mapped_column(String(500), nullable=True)
     location: Mapped[str] = mapped_column(String(40), nullable=True)
     website: Mapped[str] = mapped_column(String(100), nullable=True)

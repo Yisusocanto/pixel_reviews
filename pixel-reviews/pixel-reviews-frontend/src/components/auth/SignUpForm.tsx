@@ -52,6 +52,7 @@ const signUpSchema = z
   });
 
 function SignUpForm() {
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const { isAuthenticated } = useAuth();
   const router = useRouter();
 
@@ -153,6 +154,16 @@ function SignUpForm() {
               {isPending ? "Loging in..." : "Log In"}
             </>
           )}
+        </Button>
+        <Button
+          onPress={() =>
+            (window.location.href = `${BACKEND_URL}/auth/google/login`)
+          }
+          fullWidth
+          variant="tertiary"
+        >
+          <img src="/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" />
+          Sign in with Google
         </Button>
       </Form>
 

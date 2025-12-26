@@ -1,11 +1,20 @@
-from flask import Blueprint, request, make_response, jsonify
+import os
+
+from flask import Blueprint, request, make_response, jsonify, url_for, redirect
 from app.utils.validations import execute_validations
 from app.database import UserManager, AuthManager
 from app.utils.jwt_handler import JwtHandler
 from app.utils import password_handler, reset_token_handler
 from app.services.email_sender import EmailSender
+from dotenv import load_dotenv
+from flask import current_app
+from authlib.integrations.flask_client import OAuthError
+from random_username.generate import generate_username
+
+load_dotenv()
 
 email_sender = EmailSender()
+
 
 # Blueprint that handles authentication paths
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth")
@@ -111,6 +120,64 @@ def logout():
         secure=True,
     )
     return response, 200
+
+
+@auth_bp.route("/google/login")
+def google_login():
+    google = current_app.config["OAUTH_GOOGLE"]
+    redirect_uri = url_for("auth.google_callback", _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+
+@auth_bp.route("/google/callback")
+def google_callback():
+    frontend_url = os.getenv("FRONTEND_URL")
+    try:
+        google = current_app.config["OAUTH_GOOGLE"]
+        google_token = google.authorize_access_token()
+
+        user_info = google_token.get("userinfo")
+        email = user_info.get("email")
+        avatar_url = user_info.get("picture", None)
+
+        # If the user already exist
+        user = UserManager.get_user_by_email(email=email)
+        if user:
+            token = JwtHandler.create_jwt(user["userID"])
+            response = make_response(redirect(f"{frontend_url}/feed"))
+            response.set_cookie(
+                "jwt_pixel_reviews",
+                token,
+                max_age=86400,
+                httponly=True,
+                secure=True,
+                samesite="None",
+            )
+            return response
+
+        # If the user does not exist, it is created
+        user_id = UserManager.create_user(email=email, avatar_url=avatar_url)
+        if isinstance(user_id, dict):
+            return redirect(f"{frontend_url}/login?error={user_id["error"]}")
+
+        token = JwtHandler.create_jwt(user_id)
+        response = make_response(redirect(f"{frontend_url}/choose-username"))
+        response.set_cookie(
+            "jwt_pixel_reviews",
+            token,
+            max_age=86400,
+            httponly=True,
+            secure=True,
+            samesite="None",
+        )
+        return response
+
+    except OAuthError as o:
+        print(f"Error on google callback: {o}")
+        return redirect(f"{frontend_url}/login?error={o}")
+    except Exception as e:
+        print(f"Unknown error on google callback {e}")
+        return redirect(f"{frontend_url}/login?error={e}")
 
 
 @auth_bp.route("/verify")

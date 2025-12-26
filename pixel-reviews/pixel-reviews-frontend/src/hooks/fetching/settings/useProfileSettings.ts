@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateProfile } from "@/services/settingService";
+import { changeUsername, updateProfile } from "@/services/settingService";
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -36,6 +36,16 @@ export const useProfileSettings = () => {
         ? error.response?.data.error
         : "Unknown error.";
       displayErrorToast(errorMsj);
+    },
+  });
+};
+
+export const useChangeUsername = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (username: string) => changeUsername(username),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["authUser"], data.user);
     },
   });
 };

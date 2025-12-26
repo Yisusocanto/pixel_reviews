@@ -1,3 +1,5 @@
+from random_username.generate import generate_username
+
 from app.database.base import DatabaseBase
 from app.models import User
 from app.schemas import UserSchema
@@ -9,11 +11,28 @@ class UserManager(DatabaseBase):
     """Manages user CRUD operations"""
 
     @classmethod
-    def create_user(cls, email: str, password: str, username: str) -> int | dict:
+    def create_user(
+        cls,
+        email: str,
+        username: Optional[str] = None,
+        avatar_url: Optional[str] = None,
+        password: Optional[str] = None,
+    ) -> int | dict:
         """Create a new user in the database"""
         try:
             with cls.get_session() as session:
-                user = User(email=email, password=password, username=username)
+                if not username:
+                    username_is_not_checked = True
+                    while username_is_not_checked:
+                        username = generate_username()[0]
+                        username_is_not_checked = cls.user_exists(username)
+
+                user = User(
+                    email=email,
+                    password=password,
+                    username=username,
+                    avatar_url=avatar_url,
+                )
                 session.add(user)
                 session.flush()  # To get the user_id before the commit
                 return user.user_id

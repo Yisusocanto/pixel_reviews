@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useLogin } from "@/hooks/fetching/auth/useLogin";
 import { useAuth } from "@/providers/AuthProvider";
 import {
@@ -32,8 +31,12 @@ const Schema = z.object({
 });
 
 function LoginForm() {
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
   const { isAuthenticated } = useAuth();
+  const [queryParamError, setQueryParamError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const queryError = searchParams.get("error");
   const {
     register,
     handleSubmit,
@@ -46,7 +49,10 @@ function LoginForm() {
     if (isAuthenticated) {
       router.replace("/feed");
     }
-  }, [isAuthenticated, router]);
+    if (queryError) {
+      setQueryParamError(queryError);
+    }
+  }, [isAuthenticated, router, queryError]);
 
   const { mutate: login, isPending, isError, error } = useLogin();
 
@@ -79,7 +85,7 @@ function LoginForm() {
           <FieldError>{errors.password?.message}</FieldError>
         </TextField>
 
-        <Button type="submit" className="w-full" isPending={isPending}>
+        <Button type="submit" fullWidth isPending={isPending}>
           {({ isPending }) => (
             <>
               {isPending ? <Spinner color="current" /> : null}
@@ -87,12 +93,23 @@ function LoginForm() {
             </>
           )}
         </Button>
+        <Button
+          onPress={() =>
+            (window.location.href = `${BACKEND_URL}/auth/google/login`)
+          }
+          fullWidth
+          variant="tertiary"
+        >
+          <img src="/google-icon.svg" alt="Google" className="w-5 h-5 mr-2" />
+          Sign in with Google
+        </Button>
       </Form>
       <p className="mt-2 text-danger">
         {isError && (error as any).response.data
           ? (error as any).response.data.error
           : null}
       </p>
+      {queryParamError && <p>{queryParamError}</p>}
       <span className="flex justify-center gap-2 mt-4 ">
         Don't have an account?
         <Link

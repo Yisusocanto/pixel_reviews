@@ -1,3 +1,4 @@
+from app.database import UserManager
 from app.database.base import DatabaseBase
 from app.models import User
 from app.schemas.user_schema import UserSchema
@@ -31,6 +32,25 @@ class SettingManager(DatabaseBase):
         except Exception as e:
             print("error on update_profile manager", e)
             return None
+
+    @classmethod
+    def change_username(cls, user_id: int, new_username: str) -> dict:
+        try:
+            existing_user = UserManager.get_user_by_username(new_username)
+            if existing_user:
+                return {"error": "Username already taken."}
+
+            with cls.get_session() as session:
+                user = session.query(User).filter(User.user_id == user_id).first()
+                if not user:
+                    return {"error": "User does not exist."}
+
+                user.username = new_username
+
+                return UserSchema().dump(user)
+        except Exception as e:
+            print(f"Error on change username: {e}")
+            return {"error": "Unknown error changing the username."}
 
     @classmethod
     def save_avatar(
