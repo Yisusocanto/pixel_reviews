@@ -1,5 +1,6 @@
 import LoginForm from "@/components/auth/LoginForm";
 import { Card } from "@heroui/react";
+import { Suspense } from "react";
 
 function page() {
   return (
@@ -22,7 +23,9 @@ function page() {
           </div>
         </div>
         <div className="flex-1 flex justify-center lg:justify-end">
-          <LoginForm />
+          <Suspense fallback={<p>loading...</p>}>
+            <LoginForm />
+          </Suspense>
         </div>
       </Card>
     </div>
